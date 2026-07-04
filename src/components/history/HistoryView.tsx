@@ -46,8 +46,6 @@ export function HistoryView() {
     const [page, setPage] = useState(1);
 
     useEffect(() => {
-        setLoading(true);
-        setError(null);
         const timeout = setTimeout(() => {
             getHistory(search.trim() || undefined, FETCH_LIMIT)
                 .then((data) => {
@@ -94,7 +92,11 @@ export function HistoryView() {
             <Input
                 placeholder="Search by company name"
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                    setSearch(event.target.value);
+                    setLoading(true);
+                    setError(null);
+                }}
                 className="max-w-sm"
             />
 
