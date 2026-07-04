@@ -18,6 +18,10 @@ export const competitors: Competitor[] = [
         growthRate: 12.4,
         summary:
             "Aggressive enterprise push this quarter, undercutting on price while bundling in a new forecasting module.",
+        relation: "direct",
+        domain: "northwindanalytics.io",
+        rationale:
+            "Same core product category — AI-driven competitive intelligence — and actively competing for the same enterprise accounts.",
     },
     {
         id: "vantage",
@@ -31,6 +35,10 @@ export const competitors: Competitor[] = [
         growthRate: 5.1,
         summary:
             "Stable roadmap, but recent layoffs and a support-quality slide are opening room in mid-market accounts.",
+        relation: "direct",
+        domain: "vantage.ai",
+        rationale:
+            "Overlapping use case — real-time signal alerting for competitive moves — and competes for the same mid-market segment.",
     },
     {
         id: "pulsemetrics",
@@ -44,6 +52,10 @@ export const competitors: Competitor[] = [
         growthRate: -3.2,
         summary:
             "Churn is climbing after their pricing overhaul — a clear opening to target their SMB base directly.",
+        relation: "indirect",
+        domain: "pulsemetrics.io",
+        rationale:
+            "Focused narrowly on sentiment tracking rather than full competitive intelligence — adjacent, not a head-to-head substitute.",
     },
     {
         id: "beacon",
@@ -57,6 +69,10 @@ export const competitors: Competitor[] = [
         growthRate: 3.8,
         summary:
             "Quietly expanding into APAC. No direct product overlap yet, but their acquisition pace bears watching.",
+        relation: "indirect",
+        domain: "beaconinsights.co",
+        rationale:
+            "Static competitive reporting without real-time monitoring — overlaps only on the reporting layer, not live signal detection.",
     },
 ];
 

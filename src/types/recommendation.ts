@@ -9,4 +9,7 @@ export interface Recommendation {
     relatedTo: string;
     confidence: number;
     sources: string[];
+    /** IDs into src/data/evidence.ts, used by the wizard's EvidenceChip/Drawer. */
+    evidenceIds?: string[];
+    agentCount?: number;
 }
