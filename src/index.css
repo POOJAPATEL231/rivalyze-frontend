@@ -40,6 +40,8 @@
     --color-watch: var(--watch);
     --color-watch-foreground: var(--watch-foreground);
 
+    --background-image-iris: var(--iris);
+
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -119,6 +121,11 @@
     --border: #e4d9f7;
     --input: #e4d9f7;
     --ring: var(--violet-500);
+
+    /* Brand gradient for hero marks, CTAs, and stat highlights — built from
+       existing status tokens (teal=success, violet=primary, gold=watch) so
+       it stays in sync with theme mode instead of duplicating raw hex. */
+    --iris: linear-gradient(135deg, var(--success) 0%, var(--primary) 52%, var(--watch) 100%);
 
     --chart-1: #d6425a;
     --chart-2: var(--violet-500);
