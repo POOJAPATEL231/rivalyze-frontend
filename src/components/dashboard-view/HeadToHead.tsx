@@ -1,5 +1,3 @@
-import { EvidenceChip } from "@/components/evidence/EvidenceChip";
-import { Badge } from "@/components/ui/badge";
 import {
     Table,
     TableBody,
@@ -8,49 +6,14 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { openEvidence } from "@/store/slices/analysisSlice";
-import type { HeadToHeadCell, Report } from "@/types/analysis";
+import type { ApiHeadToHeadRow } from "@/types/api";
 
-const ROWS: { key: keyof Report["headToHead"]; label: string }[] = [
-    { key: "price", label: "Price" },
-    { key: "aiPositioning", label: "AI positioning" },
-    { key: "recentMove", label: "Recent move" },
-    { key: "topComplaint", label: "Top complaint" },
-];
-
-function Cell({ cell }: { cell: HeadToHeadCell }) {
-    const dispatch = useAppDispatch();
-
-    return (
-        <div className="space-y-1.5">
-            <div className="flex flex-wrap items-center gap-1.5">
-                <button
-                    type="button"
-                    onClick={() => cell?.evidenceId && dispatch(openEvidence(cell.evidenceId))}
-                    className="text-left text-sm text-foreground hover:underline"
-                >
-                    {cell?.text}
-                </button>
-                {cell?.badge && (
-                    <Badge
-                        variant={cell?.badge === "high-risk" ? "destructive" : "secondary"}
-                        className="text-[10px]"
-                    >
-                        {cell?.badge === "high-risk" ? "High risk" : "New"}
-                    </Badge>
-                )}
-            </div>
-            {cell?.evidenceId && <EvidenceChip evidenceId={cell.evidenceId} />}
-        </div>
-    );
+interface HeadToHeadProps {
+    rows: ApiHeadToHeadRow[];
 }
 
-export function HeadToHead() {
-    const report = useAppSelector((state) => state.analysis.report);
-    const competitors = useAppSelector((state) => state.analysis.competitors);
-
-    if (!report) return null;
+export function HeadToHead({ rows }: HeadToHeadProps) {
+    const rivalNames = rows.length > 0 ? Object.keys(rows[0].rivals) : [];
 
     return (
         <Table>
@@ -58,34 +21,40 @@ export function HeadToHead() {
                 <TableRow>
                     <TableHead>Signal</TableHead>
                     <TableHead className="bg-success/10 text-success">You</TableHead>
-                    {competitors.map((competitor) => (
-                        <TableHead key={competitor.id}>{competitor.name}</TableHead>
+                    {rivalNames.map((name) => (
+                        <TableHead key={name}>{name}</TableHead>
                     ))}
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {ROWS.map((row) => {
-                    const data = report.headToHead[row.key];
-
-                    return (
-                        <TableRow key={row.key}>
-                            <TableCell className="align-top font-medium whitespace-normal text-muted-foreground">
-                                {row.label}
-                            </TableCell>
-                            <TableCell className="max-w-56 min-w-40 align-top whitespace-normal bg-success/5">
-                                <Cell cell={data.you} />
-                            </TableCell>
-                            {competitors.map((competitor) => (
+                {rows.map((row) => (
+                    <TableRow key={row.metric}>
+                        <TableCell className="align-top font-medium whitespace-normal text-muted-foreground">
+                            {row.metric}
+                        </TableCell>
+                        <TableCell className="max-w-56 min-w-40 align-top whitespace-normal bg-success/5">
+                            {row.you}
+                        </TableCell>
+                        {rivalNames.map((name) => {
+                            const cell = row.rivals[name];
+                            return (
                                 <TableCell
-                                    key={competitor.id}
+                                    key={name}
                                     className="max-w-56 min-w-40 align-top whitespace-normal"
                                 >
-                                    <Cell cell={data.rivals[competitor.id]} />
+                                    {cell && (
+                                        <div className="space-y-1">
+                                            <p className="text-sm text-foreground">{cell.value}</p>
+                                            <p className="font-mono text-[10px] text-muted-foreground">
+                                                {cell.source_date}
+                                            </p>
+                                        </div>
+                                    )}
                                 </TableCell>
-                            ))}
-                        </TableRow>
-                    );
-                })}
+                            );
+                        })}
+                    </TableRow>
+                ))}
             </TableBody>
         </Table>
     );

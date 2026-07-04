@@ -58,11 +58,23 @@ export interface ApiRunEvent {
     msg: string;
 }
 
-/** Poll shape for GET /api/v1/runs/{job_id}, polled every 2s. In this
- * vertical slice `result` holds the Discovery `ApiCompetitorSet`. */
+/** Poll shape for GET /api/v1/runs/{job_id}, polled every 2s.
+ *
+ * Two-phase pipeline: queued -> running_discovery -> awaiting_confirmation
+ * -> confirmed -> running_analysis -> completed | failed. `running` is only
+ * for rows written by the earlier single-phase slice. At
+ * `awaiting_confirmation`, `result.competitors` is the proposed rival set. */
 export interface ApiRunStatus {
     job_id: string;
-    status: "queued" | "running" | "completed" | "failed";
+    status:
+        | "queued"
+        | "running"
+        | "running_discovery"
+        | "awaiting_confirmation"
+        | "confirmed"
+        | "running_analysis"
+        | "completed"
+        | "failed";
     current_stage: string;
     events: ApiRunEvent[];
     result: ApiCompetitorSet | null;
@@ -71,6 +83,61 @@ export interface ApiRunStatus {
     error: string | null;
 }
 
+export interface ApiSwot {
+    strengths: string[];
+    weaknesses: string[];
+    opportunities: string[];
+    threats: string[];
+}
+
+export interface ApiSentimentEntry {
+    score: number;
+    label: string;
+}
+
+export interface ApiHeadToHeadRival {
+    value: string;
+    claim_ref: string;
+    source_date: string;
+}
+
+export interface ApiHeadToHeadRow {
+    metric: string;
+    you: string;
+    rivals: Record<string, ApiHeadToHeadRival>;
+}
+
+export interface ApiOpportunity {
+    text: string;
+    evidence_ids: string[];
+    claim_ref: string;
+}
+
+export interface ApiRecommendation {
+    action: string;
+    rationale: string;
+    confidence: number;
+    evidence_ids: string[];
+    claim_ref: string;
+}
+
+/** GET /api/v1/reports/{run_id} response, matching the OpenAPI schema
+ * exactly — `threat_level` and sentiment `label` values are free-form
+ * strings from the LLM, not a closed enum, so callers must fall back
+ * gracefully on unrecognized values. */
+export interface ApiReportResponse {
+    company: string;
+    threat_level: string;
+    executive_summary: string;
+    swot: ApiSwot;
+    sentiment: Record<string, ApiSentimentEntry>;
+    head_to_head: ApiHeadToHeadRow[];
+    opportunities: ApiOpportunity[];
+    recommendations: ApiRecommendation[];
+    low_signal_findings: string[];
+    analysis_date: string;
+
+}
 /** One row of GET /api/v1/history. threat_level/confidence are null for
  * runs completed before the strategist agent produced a report. */
 export interface ApiHistoryEntry {

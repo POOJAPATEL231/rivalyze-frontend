@@ -14,7 +14,13 @@ export type InputMode = "company" | "idea";
 
 export type RunStatus = "idle" | "running" | "done";
 
-export type DiscoveryJobStatus = "idle" | "submitting" | "polling" | "failed";
+export type DiscoveryJobStatus =
+    | "idle"
+    | "submitting"
+    | "polling"
+    | "awaiting_confirmation"
+    | "completed"
+    | "failed";
 
 export interface DiscoveryJobState {
     status: DiscoveryJobStatus;
