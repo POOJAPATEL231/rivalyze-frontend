@@ -10,8 +10,8 @@ interface RecCardProps {
  * yet, shown as a plain source count rather than wired to EvidenceChip
  * (which only resolves against the static mock evidence set). */
 export function RecCard({ recommendation }: RecCardProps) {
-    const evidenceCount = recommendation.evidence_ids.length;
-    const confidencePercent = Math.round(recommendation.confidence * 100);
+    const evidenceCount = recommendation?.evidence_ids?.length || 0;
+    const confidencePercent = Math.round(recommendation?.confidence * 100);
 
     return (
         <Card className="h-full">
