@@ -1,5 +1,7 @@
+import AppRouter from "@/Router";
+
 function App() {
-    return <>App</>;
+    return <AppRouter />;
 }
 
 export default App;
