@@ -27,21 +27,21 @@ function Cell({ cell }: { cell: HeadToHeadCell }) {
             <div className="flex flex-wrap items-center gap-1.5">
                 <button
                     type="button"
-                    onClick={() => cell.evidenceId && dispatch(openEvidence(cell.evidenceId))}
+                    onClick={() => cell?.evidenceId && dispatch(openEvidence(cell.evidenceId))}
                     className="text-left text-sm text-foreground hover:underline"
                 >
-                    {cell.text}
+                    {cell?.text}
                 </button>
-                {cell.badge && (
+                {cell?.badge && (
                     <Badge
-                        variant={cell.badge === "high-risk" ? "destructive" : "secondary"}
+                        variant={cell?.badge === "high-risk" ? "destructive" : "secondary"}
                         className="text-[10px]"
                     >
-                        {cell.badge === "high-risk" ? "High risk" : "New"}
+                        {cell?.badge === "high-risk" ? "High risk" : "New"}
                     </Badge>
                 )}
             </div>
-            {cell.evidenceId && <EvidenceChip evidenceId={cell.evidenceId} />}
+            {cell?.evidenceId && <EvidenceChip evidenceId={cell.evidenceId} />}
         </div>
     );
 }
@@ -66,6 +66,7 @@ export function HeadToHead() {
             <TableBody>
                 {ROWS.map((row) => {
                     const data = report.headToHead[row.key];
+
                     return (
                         <TableRow key={row.key}>
                             <TableCell className="align-top font-medium whitespace-normal text-muted-foreground">

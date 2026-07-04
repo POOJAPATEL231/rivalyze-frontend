@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 
 import { extractApiErrorMessage } from "@/lib/apiError";
 import { getRunStatus, startAnalysis } from "@/services/analyze";
@@ -49,6 +50,7 @@ function mapApiCompetitor(competitor: ApiCompetitor, index: number): Competitor 
 
 export function useDiscoveryJob() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const discoveryJob = useAppSelector((state) => state.analysis.discoveryJob);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const cancelledRef = useRef(false);
@@ -74,7 +76,7 @@ export function useDiscoveryJob() {
                         );
                         dispatch(setCompetitors(competitors));
                         dispatch(unlockStep("discovery"));
-                        dispatch(setStep("discovery"));
+                        navigate("/discovery");
                         dispatch(resetDiscoveryJob());
                         return;
                     }

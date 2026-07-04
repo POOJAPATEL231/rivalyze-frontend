@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { ArrowLeft } from "lucide-react";
 
 import { ChatBox } from "@/components/workspace/ChatBox";
@@ -33,6 +34,7 @@ const DOC_TEMPLATES: Omit<Doc, "id">[] = [
 
 export function WorkspaceView() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const [docs, setDocs] = useState<Doc[]>([]);
 
     function handleAddDoc() {
@@ -43,11 +45,7 @@ export function WorkspaceView() {
     return (
         <div className="mx-auto max-w-6xl space-y-6 px-4 py-12 sm:px-6 lg:px-8">
             <div className="space-y-4">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => dispatch(setStep("recommendations"))}
-                >
+                <Button variant="ghost" size="sm" onClick={() => navigate("/recommendations")}>
                     <ArrowLeft data-icon="inline-start" />
                     Back
                 </Button>

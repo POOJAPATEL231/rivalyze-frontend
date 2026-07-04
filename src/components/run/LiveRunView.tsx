@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { AgentLane } from "@/components/run/AgentLane";
+import { useNavigate } from "react-router";
 import { AgentLedger } from "@/components/run/AgentLedger";
 import { LowSignalWarning } from "@/components/run/LowSignalWarning";
 import { TelemetryBar } from "@/components/run/TelemetryBar";
@@ -71,6 +72,7 @@ const LANES: LaneConfig[] = [
 
 export function LiveRunView() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const { skip, lowSignalDetected } = useRunSimulation();
     const runEvents = useAppSelector((state) => state.analysis.runEvents);
     const laneStatuses = useAppSelector((state) => state.analysis.laneStatuses);
@@ -85,7 +87,7 @@ export function LiveRunView() {
 
     function handleOpenDashboard() {
         dispatch(unlockStep("dashboard"));
-        dispatch(setStep("dashboard"));
+        navigate("/dashboard");
     }
 
     return (
