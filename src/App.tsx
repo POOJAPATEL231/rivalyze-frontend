@@ -1,12 +1,7 @@
-import { AppShell } from "@/components/layout/AppShell";
-import Dashboard from "@/pages/Dashboard";
+import AnalysisFlow from "@/pages/AnalysisFlow";
 
 function App() {
-    return (
-        <AppShell>
-            <Dashboard />
-        </AppShell>
-    );
+    return <AnalysisFlow />;
 }
 
 export default App;
