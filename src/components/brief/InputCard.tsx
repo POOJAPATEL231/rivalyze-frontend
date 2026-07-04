@@ -89,7 +89,7 @@ export function InputCard() {
                             placeholder="What are you building, and who is it for?"
                             value={ideaDescription}
                             onChange={(e) => dispatch(setIdeaDescription(e.target.value))}
-                            className="min-h-24"
+                            className="min-h-24 w-full resize-none overflow-y-auto break-all"
                         />
                     </div>
                 )}

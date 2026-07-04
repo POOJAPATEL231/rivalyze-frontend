@@ -1,8 +1,10 @@
-import { Check, Lock } from "lucide-react";
+import { Check, Lock, Moon, Sun } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep } from "@/store/slices/analysisSlice";
+import { toggleTheme } from "@/store/slices/uiSlice";
 import type { AnalysisStep } from "@/types/analysis";
 
 interface StepConfig {
@@ -38,6 +40,7 @@ export function StepBar() {
     const dispatch = useAppDispatch();
     const currentStep = useAppSelector((state) => state.analysis.currentStep);
     const unlockedSteps = useAppSelector((state) => state.analysis.unlockedSteps);
+    const theme = useAppSelector((state) => state.ui.theme);
     const currentIndex = STEPS.findIndex((step) => step.id === currentStep);
 
     return (
@@ -182,6 +185,16 @@ export function StepBar() {
                     );
                 })}
             </div>
+
+            <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Toggle theme"
+                onClick={() => dispatch(toggleTheme())}
+                className="ml-auto shrink-0"
+            >
+                {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+            </Button>
         </nav>
     );
 }

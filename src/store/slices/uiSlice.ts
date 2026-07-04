@@ -9,7 +9,7 @@ interface UiState {
 
 const initialState: UiState = {
     sidebarOpen: true,
-    theme: "dark",
+    theme: "light",
 };
 
 const uiSlice = createSlice({
