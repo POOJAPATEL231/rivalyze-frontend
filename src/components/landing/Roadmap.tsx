@@ -30,7 +30,7 @@ export default function Roadmap() {
                                         <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
                                             {s.tag}
                                         </div>
-                                        <div className="mt-1 font-display text-sm font-semibold text-foreground">
+                                        <div className="mt-1 font-heading text-sm font-semibold text-foreground">
                                             {s.title}
                                         </div>
                                     </div>

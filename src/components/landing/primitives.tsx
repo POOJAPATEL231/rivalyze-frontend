@@ -75,7 +75,7 @@ export function SectionHeading({
         <Reveal className={center ? "text-center" : ""}>
             {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
             <h2
-                className={`font-display text-3xl font-semibold leading-tight text-foreground sm:text-4xl md:text-5xl ${center ? "mx-auto" : ""}`}
+                className={`font-heading text-3xl font-semibold leading-tight text-foreground sm:text-4xl md:text-5xl ${center ? "mx-auto" : ""}`}
             >
                 {title}
             </h2>
@@ -173,7 +173,7 @@ export function ConfidenceRing({
                 </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-display text-3xl font-semibold text-foreground">
+                <span className="font-heading text-3xl font-semibold text-foreground">
                     <Counter target={value} suffix="%" />
                 </span>
                 {label && <span className="mt-1 text-xs text-muted-foreground/70">{label}</span>}

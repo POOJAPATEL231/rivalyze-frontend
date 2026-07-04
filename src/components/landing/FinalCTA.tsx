@@ -11,7 +11,7 @@ export default function FinalCTA({ onStartAnalysis }: FinalCTAProps) {
             <div className="pointer-events-none absolute -bottom-32 right-1/4 h-96 w-96 rounded-full bg-chart-1/20 blur-[120px]" />
             <Container>
                 <Reveal className="relative text-center">
-                    <h2 className="mx-auto max-w-3xl font-display text-3xl font-semibold leading-tight text-foreground sm:text-4xl md:text-5xl">
+                    <h2 className="mx-auto max-w-3xl font-heading text-3xl font-semibold leading-tight text-foreground sm:text-4xl md:text-5xl">
                         Perplexity Gives You Answers.
                         <br />
                         <span className="text-gradient">Argus Gives You Decisions.</span>

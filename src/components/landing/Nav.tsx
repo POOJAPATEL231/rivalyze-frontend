@@ -26,7 +26,7 @@ export default function Nav({ onStartAnalysis }: NavProps) {
             <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
                 <a
                     href="#top"
-                    className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight text-foreground"
+                    className="flex items-center gap-2 font-heading text-lg font-semibold tracking-tight text-foreground"
                 >
                     <img
                         src="/brand/argus-icon.png"

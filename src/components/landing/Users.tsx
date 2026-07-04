@@ -31,7 +31,7 @@ export default function Users() {
                     {USERS.map((u, i) => (
                         <Reveal key={u.role} delay={i * 90}>
                             <GlassCard className="h-full">
-                                <h3 className="font-display text-lg font-semibold text-foreground">
+                                <h3 className="font-heading text-lg font-semibold text-foreground">
                                     {u.role}
                                 </h3>
                                 <p className="mt-3 text-sm text-muted-foreground">{u.outcome}</p>

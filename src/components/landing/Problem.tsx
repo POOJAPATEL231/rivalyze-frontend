@@ -28,7 +28,7 @@ export default function Problem() {
                         <Reveal key={c.title} delay={i * 100}>
                             <GlassCard className="h-full">
                                 <div className={`h-1 w-10 rounded-full ${c.bar}`} />
-                                <h3 className="mt-5 font-display text-xl font-semibold text-foreground">
+                                <h3 className="mt-5 font-heading text-xl font-semibold text-foreground">
                                     {c.title}
                                 </h3>
                                 <ul className="mt-4 space-y-2">
@@ -47,7 +47,7 @@ export default function Problem() {
                     ))}
                 </div>
                 <Reveal delay={300}>
-                    <p className="mx-auto mt-20 max-w-3xl text-center font-display text-2xl font-medium leading-snug text-foreground sm:text-3xl">
+                    <p className="mx-auto mt-20 max-w-3xl text-center font-heading text-2xl font-medium leading-snug text-foreground sm:text-3xl">
                         Leadership teams don't need more data.
                         <br />
                         <span className="text-gradient">They need defensible recommendations.</span>

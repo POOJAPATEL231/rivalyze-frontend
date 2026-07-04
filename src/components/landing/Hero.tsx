@@ -39,7 +39,7 @@ export default function Hero({ onStartAnalysis }: HeroProps) {
                         </div>
                     </Reveal>
                     <Reveal delay={80}>
-                        <h1 className="font-display text-4xl font-semibold leading-[1.08] text-foreground sm:text-5xl md:text-6xl">
+                        <h1 className="font-heading text-4xl font-semibold leading-[1.08] text-foreground sm:text-5xl md:text-6xl">
                             Stop Guessing What <span className="text-gradient">Competitors</span>{" "}
                             Are Doing.
                         </h1>
@@ -130,7 +130,7 @@ function GlassStat({
                 {eyebrow}
             </div>
             <div
-                className={`mt-2 font-display text-3xl font-semibold ${tone === "rose" ? "text-destructive" : "text-chart-1"}`}
+                className={`mt-2 font-heading text-3xl font-semibold ${tone === "rose" ? "text-destructive" : "text-chart-1"}`}
             >
                 {value}
             </div>
@@ -168,7 +168,7 @@ function GlassRing({ className = "", style }: { className?: string; style?: Reac
             <div className="mt-1 text-xs font-mono uppercase tracking-widest text-muted-foreground/70">
                 Confidence
             </div>
-            <div className="font-display text-lg font-semibold text-foreground">72%</div>
+            <div className="font-heading text-lg font-semibold text-foreground">72%</div>
         </div>
     );
 }

@@ -39,7 +39,7 @@ export default function Features() {
                                 <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 font-mono text-sm text-primary">
                                     {i + 1}
                                 </div>
-                                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">
+                                <h3 className="mt-5 font-heading text-lg font-semibold text-foreground">
                                     {f.title}
                                 </h3>
                                 <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>

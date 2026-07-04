@@ -50,7 +50,7 @@ export default function HowItWorks() {
                                             <span className="h-1.5 w-1.5 rounded-full bg-chart-1 live-dot" />{" "}
                                             Active
                                         </div>
-                                        <div className="mt-3 font-display text-sm font-semibold text-foreground">
+                                        <div className="mt-3 font-heading text-sm font-semibold text-foreground">
                                             {a.name}
                                         </div>
                                         <p className="mt-1 text-xs text-muted-foreground">
@@ -93,11 +93,11 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
     return (
         <Reveal>
             <div className="flex items-start gap-5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-display text-sm font-semibold text-primary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 font-heading text-sm font-semibold text-primary">
                     {n}
                 </div>
                 <div className="w-full">
-                    <h3 className="font-display text-xl font-semibold text-foreground">{title}</h3>
+                    <h3 className="font-heading text-xl font-semibold text-foreground">{title}</h3>
                     <div className="mt-5">{children}</div>
                 </div>
             </div>

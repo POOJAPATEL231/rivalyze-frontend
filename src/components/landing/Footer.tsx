@@ -12,7 +12,7 @@ export default function Footer() {
             <Container>
                 <div className="flex flex-wrap justify-between gap-12">
                     <div>
-                        <span className="flex items-center gap-2 font-display text-lg font-semibold text-foreground">
+                        <span className="flex items-center gap-2 font-heading text-lg font-semibold text-foreground">
                             <img
                                 src="/brand/argus-icon.png"
                                 alt=""
