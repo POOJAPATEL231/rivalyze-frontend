@@ -20,6 +20,7 @@ interface AnalysisState {
     domain: string;
     ideaDescription: string;
     competitors: Competitor[];
+    removedCompetitors: Competitor[];
     runStatus: RunStatus;
     runEvents: RunEvent[];
     telemetry: Telemetry;
@@ -38,6 +39,7 @@ const initialState: AnalysisState = {
     domain: "",
     ideaDescription: "",
     competitors: [],
+    removedCompetitors: [],
     runStatus: "idle",
     runEvents: [],
     telemetry: { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 },
@@ -78,11 +80,21 @@ const analysisSlice = createSlice({
         },
         setCompetitors(state, action: PayloadAction<Competitor[]>) {
             state.competitors = action.payload;
+            state.removedCompetitors = [];
         },
         removeCompetitor(state, action: PayloadAction<string>) {
-            state.competitors = state.competitors.filter(
-                (competitor) => competitor.id !== action.payload,
-            );
+            const index = state.competitors.findIndex((c) => c.id === action.payload);
+            if (index !== -1) {
+                state.removedCompetitors.push(state.competitors[index]);
+                state.competitors.splice(index, 1);
+            }
+        },
+        restoreCompetitor(state, action: PayloadAction<string>) {
+            const index = state.removedCompetitors.findIndex((c) => c.id === action.payload);
+            if (index !== -1) {
+                state.competitors.push(state.removedCompetitors[index]);
+                state.removedCompetitors.splice(index, 1);
+            }
         },
         setRunStatus(state, action: PayloadAction<RunStatus>) {
             state.runStatus = action.payload;
@@ -134,6 +146,7 @@ export const {
     setIdeaDescription,
     setCompetitors,
     removeCompetitor,
+    restoreCompetitor,
     setRunStatus,
     appendRunEvent,
     updateTelemetry,

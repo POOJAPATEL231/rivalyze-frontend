@@ -19,7 +19,6 @@ export function useRunSimulation() {
     const dispatch = useAppDispatch();
     const [lowSignalDetected, setLowSignalDetected] = useState(false);
     const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const appliedCountRef = useRef(0);
 
     function applyEntry(entry: RunScriptEntry) {
@@ -76,15 +75,8 @@ export function useRunSimulation() {
             setTimeout(() => applyEntry(entry), entry.delayMs),
         );
 
-        let seconds = 0;
-        intervalRef.current = setInterval(() => {
-            seconds += 1;
-            dispatch(updateTelemetry({ elapsedSeconds: seconds }));
-        }, 1000);
-
         return () => {
             timeoutsRef.current.forEach(clearTimeout);
-            if (intervalRef.current) clearInterval(intervalRef.current);
         };
         // Runs once per LiveRunView mount — re-entering the step is what should
         // restart it, not a dependency change mid-run.
@@ -93,7 +85,6 @@ export function useRunSimulation() {
 
     function skip() {
         timeoutsRef.current.forEach(clearTimeout);
-        if (intervalRef.current) clearInterval(intervalRef.current);
 
         // Only the entries that haven't fired yet — applying the whole script
         // unconditionally would duplicate ledger lines already appended.
