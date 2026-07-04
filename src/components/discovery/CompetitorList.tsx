@@ -1,10 +1,13 @@
 import { Plus, Rocket } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import { CompetitorRow } from "@/components/discovery/CompetitorRow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { extractApiErrorMessage } from "@/lib/apiError";
+import { confirmRun } from "@/services/analyze";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
     removeCompetitor,
@@ -18,10 +21,30 @@ export function CompetitorList() {
     const navigate = useNavigate();
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const removedCompetitors = useAppSelector((state) => state.analysis.removedCompetitors);
+    const jobId = useAppSelector((state) => state.analysis.discoveryJob.jobId);
+    const [isDeploying, setIsDeploying] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    function handleDeploy() {
-        dispatch(unlockStep("run"));
-        navigate("/run");
+    async function handleDeploy() {
+        if (!jobId) return;
+        setIsDeploying(true);
+        setError(null);
+        try {
+            await confirmRun(
+                jobId,
+                competitors.map((competitor) => ({
+                    name: competitor.name,
+                    category: competitor.relation ?? "direct",
+                    rationale: competitor.rationale ?? "",
+                })),
+            );
+            dispatch(unlockStep("run"));
+            navigate("/run");
+        } catch (err) {
+            setError(extractApiErrorMessage(err));
+        } finally {
+            setIsDeploying(false);
+        }
     }
 
     return (
@@ -49,13 +72,15 @@ export function CompetitorList() {
                         </p>
                     )}
 
+                    {error && <p className="text-sm text-destructive">{error}</p>}
+
                     <Button
                         size="lg"
                         disabled={competitors.length === 0}
                         onClick={handleDeploy}
                         className="mt-auto w-full shrink-0 bg-iris text-background hover:opacity-90"
                     >
-                        Deploy the agents
+                        {isDeploying ? "Deploying..." : "Deploy the agents"}
                         <Rocket data-icon="inline-end" />
                     </Button>
                 </CardContent>

@@ -8,7 +8,6 @@ import {
     discoveryJobFailed,
     discoveryJobPolling,
     discoveryJobSubmitting,
-    resetDiscoveryJob,
     setCompetitors,
     setStep,
     unlockStep,
@@ -77,7 +76,14 @@ export function useDiscoveryJob() {
                         dispatch(setCompetitors(competitors));
                         dispatch(unlockStep("discovery"));
                         navigate("/discovery");
-                        dispatch(resetDiscoveryJob());
+                        return;
+                    }
+
+                    // Already confirmed and finished — skip the review/Deploy
+                    // step entirely so confirm isn't called on it again.
+                    if (status.status === "completed") {
+                        dispatch(unlockStep("run"));
+                        navigate("/run");
                         return;
                     }
 
