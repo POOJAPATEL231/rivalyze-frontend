@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 import { Link } from "react-router";
+
+import { Button } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toggleTheme } from "@/store/slices/uiSlice";
 
 const LINKS = [
     { href: "#how-it-works", label: "How It Works" },
@@ -10,6 +15,8 @@ const LINKS = [
 
 export default function Nav() {
     const [scrolled, setScrolled] = useState(false);
+    const dispatch = useAppDispatch();
+    const theme = useAppSelector((state) => state.ui.theme);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 8);
@@ -46,6 +53,14 @@ export default function Nav() {
                     ))}
                 </div>
                 <div className="flex items-center gap-3">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Toggle theme"
+                        onClick={() => dispatch(toggleTheme())}
+                    >
+                        {theme === "dark" ? <Sun /> : <Moon />}
+                    </Button>
                     <Link
                         to="/login"
                         className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-muted-foreground"
