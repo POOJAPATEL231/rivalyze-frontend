@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="iris" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#189b7d" />
+      <stop offset="52%" stop-color="#a077f8" />
+      <stop offset="100%" stop-color="#b37f1e" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#iris)" />
+  <text
+    x="16"
+    y="22"
+    text-anchor="middle"
+    font-family="Georgia, serif"
+    font-size="18"
+    font-weight="700"
+    fill="#0b0713"
+  >R</text>
+</svg>
