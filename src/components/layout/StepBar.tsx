@@ -1,10 +1,10 @@
 import { Check, Lock, LogOut, Moon, Sun } from "lucide-react";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { logout as logoutApi } from "@/services/auth";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setStep } from "@/store/slices/analysisSlice";
 import { logout } from "@/store/slices/authSlice";
 import { toggleTheme } from "@/store/slices/uiSlice";
 import type { AnalysisStep } from "@/types/analysis";
@@ -40,6 +40,7 @@ const STEPS = [...WIZARD_STEPS, ...NAV_STEPS];
  * peer destinations, not sequential phases. */
 export function StepBar() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const currentStep = useAppSelector((state) => state.analysis.currentStep);
     const unlockedSteps = useAppSelector((state) => state.analysis.unlockedSteps);
     const theme = useAppSelector((state) => state.ui.theme);
@@ -96,7 +97,7 @@ export function StepBar() {
                                 type="button"
                                 disabled={!isUnlocked}
                                 aria-current={isActive ? "step" : undefined}
-                                onClick={() => dispatch(setStep(step.id))}
+                                onClick={() => navigate(`/${step.id}`)}
                                 className="group flex items-center gap-2 rounded-full py-1 pr-2.5 pl-1 transition-colors disabled:cursor-not-allowed"
                             >
                                 <span
@@ -159,7 +160,7 @@ export function StepBar() {
                             type="button"
                             disabled={!isUnlocked}
                             aria-current={isActive ? "step" : undefined}
-                            onClick={() => dispatch(setStep(step.id))}
+                            onClick={() => navigate(`/${step.id}`)}
                             className={cn(
                                 "flex items-center gap-1.5 rounded-full px-3 py-1.5 font-heading text-sm font-medium whitespace-nowrap transition-colors",
                                 isActive && "bg-primary text-primary-foreground",
