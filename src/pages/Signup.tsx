@@ -2,6 +2,7 @@ import { type FormEvent, useEffect, useState } from "react";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 
+import { TestimonialCarousel } from "@/components/auth/TestimonialCarousel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,7 +55,7 @@ export default function Signup() {
             <div className="pointer-events-none absolute inset-0 bg-background" />
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,color-mix(in_srgb,var(--primary)_45%,transparent)_0%,transparent_40%),radial-gradient(circle_at_90%_20%,color-mix(in_srgb,var(--chart-1)_30%,transparent)_0%,transparent_38%),radial-gradient(circle_at_85%_95%,color-mix(in_srgb,var(--success)_32%,transparent)_0%,transparent_40%),radial-gradient(circle_at_10%_90%,color-mix(in_srgb,var(--chart-4)_35%,transparent)_0%,transparent_35%)]" />
 
-            <div className="relative isolate grid w-full max-w-4xl overflow-hidden rounded-4xl border border-border bg-[color-mix(in_srgb,var(--card)_38%,transparent)] shadow-lg backdrop-blur-2xl lg:grid-cols-2">
+            <div className="relative isolate grid w-full max-w-5xl overflow-hidden rounded-4xl border border-border bg-[color-mix(in_srgb,var(--card)_38%,transparent)] shadow-lg backdrop-blur-2xl lg:min-h-[640px] lg:grid-cols-2">
                 <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-white/10 via-white/[0.02] to-transparent" />
                 <div className="relative z-10 p-8 sm:p-10">
                     <Link
@@ -142,18 +143,7 @@ export default function Signup() {
                             are saying.
                         </h2>
 
-                        <p className="mt-6 font-heading text-4xl text-primary/60">&ldquo;</p>
-                        <p className="-mt-4 text-sm text-muted-foreground">
-                            &ldquo;We finally see every move our competitors make before they even
-                            announce it.&rdquo;
-                        </p>
-
-                        <div className="mt-4">
-                            <p className="font-heading text-sm font-semibold text-foreground">
-                                Alex Rivera
-                            </p>
-                            <p className="text-xs text-muted-foreground">Head of Product, Nimbus</p>
-                        </div>
+                        <TestimonialCarousel />
 
                         <div className="mt-5 flex gap-3">
                             <span className="flex size-9 items-center justify-center rounded-full bg-destructive/15 text-destructive">
