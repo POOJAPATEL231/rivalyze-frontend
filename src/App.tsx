@@ -1,17 +1,7 @@
-import { useState } from "react";
-
-import { Splash } from "@/components/splash/Splash";
-import AnalysisFlow from "@/pages/AnalysisFlow";
+import AppRouter from "@/Router";
 
 function App() {
-    const [showSplash, setShowSplash] = useState(true);
-
-    return (
-        <>
-            {showSplash && <Splash onDismiss={() => setShowSplash(false)} />}
-            <AnalysisFlow />
-        </>
-    );
+    return <AppRouter />;
 }
 
 export default App;
