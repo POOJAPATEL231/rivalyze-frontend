@@ -14,6 +14,7 @@ import {
     setIdeaDescription,
     setInputMode,
 } from "@/store/slices/analysisSlice";
+import { hasUnsafeMarkup, isValidDomain } from "@/utils/textValidation";
 
 const COMPANY_EXAMPLES = [
     { name: "Notion", domain: "notion.so" },
@@ -24,6 +25,10 @@ const COMPANY_EXAMPLES = [
 const IDEA_EXAMPLE =
     "An AI copilot that plans and reorders grocery staples for busy families based on what they've already bought.";
 
+const MAX_NAME_LENGTH = 100;
+const MAX_DOMAIN_LENGTH = 253;
+const MAX_IDEA_LENGTH = 500;
+
 export function InputCard() {
     const dispatch = useAppDispatch();
     const inputMode = useAppSelector((state) => state.analysis.inputMode);
@@ -32,16 +37,44 @@ export function InputCard() {
     const ideaDescription = useAppSelector((state) => state.analysis.ideaDescription);
     const { startDiscovery, status, error } = useDiscoveryJob();
 
+    const validationError = (() => {
+        if (inputMode === "company") {
+            const name = companyName.trim();
+            if (!name) return null;
+            if (name.length > MAX_NAME_LENGTH)
+                return `Company name must be under ${MAX_NAME_LENGTH} characters.`;
+            if (hasUnsafeMarkup(companyName))
+                return "Company name can't contain HTML or script content.";
+            const site = domain.trim();
+            if (site) {
+                if (site.length > MAX_DOMAIN_LENGTH)
+                    return `Domain must be under ${MAX_DOMAIN_LENGTH} characters.`;
+                if (hasUnsafeMarkup(site)) return "Domain can't contain HTML or script content.";
+                if (!isValidDomain(site)) return "Enter a valid domain, e.g. notion.so.";
+            }
+            return null;
+        }
+        const idea = ideaDescription.trim();
+        if (!idea) return null;
+        if (idea.length > MAX_IDEA_LENGTH)
+            return `Idea description must be under ${MAX_IDEA_LENGTH} characters.`;
+        if (hasUnsafeMarkup(ideaDescription))
+            return "Idea description can't contain HTML or script content.";
+        return null;
+    })();
+
     const canStart =
-        inputMode === "company" ? companyName.trim().length > 0 : ideaDescription.trim().length > 0;
+        (inputMode === "company"
+            ? companyName.trim().length > 0
+            : ideaDescription.trim().length > 0) && validationError === null;
     const isBusy = status === "submitting" || status === "polling";
 
     function handleStart() {
         if (!canStart || isBusy) return;
         startDiscovery({
-            company: inputMode === "company" ? companyName : "",
-            domain: inputMode === "company" ? domain : "",
-            idea: inputMode === "idea" ? ideaDescription : null,
+            company: inputMode === "company" ? companyName.trim() : "",
+            domain: inputMode === "company" ? domain.trim() : "",
+            idea: inputMode === "idea" ? ideaDescription.trim() : null,
         });
     }
 
@@ -94,9 +127,13 @@ export function InputCard() {
                             placeholder="What are you building, and who is it for?"
                             value={ideaDescription}
                             disabled={isBusy}
+                            maxLength={MAX_IDEA_LENGTH}
                             onChange={(e) => dispatch(setIdeaDescription(e.target.value))}
                             className="min-h-24 w-full resize-none overflow-y-auto break-all"
                         />
+                        <p className="text-right text-xs text-muted-foreground">
+                            {ideaDescription.length}/{MAX_IDEA_LENGTH}
+                        </p>
                     </div>
                 )}
 
@@ -122,6 +159,7 @@ export function InputCard() {
                     )}
                 </div>
 
+                {validationError && <p className="text-sm text-destructive">{validationError}</p>}
                 {status === "failed" && error && (
                     <p className="text-sm text-destructive">{error}</p>
                 )}
