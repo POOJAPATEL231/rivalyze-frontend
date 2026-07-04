@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 const LINKS = [
     { href: "#how-it-works", label: "How It Works" },
@@ -7,18 +8,16 @@ const LINKS = [
     { href: "#roadmap", label: "Roadmap" },
 ];
 
-interface NavProps {
-    onStartAnalysis: () => void;
-}
-
-export default function Nav({ onStartAnalysis }: NavProps) {
+export default function Nav() {
     const [scrolled, setScrolled] = useState(false);
+
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 8);
         onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
+
     return (
         <nav
             className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${scrolled ? "glass" : "border-b border-transparent"}`}
@@ -46,13 +45,20 @@ export default function Nav({ onStartAnalysis }: NavProps) {
                         </a>
                     ))}
                 </div>
-                <button
-                    type="button"
-                    onClick={onStartAnalysis}
-                    className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-foreground transition-transform hover:-translate-y-0.5 hover:brightness-110"
-                >
-                    Start Analysis
-                </button>
+                <div className="flex items-center gap-3">
+                    <Link
+                        to="/login"
+                        className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-muted-foreground"
+                    >
+                        Login
+                    </Link>
+                    <Link
+                        to="/signup"
+                        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-foreground transition-transform hover:-translate-y-0.5 hover:brightness-110"
+                    >
+                        Sign Up
+                    </Link>
+                </div>
             </div>
         </nav>
     );

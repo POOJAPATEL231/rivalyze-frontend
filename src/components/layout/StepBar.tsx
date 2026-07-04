@@ -1,9 +1,10 @@
-import { Check, Lock, Moon, Sun } from "lucide-react";
+import { Check, Lock, LogOut, Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep } from "@/store/slices/analysisSlice";
+import { logout } from "@/store/slices/authSlice";
 import { toggleTheme } from "@/store/slices/uiSlice";
 import type { AnalysisStep } from "@/types/analysis";
 
@@ -194,6 +195,17 @@ export function StepBar() {
                 className="ml-auto shrink-0"
             >
                 {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+            </Button>
+
+            <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Log out"
+                title="Log out"
+                onClick={() => dispatch(logout())}
+                className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+            >
+                <LogOut className="size-5" />
             </Button>
         </nav>
     );

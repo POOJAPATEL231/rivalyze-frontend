@@ -21,7 +21,7 @@ interface SplashProps {
 export default function Splash({ onStartAnalysis }: SplashProps) {
     return (
         <div className="min-h-screen bg-background">
-            <Nav onStartAnalysis={onStartAnalysis} />
+            <Nav />
             <Hero onStartAnalysis={onStartAnalysis} />
             <TrustBar />
             <Problem />
