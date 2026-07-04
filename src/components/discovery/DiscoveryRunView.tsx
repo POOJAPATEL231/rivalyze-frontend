@@ -1,8 +1,9 @@
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert, Loader2 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 
 import { CompetitorList } from "@/components/discovery/CompetitorList";
 import { CompetitorRadar } from "@/components/discovery/CompetitorRadar";
+import { RadarLoader } from "@/components/discovery/RadarLoader";
 import { AgentLedger } from "@/components/run/AgentLedger";
 import { TelemetryBar } from "@/components/run/TelemetryBar";
 import { Button } from "@/components/ui/button";
@@ -25,20 +26,30 @@ export function DiscoveryRunView() {
         navigate("/dashboard");
     }
 
-    return (
-        <div className="mx-auto max-w-6xl space-y-6 px-4 py-12 sm:px-6 lg:px-8">
-            <div>
-                <h1 className="font-heading text-3xl font-semibold text-foreground">
-                    Five agents are on it
-                </h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                    Sit tight while Discovery, News, Product, Reviews, and the Strategist work the
-                    competitive set in parallel.
-                </p>
+    if (phase === "discovering") {
+        return (
+            <div className="mx-auto mt-12 flex min-h-[50vh] max-w-6xl flex-col items-center justify-center space-y-8 rounded-lg border border-accent bg-card py-8 shadow-sm px-4 text-center">
+                <RadarLoader
+                    companyLabel={companyName || "Your idea"}
+                    className="w-full max-w-[240px]"
+                />
+                <div className="flex flex-col items-center gap-3">
+                    <div className="flex items-center gap-2">
+                        <Loader2 className="size-5 animate-spin text-primary" />
+                        <h1 className="font-heading text-xl font-semibold text-foreground">
+                            Finding the top competitors...
+                        </h1>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        Scanning the web for direct and indirect alternatives
+                    </p>
+                </div>
             </div>
+        );
+    }
 
-            <TelemetryBar />
-
+    return (
+        <div className="mx-auto max-w-6xl space-y-12 px-4 py-12 sm:px-6 lg:px-8">
             {error && (
                 <div className="flex items-start gap-2 rounded-lg border border-dashed border-destructive/60 bg-destructive/10 p-3 text-xs text-destructive">
                     <TriangleAlert className="size-4 shrink-0" />
@@ -47,7 +58,7 @@ export function DiscoveryRunView() {
             )}
 
             {(phase === "awaiting_confirmation" || phase === "confirming") && (
-                <div className="space-y-4">
+                <div className="space-y-12">
                     <div>
                         <h2 className="font-heading text-2xl font-semibold text-foreground">
                             Here&rsquo;s who you&rsquo;re up against
@@ -67,9 +78,23 @@ export function DiscoveryRunView() {
                 </div>
             )}
 
-            <div className="w-full">
-                <AgentLedger />
-            </div>
+            {phase === "analyzing" && (
+                <>
+                    <div>
+                        <h1 className="font-heading text-3xl font-semibold text-foreground">
+                            Five agents are on it
+                        </h1>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Sit tight while Discovery, News, Product, Reviews, and the Strategist
+                            work the competitive set in parallel.
+                        </p>
+                    </div>
+                    <TelemetryBar />
+                    <div className="w-full">
+                        <AgentLedger />
+                    </div>
+                </>
+            )}
 
             {phase === "done" && (
                 <div className="flex flex-wrap items-center justify-end gap-3">
