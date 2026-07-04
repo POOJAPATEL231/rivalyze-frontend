@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 
 import { BriefView } from "@/components/brief/BriefView";
+import { DiscoveryView } from "@/components/discovery/DiscoveryView";
 import { EvidenceDrawer } from "@/components/evidence/EvidenceDrawer";
 import { StepBar } from "@/components/layout/StepBar";
 import { useAppSelector } from "@/store/hooks";
+
+const BUILT_STEPS = ["brief", "discovery"];
 
 export default function AnalysisFlow() {
     const step = useAppSelector((state) => state.analysis.currentStep);
@@ -19,7 +22,8 @@ export default function AnalysisFlow() {
         <div className="flex min-h-svh flex-col">
             <StepBar />
             {step === "brief" && <BriefView />}
-            {step !== "brief" && (
+            {step === "discovery" && <DiscoveryView />}
+            {!BUILT_STEPS.includes(step) && (
                 <div className="flex flex-1 items-center justify-center py-24 text-sm text-muted-foreground">
                     This step isn't built yet — check back after the next phase ships.
                 </div>
