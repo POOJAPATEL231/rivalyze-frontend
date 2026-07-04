@@ -1,0 +1,11 @@
+{
+    "navigationFallback": {
+        "rewrite": "/index.html",
+        "exclude": [
+            "/assets/*",
+            "/media/*",
+            "/brand/*",
+            "*.{svg,png,jpg,jpeg,gif,ico,css,js,json,txt,woff,woff2}"
+        ]
+    }
+}
