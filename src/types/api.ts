@@ -58,11 +58,23 @@ export interface ApiRunEvent {
     msg: string;
 }
 
-/** Poll shape for GET /api/v1/runs/{job_id}, polled every 2s. In this
- * vertical slice `result` holds the Discovery `ApiCompetitorSet`. */
+/** Poll shape for GET /api/v1/runs/{job_id}, polled every 2s.
+ *
+ * Two-phase pipeline: queued -> running_discovery -> awaiting_confirmation
+ * -> confirmed -> running_analysis -> completed | failed. `running` is only
+ * for rows written by the earlier single-phase slice. At
+ * `awaiting_confirmation`, `result.competitors` is the proposed rival set. */
 export interface ApiRunStatus {
     job_id: string;
-    status: "queued" | "running" | "completed" | "failed";
+    status:
+        | "queued"
+        | "running"
+        | "running_discovery"
+        | "awaiting_confirmation"
+        | "confirmed"
+        | "running_analysis"
+        | "completed"
+        | "failed";
     current_stage: string;
     events: ApiRunEvent[];
     result: ApiCompetitorSet | null;

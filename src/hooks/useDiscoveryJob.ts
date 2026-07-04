@@ -70,7 +70,7 @@ export function useDiscoveryJob() {
                 .then((status) => {
                     if (cancelledRef.current) return;
 
-                    if (status.status === "completed") {
+                    if (status.status === "awaiting_confirmation") {
                         const competitors = (status.result?.competitors ?? []).map(
                             mapApiCompetitor,
                         );
