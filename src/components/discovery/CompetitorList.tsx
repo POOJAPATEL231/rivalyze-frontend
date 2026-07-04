@@ -6,12 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-    removeCompetitor,
-    restoreCompetitor,
-    setStep,
-    unlockStep,
-} from "@/store/slices/analysisSlice";
+import { removeCompetitor, restoreCompetitor, unlockStep } from "@/store/slices/analysisSlice";
 
 export function CompetitorList() {
     const dispatch = useAppDispatch();

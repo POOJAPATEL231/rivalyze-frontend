@@ -10,7 +10,6 @@ import {
     discoveryJobSubmitting,
     resetDiscoveryJob,
     setCompetitors,
-    setStep,
     unlockStep,
 } from "@/store/slices/analysisSlice";
 import type { ApiAnalyzeRequest, ApiCompetitor } from "@/types/api";
@@ -19,7 +18,7 @@ import type { Competitor } from "@/types/competitor";
 const POLL_INTERVAL_MS = 2000;
 /** ~90s soft timeout so a stuck backend job fails visibly instead of
  * polling forever. */
-const MAX_POLLS = 45;
+const MAX_POLLS = 25;
 
 function slugify(name: string): string {
     return name

@@ -9,7 +9,6 @@ import {
     setCompetitors,
     setDomain,
     setReport,
-    setStep,
     unlockStep,
 } from "@/store/slices/analysisSlice";
 import type { AnalysisStep } from "@/types/analysis";

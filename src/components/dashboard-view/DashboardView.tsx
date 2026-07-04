@@ -9,7 +9,7 @@ import { SwotGrid } from "@/components/dashboard-view/SwotGrid";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setStep, unlockStep } from "@/store/slices/analysisSlice";
+import { unlockStep } from "@/store/slices/analysisSlice";
 
 export function DashboardView() {
     const dispatch = useAppDispatch();

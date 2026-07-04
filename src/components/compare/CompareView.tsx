@@ -8,8 +8,7 @@ import { Verdict } from "@/components/compare/Verdict";
 import { Button } from "@/components/ui/button";
 import { YOUR_ANGLE } from "@/data/compareData";
 import { cn } from "@/lib/utils";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setStep } from "@/store/slices/analysisSlice";
+import { useAppSelector } from "@/store/hooks";
 import type { Report } from "@/types/analysis";
 
 const H2H_ROWS: { key: keyof Report["headToHead"]; label: string }[] = [
@@ -20,7 +19,6 @@ const H2H_ROWS: { key: keyof Report["headToHead"]; label: string }[] = [
 ];
 
 export function CompareView() {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const report = useAppSelector((state) => state.analysis.report);
     const competitors = useAppSelector((state) => state.analysis.competitors);

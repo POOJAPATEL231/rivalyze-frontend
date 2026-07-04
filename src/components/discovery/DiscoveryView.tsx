@@ -4,11 +4,8 @@ import { useNavigate } from "react-router";
 import { CompetitorList } from "@/components/discovery/CompetitorList";
 import { CompetitorRadar } from "@/components/discovery/CompetitorRadar";
 import { Button } from "@/components/ui/button";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setStep } from "@/store/slices/analysisSlice";
-
+import { useAppSelector } from "@/store/hooks";
 export function DiscoveryView() {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const companyName = useAppSelector((state) => state.analysis.companyName);

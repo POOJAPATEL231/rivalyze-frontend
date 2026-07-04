@@ -15,7 +15,7 @@ import { TelemetryBar } from "@/components/run/TelemetryBar";
 import { Button } from "@/components/ui/button";
 import { useRunSimulation } from "@/hooks/useRunSimulation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setStep, unlockStep } from "@/store/slices/analysisSlice";
+import { unlockStep } from "@/store/slices/analysisSlice";
 import type { LaneId } from "@/types/analysis";
 
 interface LaneConfig {
