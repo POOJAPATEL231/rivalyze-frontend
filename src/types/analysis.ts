@@ -1,3 +1,5 @@
+import type { Recommendation } from "@/types/recommendation";
+
 export type AnalysisStep =
     | "brief"
     | "discovery"
@@ -114,4 +116,5 @@ export interface Report {
     sentiment: SentimentEntry[];
     opportunities: Opportunity[];
     sourceCategories: string[];
+    recommendations: Recommendation[];
 }

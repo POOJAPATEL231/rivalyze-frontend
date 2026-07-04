@@ -150,4 +150,54 @@ export const MOCK_REPORT: Omit<Report, "generatedAt"> = {
         },
     ],
     sourceCategories: ["Product pages", "Reviews", "Filings", "Forums", "Signal feeds"],
+    recommendations: [
+        {
+            id: "rec-counter-bundle",
+            title: "Ship a lightweight forecasting add-on",
+            description:
+                "Match Northwind's bundled forecasting with a scoped, lower-cost add-on rather than a blanket price cut — protects margin while closing the feature gap.",
+            type: "product",
+            relatedTo: "northwind",
+            confidence: 82,
+            sources: [],
+            evidenceIds: ["ev-threat-northwind"],
+            agentCount: 2,
+        },
+        {
+            id: "rec-apac-timing",
+            title: "Begin APAC market prep before Beacon lands",
+            description:
+                "Beacon is only just staffing up regionally. Early localized messaging and a distributor conversation now can anchor the category before they arrive.",
+            type: "expansion",
+            relatedTo: "beacon",
+            confidence: 74,
+            sources: [],
+            evidenceIds: ["ev-beacon-apac"],
+            agentCount: 2,
+        },
+        {
+            id: "rec-pulsemetrics-migration",
+            title: "Launch a migration offer for PulseMetrics SMB accounts",
+            description:
+                "Their pricing overhaul is actively pushing SMB accounts to shop around. A time-boxed migration incentive converts well while that window is open.",
+            type: "marketing",
+            relatedTo: "pulsemetrics",
+            confidence: 61,
+            sources: [],
+            evidenceIds: ["ev-opportunity-pulsemetrics"],
+            agentCount: 2,
+        },
+        {
+            id: "rec-vantage-reliability",
+            title: "Message against Vantage's support decline",
+            description:
+                "Early signal that alert-latency complaints are rising post-layoffs. Worth testing in competitive messaging, but treat it as a lead — not yet corroborated by a second source.",
+            type: "marketing",
+            relatedTo: "vantage",
+            confidence: 47,
+            sources: [],
+            evidenceIds: ["ev-vantage-support-slide"],
+            agentCount: 1,
+        },
+    ],
 };

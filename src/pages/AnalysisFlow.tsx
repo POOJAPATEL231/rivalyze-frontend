@@ -5,10 +5,11 @@ import { DashboardView } from "@/components/dashboard-view/DashboardView";
 import { DiscoveryView } from "@/components/discovery/DiscoveryView";
 import { EvidenceDrawer } from "@/components/evidence/EvidenceDrawer";
 import { StepBar } from "@/components/layout/StepBar";
+import { RecommendationsView } from "@/components/recommendations/RecommendationsView";
 import { LiveRunView } from "@/components/run/LiveRunView";
 import { useAppSelector } from "@/store/hooks";
 
-const BUILT_STEPS = ["brief", "discovery", "run", "dashboard"];
+const BUILT_STEPS = ["brief", "discovery", "run", "dashboard", "recommendations"];
 
 export default function AnalysisFlow() {
     const step = useAppSelector((state) => state.analysis.currentStep);
@@ -27,6 +28,7 @@ export default function AnalysisFlow() {
             {step === "discovery" && <DiscoveryView />}
             {step === "run" && <LiveRunView />}
             {step === "dashboard" && <DashboardView />}
+            {step === "recommendations" && <RecommendationsView />}
             {!BUILT_STEPS.includes(step) && (
                 <div className="flex flex-1 items-center justify-center py-24 text-sm text-muted-foreground">
                     This step isn't built yet — check back after the next phase ships.
