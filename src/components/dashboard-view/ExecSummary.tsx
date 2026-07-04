@@ -1,54 +1,31 @@
-import { EvidenceChip } from "@/components/evidence/EvidenceChip";
 import { cn } from "@/lib/utils";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { openEvidence } from "@/store/slices/analysisSlice";
-import type { Claim, ThreatLevel } from "@/types/analysis";
+import { useAppSelector } from "@/store/hooks";
+import type { ApiReportResponse } from "@/types/api";
 
-const THREAT_LEVEL_CONFIG: Record<ThreatLevel, { label: string; className: string }> = {
-    low: { label: "Low", className: "text-success" },
-    moderate: { label: "Moderate", className: "text-watch" },
-    elevated: { label: "Elevated", className: "text-watch" },
-    critical: { label: "Critical", className: "text-destructive" },
+const THREAT_LEVEL_CONFIG: Record<string, { label: string; className: string }> = {
+    LOW: { label: "Low", className: "text-success" },
+    MEDIUM: { label: "Medium", className: "text-watch" },
+    MODERATE: { label: "Moderate", className: "text-watch" },
+    ELEVATED: { label: "Elevated", className: "text-watch" },
+    HIGH: { label: "High", className: "text-destructive" },
+    CRITICAL: { label: "Critical", className: "text-destructive" },
 };
 
-interface ExecSummaryRowProps {
-    label: string;
-    claim: Claim;
+interface ExecSummaryProps {
+    report: ApiReportResponse;
 }
 
-function ExecSummaryRow({ label, claim }: ExecSummaryRowProps) {
-    const dispatch = useAppDispatch();
-
-    return (
-        <div className="flex flex-wrap items-start justify-between gap-3 border-t border-border py-3 first:border-t-0 first:pt-0">
-            <div className="space-y-1">
-                <p className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
-                    {label}
-                </p>
-                <button
-                    type="button"
-                    onClick={() => claim.evidenceId && dispatch(openEvidence(claim.evidenceId))}
-                    className="text-left text-sm text-foreground hover:underline"
-                >
-                    {claim.text}
-                </button>
-            </div>
-            {claim.evidenceId && <EvidenceChip evidenceId={claim.evidenceId} />}
-        </div>
-    );
-}
-
-/** Wide banner: threat level + run metadata on the left, sourced claim rows
+/** Wide banner: threat level + run metadata on the left, executive summary
  * on the right. Gradient border via a 1px iris-filled wrapper. */
-export function ExecSummary() {
-    const report = useAppSelector((state) => state.analysis.report);
+export function ExecSummary({ report }: ExecSummaryProps) {
     const companyName = useAppSelector((state) => state.analysis.companyName);
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const telemetry = useAppSelector((state) => state.analysis.telemetry);
 
-    if (!report) return null;
-
-    const level = THREAT_LEVEL_CONFIG[report.threatLevel];
+    const level = THREAT_LEVEL_CONFIG[report.threat_level.toUpperCase()] ?? {
+        label: report.threat_level,
+        className: "text-foreground",
+    };
 
     return (
         <div className="rounded-2xl bg-iris p-px">
@@ -61,15 +38,20 @@ export function ExecSummary() {
                         {level.label}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                        {companyName || "Your idea"} · {competitors.length} competitors tracked ·{" "}
-                        {telemetry.elapsedSeconds}s run · {telemetry.llmCalls} LLM calls
+                        {companyName || report.company || "Your idea"} · {competitors.length}{" "}
+                        competitors tracked · {telemetry.elapsedSeconds}s run · {telemetry.llmCalls}{" "}
+                        LLM calls
                     </p>
                 </div>
 
-                <div>
-                    <ExecSummaryRow label="Top threat" claim={report.topThreat} />
-                    <ExecSummaryRow label="Biggest opportunity" claim={report.biggestOpportunity} />
-                    <ExecSummaryRow label="Recommended action" claim={report.recommendedAction} />
+                <div className="space-y-2">
+                    <p className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                        Executive summary
+                    </p>
+                    <p className="text-sm text-foreground">{report.executive_summary}</p>
+                    <p className="font-mono text-[10px] text-muted-foreground">
+                        Generated {report.analysis_date}
+                    </p>
                 </div>
             </div>
         </div>

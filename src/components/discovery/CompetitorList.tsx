@@ -22,11 +22,21 @@ export function CompetitorList() {
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const removedCompetitors = useAppSelector((state) => state.analysis.removedCompetitors);
     const jobId = useAppSelector((state) => state.analysis.discoveryJob.jobId);
+    const jobStatus = useAppSelector((state) => state.analysis.discoveryJob.status);
     const [isDeploying, setIsDeploying] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     async function handleDeploy() {
         if (!jobId) return;
+
+        // Job already ran to completion (e.g. resumed mid-flow) — confirm
+        // was already accepted server-side, calling it again would 404/409.
+        if (jobStatus === "completed") {
+            dispatch(unlockStep("run"));
+            navigate("/run");
+            return;
+        }
+
         setIsDeploying(true);
         setError(null);
         try {
@@ -76,7 +86,7 @@ export function CompetitorList() {
 
                     <Button
                         size="lg"
-                        disabled={competitors.length === 0}
+                        disabled={competitors.length === 0 || !jobId || isDeploying}
                         onClick={handleDeploy}
                         className="mt-auto w-full shrink-0 bg-iris text-background hover:opacity-90"
                     >

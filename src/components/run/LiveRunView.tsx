@@ -10,10 +10,9 @@ import {
 import { AgentLane } from "@/components/run/AgentLane";
 import { useNavigate } from "react-router";
 import { AgentLedger } from "@/components/run/AgentLedger";
-import { LowSignalWarning } from "@/components/run/LowSignalWarning";
 import { TelemetryBar } from "@/components/run/TelemetryBar";
 import { Button } from "@/components/ui/button";
-import { useRunSimulation } from "@/hooks/useRunSimulation";
+import { useLiveRun } from "@/hooks/useLiveRun";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep, unlockStep } from "@/store/slices/analysisSlice";
 import type { LaneId } from "@/types/analysis";
@@ -73,7 +72,8 @@ const LANES: LaneConfig[] = [
 export function LiveRunView() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { skip, lowSignalDetected } = useRunSimulation();
+    const jobId = useAppSelector((state) => state.analysis.discoveryJob.jobId);
+    useLiveRun(jobId);
     const runEvents = useAppSelector((state) => state.analysis.runEvents);
     const laneStatuses = useAppSelector((state) => state.analysis.laneStatuses);
     const runStatus = useAppSelector((state) => state.analysis.runStatus);
@@ -104,8 +104,6 @@ export function LiveRunView() {
 
             <TelemetryBar />
 
-            {lowSignalDetected && <LowSignalWarning />}
-
             <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-[55fr_45fr]">
                 <div className="space-y-3">
                     {LANES.map((lane) => (
@@ -125,9 +123,6 @@ export function LiveRunView() {
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-3">
-                <Button variant="outline" onClick={skip} disabled={runStatus === "done"}>
-                    Skip animation
-                </Button>
                 <Button
                     size="lg"
                     disabled={runStatus !== "done"}

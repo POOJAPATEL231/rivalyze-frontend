@@ -3,6 +3,7 @@ import type {
     ApiAnalyzeRequest,
     ApiAnalyzeResponse,
     ApiCompetitor,
+    ApiReportResponse,
     ApiRunStatus,
 } from "@/types/api";
 
@@ -23,4 +24,9 @@ export async function confirmRun(
     await apiClient.post(`/api/v1/runs/${jobId}/confirm`, {
         confirmed_competitors: confirmedCompetitors,
     });
+}
+
+export async function getReport(runId: string): Promise<ApiReportResponse> {
+    const response = await apiClient.get<ApiReportResponse>(`/api/v1/reports/${runId}`);
+    return response.data;
 }

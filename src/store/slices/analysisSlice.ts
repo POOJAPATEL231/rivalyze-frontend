@@ -28,6 +28,7 @@ interface AnalysisState {
     telemetry: Telemetry;
     laneStatuses: Record<LaneId, LaneStatus>;
     report: Report | null;
+    runId: string | null;
     evidenceDrawer: { open: boolean; evidenceId: string | null };
 }
 
@@ -54,6 +55,7 @@ const initialState: AnalysisState = {
         strategist: "waiting",
     },
     report: null,
+    runId: null,
     evidenceDrawer: { open: false, evidenceId: null },
 };
 
@@ -109,6 +111,14 @@ const analysisSlice = createSlice({
             state.discoveryJob.status = "failed";
             state.discoveryJob.error = action.payload;
         },
+        discoveryJobResolved(
+            state,
+            action: PayloadAction<
+                Extract<DiscoveryJobState["status"], "awaiting_confirmation" | "completed">
+            >,
+        ) {
+            state.discoveryJob.status = action.payload;
+        },
         resetDiscoveryJob(state) {
             state.discoveryJob = { status: "idle", jobId: null, error: null };
         },
@@ -117,6 +127,9 @@ const analysisSlice = createSlice({
         },
         appendRunEvent(state, action: PayloadAction<RunEvent>) {
             state.runEvents.push(action.payload);
+        },
+        setRunEvents(state, action: PayloadAction<RunEvent[]>) {
+            state.runEvents = action.payload;
         },
         updateTelemetry(state, action: PayloadAction<Partial<Telemetry>>) {
             Object.assign(state.telemetry, action.payload);
@@ -127,6 +140,9 @@ const analysisSlice = createSlice({
         setReport(state, action: PayloadAction<Report | null>) {
             state.report = action.payload;
         },
+        setRunId(state, action: PayloadAction<string | null>) {
+            state.runId = action.payload;
+        },
         /** Re-entering Live Run should always start clean, not pile a fresh
          * script on top of a previously completed run's ledger/telemetry. */
         resetRun(state) {
@@ -134,6 +150,7 @@ const analysisSlice = createSlice({
             state.runEvents = [];
             state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
             state.report = null;
+            state.runId = null;
             state.laneStatuses = {
                 discovery: "done",
                 news: "queued",
@@ -166,12 +183,15 @@ export const {
     discoveryJobSubmitting,
     discoveryJobPolling,
     discoveryJobFailed,
+    discoveryJobResolved,
     resetDiscoveryJob,
     setRunStatus,
     appendRunEvent,
+    setRunEvents,
     updateTelemetry,
     setLaneStatus,
     setReport,
+    setRunId,
     resetRun,
     openEvidence,
     closeEvidence,

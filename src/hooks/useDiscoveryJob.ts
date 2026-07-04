@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
     discoveryJobFailed,
     discoveryJobPolling,
+    discoveryJobResolved,
     discoveryJobSubmitting,
     setCompetitors,
     setStep,
@@ -69,21 +70,17 @@ export function useDiscoveryJob() {
                 .then((status) => {
                     if (cancelledRef.current) return;
 
-                    if (status.status === "awaiting_confirmation") {
+                    if (
+                        status.status === "awaiting_confirmation" ||
+                        status.status === "completed"
+                    ) {
                         const competitors = (status.result?.competitors ?? []).map(
                             mapApiCompetitor,
                         );
                         dispatch(setCompetitors(competitors));
+                        dispatch(discoveryJobResolved(status.status));
                         dispatch(unlockStep("discovery"));
                         navigate("/discovery");
-                        return;
-                    }
-
-                    // Already confirmed and finished — skip the review/Deploy
-                    // step entirely so confirm isn't called on it again.
-                    if (status.status === "completed") {
-                        dispatch(unlockStep("run"));
-                        navigate("/run");
                         return;
                     }
 

@@ -1,12 +1,15 @@
 import { SentimentRow } from "@/components/dashboard-view/SentimentRow";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAppSelector } from "@/store/hooks";
+import type { ApiSentimentEntry } from "@/types/api";
 
-export function SentimentPanel() {
-    const report = useAppSelector((state) => state.analysis.report);
-    const competitors = useAppSelector((state) => state.analysis.competitors);
+interface SentimentPanelProps {
+    sentiment: Record<string, ApiSentimentEntry>;
+}
 
-    if (!report) return null;
+export function SentimentPanel({ sentiment }: SentimentPanelProps) {
+    const entries = Object.entries(sentiment);
+
+    if (entries.length === 0) return null;
 
     return (
         <Card>
@@ -14,20 +17,9 @@ export function SentimentPanel() {
                 <CardTitle>Rival sentiment</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-                {competitors.map((competitor) => {
-                    const entry = report.sentiment.find(
-                        (sentiment) => sentiment.competitorId === competitor.id,
-                    );
-                    if (!entry) return null;
-                    return (
-                        <SentimentRow
-                            key={competitor.id}
-                            name={competitor.name}
-                            score={entry.score}
-                            label={entry.label}
-                        />
-                    );
-                })}
+                {entries.map(([name, entry]) => (
+                    <SentimentRow key={name} name={name} score={entry.score} label={entry.label} />
+                ))}
                 <p className="border-t border-border pt-3 text-xs text-muted-foreground">
                     Scores blend review ratings, forum sentiment, and recent complaint volume —
                     0.65+ reads positive, under 0.50 signals real friction.
