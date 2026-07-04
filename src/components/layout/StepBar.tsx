@@ -1,5 +1,12 @@
-import { Check, Lock, LogOut, Moon, Sun } from "lucide-react";
+import { Check, Lock, LogOut, Moon, Sun, MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -62,7 +69,7 @@ export function StepBar() {
     return (
         <nav
             aria-label="Analysis progress"
-            className="glass sticky top-0 z-50 flex shrink-0 items-center gap-5 overflow-x-auto px-6 py-3"
+            className="glass sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6"
         >
             <a
                 href="/"
@@ -76,7 +83,8 @@ export function StepBar() {
                 Argus
             </a>
 
-            <ol className="flex shrink-0 items-center">
+            {/* Wizard rail — always visible. Labels hide below md, circles shrink below md */}
+            <ol className="flex min-w-0 flex-1 items-center">
                 {WIZARD_STEPS.map((step, index) => {
                     const isActive = step.id === currentStep;
                     const isUnlocked = unlockedSteps.includes(step.id);
@@ -88,7 +96,7 @@ export function StepBar() {
                                 <div
                                     aria-hidden
                                     className={cn(
-                                        "h-px w-6 shrink-0 transition-colors duration-500 sm:w-10",
+                                        "h-px min-w-3 flex-1 transition-colors duration-500 min-[960px]:min-w-6 min-[1430px]:min-w-10",
                                         index <= currentIndex ? "bg-primary" : "bg-border",
                                     )}
                                 />
@@ -97,12 +105,13 @@ export function StepBar() {
                                 type="button"
                                 disabled={!isUnlocked}
                                 aria-current={isActive ? "step" : undefined}
+                                aria-label={step.label}
                                 onClick={() => navigate(`/${step.id}`)}
-                                className="group flex items-center gap-2 rounded-full py-1 pr-2.5 pl-1 transition-colors disabled:cursor-not-allowed"
+                                className="group flex items-center gap-2 rounded-full py-1 pr-1 pl-0.5 transition-colors disabled:cursor-not-allowed min-[960px]:pr-2.5 min-[960px]:pl-1"
                             >
                                 <span
                                     className={cn(
-                                        "relative flex size-7 shrink-0 items-center justify-center rounded-full border font-mono text-[11px] tabular-nums transition-all duration-300",
+                                        "relative flex size-6 shrink-0 items-center justify-center rounded-full border font-mono text-[10px] tabular-nums transition-all duration-300 min-[960px]:size-7 min-[960px]:text-[11px]",
                                         isActive &&
                                             "scale-110 border-primary bg-primary text-primary-foreground shadow-glow",
                                         !isActive &&
@@ -120,16 +129,17 @@ export function StepBar() {
                                         <span className="absolute inset-0 animate-ping rounded-full bg-primary/40" />
                                     )}
                                     {isDone ? (
-                                        <Check className="size-3.5" />
+                                        <Check className="size-3 min-[960px]:size-3.5" />
                                     ) : !isUnlocked ? (
-                                        <Lock className="size-3" />
+                                        <Lock className="size-2.5 min-[960px]:size-3" />
                                     ) : (
                                         step.number
                                     )}
                                 </span>
+                                {/* Labels only show at md+ */}
                                 <span
                                     className={cn(
-                                        "hidden font-heading text-sm font-medium whitespace-nowrap sm:inline",
+                                        "hidden font-heading text-sm font-medium whitespace-nowrap min-[960px]:inline",
                                         isActive
                                             ? "text-foreground"
                                             : isUnlocked
@@ -145,9 +155,62 @@ export function StepBar() {
                 })}
             </ol>
 
-            <div aria-hidden className="h-6 w-px shrink-0 bg-border" />
+            {/* NAV_STEPS dropdown — visible below xl */}
+            <div className="flex shrink-0 items-center min-[1430px]:hidden">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="gap-1 rounded-full font-heading text-sm text-muted-foreground hover:text-foreground"
+                        >
+                            <MoreHorizontal className="size-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-44">
+                        {NAV_STEPS.map((step, i) => {
+                            const index = WIZARD_STEPS.length + i;
+                            const isActive = step.id === currentStep;
+                            const isUnlocked = unlockedSteps.includes(step.id);
+                            const isDone = isUnlocked && index < currentIndex;
+                            return (
+                                <DropdownMenuItem
+                                    key={step.id}
+                                    disabled={!isUnlocked}
+                                    onClick={() => navigate(`/${step.id}`)}
+                                    className={cn(
+                                        "cursor-pointer font-heading text-sm flex items-center justify-between gap-3",
+                                        isActive &&
+                                            "bg-primary/10 font-semibold text-primary focus:bg-primary/10 focus:text-primary",
+                                        !isActive && isDone && "text-success focus:text-success",
+                                        !isUnlocked && "text-muted-foreground/50",
+                                    )}
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <span className="w-3">
+                                            {isDone ? (
+                                                <Check className="size-3" />
+                                            ) : !isUnlocked ? (
+                                                <Lock className="size-3" />
+                                            ) : null}
+                                        </span>
+                                        {step.label}
+                                    </span>
+                                    {step.stretch && (
+                                        <span className="flex size-3.5 items-center justify-center rounded-full bg-watch text-[9px] font-bold text-watch-foreground">
+                                            S
+                                        </span>
+                                    )}
+                                </DropdownMenuItem>
+                            );
+                        })}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
 
-            <div className="flex items-center gap-1 overflow-x-auto">
+            <div aria-hidden className="hidden h-6 w-px shrink-0 bg-border min-[1430px]:block" />
+
+            <div className="hidden shrink-0 items-center gap-1 min-[1430px]:flex">
                 {NAV_STEPS.map((step, i) => {
                     const index = WIZARD_STEPS.length + i;
                     const isActive = step.id === currentStep;
