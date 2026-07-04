@@ -1,25 +1,22 @@
-import type { AuthResponse, LoginCredentials, SignupCredentials } from "@/types/auth";
+import { apiClient } from "@/services/api";
+import type {
+    ApiLoginRequest,
+    ApiSignupRequest,
+    ApiTokenResponse,
+    ApiRefreshRequest,
+} from "@/types/api";
 
-const MOCK_DELAY_MS = 800;
-
-function delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+export async function signup(payload: ApiSignupRequest): Promise<ApiTokenResponse> {
+    const response = await apiClient.post<ApiTokenResponse>("/api/v1/auth/signup", payload);
+    return response.data;
 }
 
-export async function login(credentials: LoginCredentials): Promise<AuthResponse> {
-    await delay(MOCK_DELAY_MS);
-
-    return {
-        user: { email: credentials.email },
-        token: `mock-jwt-${Date.now()}`,
-    };
+export async function login(payload: ApiLoginRequest): Promise<ApiTokenResponse> {
+    const response = await apiClient.post<ApiTokenResponse>("/api/v1/auth/login", payload);
+    return response.data;
 }
 
-export async function signup(credentials: SignupCredentials): Promise<AuthResponse> {
-    await delay(MOCK_DELAY_MS);
-
-    return {
-        user: { email: credentials.email },
-        token: `mock-jwt-${Date.now()}`,
-    };
+export async function logout(refreshToken: string): Promise<void> {
+    const payload: ApiRefreshRequest = { refresh_token: refreshToken };
+    await apiClient.post("/api/v1/auth/logout", payload);
 }

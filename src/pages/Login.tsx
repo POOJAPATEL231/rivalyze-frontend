@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { extractApiErrorMessage } from "@/lib/apiError";
 import { login } from "@/services/auth";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearError, loginFailure, loginStart, loginSuccess } from "@/store/slices/authSlice";
@@ -29,11 +30,17 @@ export default function Login() {
         e.preventDefault();
         dispatch(loginStart());
         try {
-            const response = await login({ email, password });
-            dispatch(loginSuccess(response));
+            const tokens = await login({ email, password });
+            dispatch(
+                loginSuccess({
+                    user: { email },
+                    accessToken: tokens.access_token,
+                    refreshToken: tokens.refresh_token,
+                }),
+            );
             navigate(from, { replace: true });
         } catch (err) {
-            dispatch(loginFailure(err instanceof Error ? err.message : "Login failed"));
+            dispatch(loginFailure(extractApiErrorMessage(err)));
         }
     };
 

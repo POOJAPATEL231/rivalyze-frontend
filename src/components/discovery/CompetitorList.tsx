@@ -4,7 +4,6 @@ import { CompetitorRow } from "@/components/discovery/CompetitorRow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { competitors as seedCompetitors } from "@/data/competitors";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
     removeCompetitor,
@@ -30,7 +29,7 @@ export function CompetitorList() {
                     <CardTitle>Confirmed competitor set</CardTitle>
                     <CardAction>
                         <Badge variant="secondary" className="font-mono">
-                            {competitors.length} of {seedCompetitors.length}
+                            {competitors.length} of {competitors.length + removedCompetitors.length}
                         </Badge>
                     </CardAction>
                 </CardHeader>
