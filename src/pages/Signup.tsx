@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { extractApiErrorMessage } from "@/lib/apiError";
 import { signup } from "@/services/auth";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearError, signupFailure, signupStart, signupSuccess } from "@/store/slices/authSlice";
+
+const MIN_PASSWORD_LENGTH = 8;
 
 export default function Signup() {
     const dispatch = useAppDispatch();
@@ -20,6 +23,7 @@ export default function Signup() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const passwordTooShort = password.length > 0 && password.length < MIN_PASSWORD_LENGTH;
 
     useEffect(() => {
         dispatch(clearError());
@@ -27,13 +31,20 @@ export default function Signup() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        if (password.length < MIN_PASSWORD_LENGTH) return;
         dispatch(signupStart());
         try {
-            const response = await signup({ email, password });
-            dispatch(signupSuccess(response));
+            const tokens = await signup({ email, password });
+            dispatch(
+                signupSuccess({
+                    user: { email },
+                    accessToken: tokens.access_token,
+                    refreshToken: tokens.refresh_token,
+                }),
+            );
             navigate(from, { replace: true });
         } catch (err) {
-            dispatch(signupFailure(err instanceof Error ? err.message : "Signup failed"));
+            dispatch(signupFailure(extractApiErrorMessage(err)));
         }
     };
 
@@ -86,10 +97,21 @@ export default function Signup() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
+                                    minLength={MIN_PASSWORD_LENGTH}
                                     autoComplete="new-password"
                                 />
+                                {passwordTooShort && (
+                                    <p className="text-xs text-muted-foreground">
+                                        At least {MIN_PASSWORD_LENGTH} characters.
+                                    </p>
+                                )}
                             </div>
-                            <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                size="lg"
+                                disabled={isLoading || password.length < MIN_PASSWORD_LENGTH}
+                            >
                                 {isLoading ? "Creating account…" : "Create account"}
                             </Button>
                         </form>

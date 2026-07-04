@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 
 import { ExampleChip } from "@/components/brief/ExampleChip";
 import { ModeSwitch } from "@/components/brief/ModeSwitch";
@@ -6,16 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { competitors as seedCompetitors } from "@/data/competitors";
+import { useDiscoveryJob } from "@/hooks/useDiscoveryJob";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
     setCompanyName,
-    setCompetitors,
     setDomain,
     setIdeaDescription,
     setInputMode,
-    setStep,
-    unlockStep,
 } from "@/store/slices/analysisSlice";
 
 const COMPANY_EXAMPLES = [
@@ -33,23 +30,29 @@ export function InputCard() {
     const companyName = useAppSelector((state) => state.analysis.companyName);
     const domain = useAppSelector((state) => state.analysis.domain);
     const ideaDescription = useAppSelector((state) => state.analysis.ideaDescription);
+    const { startDiscovery, status, error } = useDiscoveryJob();
 
     const canStart =
         inputMode === "company" ? companyName.trim().length > 0 : ideaDescription.trim().length > 0;
+    const isBusy = status === "submitting" || status === "polling";
 
     function handleStart() {
-        if (!canStart) return;
-        // No discovery agent exists yet, so seed the Discovery view with the
-        // mock competitor set here rather than leaving it empty.
-        dispatch(setCompetitors(seedCompetitors));
-        dispatch(unlockStep("discovery"));
-        dispatch(setStep("discovery"));
+        if (!canStart || isBusy) return;
+        startDiscovery({
+            company: inputMode === "company" ? companyName : "",
+            domain: inputMode === "company" ? domain : "",
+            idea: inputMode === "idea" ? ideaDescription : null,
+        });
     }
 
     return (
         <Card>
             <CardContent className="space-y-4">
-                <ModeSwitch value={inputMode} onChange={(mode) => dispatch(setInputMode(mode))} />
+                <ModeSwitch
+                    value={inputMode}
+                    onChange={(mode) => dispatch(setInputMode(mode))}
+                    disabled={isBusy}
+                />
 
                 {inputMode === "company" ? (
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -64,6 +67,7 @@ export function InputCard() {
                                 id="brief-company-name"
                                 placeholder="e.g. Notion"
                                 value={companyName}
+                                disabled={isBusy}
                                 onChange={(e) => dispatch(setCompanyName(e.target.value))}
                             />
                         </div>
@@ -75,6 +79,7 @@ export function InputCard() {
                                 id="brief-domain"
                                 placeholder="e.g. notion.so"
                                 value={domain}
+                                disabled={isBusy}
                                 onChange={(e) => dispatch(setDomain(e.target.value))}
                             />
                         </div>
@@ -88,6 +93,7 @@ export function InputCard() {
                             id="brief-idea"
                             placeholder="What are you building, and who is it for?"
                             value={ideaDescription}
+                            disabled={isBusy}
                             onChange={(e) => dispatch(setIdeaDescription(e.target.value))}
                             className="min-h-24 w-full resize-none overflow-y-auto break-all"
                         />
@@ -100,6 +106,7 @@ export function InputCard() {
                             <ExampleChip
                                 key={example.name}
                                 label={example.name}
+                                disabled={isBusy}
                                 onClick={() => {
                                     dispatch(setCompanyName(example.name));
                                     dispatch(setDomain(example.domain));
@@ -109,19 +116,33 @@ export function InputCard() {
                     ) : (
                         <ExampleChip
                             label="Try an example idea"
+                            disabled={isBusy}
                             onClick={() => dispatch(setIdeaDescription(IDEA_EXAMPLE))}
                         />
                     )}
                 </div>
 
+                {status === "failed" && error && (
+                    <p className="text-sm text-destructive">{error}</p>
+                )}
+
                 <Button
                     size="lg"
-                    disabled={!canStart}
+                    disabled={!canStart || isBusy}
                     onClick={handleStart}
                     className="w-full bg-iris text-background hover:opacity-90"
                 >
-                    Start intelligence scan
-                    <ArrowRight data-icon="inline-end" />
+                    {isBusy ? (
+                        <>
+                            <Loader2 className="animate-spin" data-icon="inline-start" />
+                            Discovering competitors&hellip;
+                        </>
+                    ) : (
+                        <>
+                            Start intelligence scan
+                            <ArrowRight data-icon="inline-end" />
+                        </>
+                    )}
                 </Button>
             </CardContent>
         </Card>

@@ -3,6 +3,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Competitor } from "@/types/competitor";
 import type {
     AnalysisStep,
+    DiscoveryJobState,
     InputMode,
     LaneId,
     LaneStatus,
@@ -21,6 +22,7 @@ interface AnalysisState {
     ideaDescription: string;
     competitors: Competitor[];
     removedCompetitors: Competitor[];
+    discoveryJob: DiscoveryJobState;
     runStatus: RunStatus;
     runEvents: RunEvent[];
     telemetry: Telemetry;
@@ -40,6 +42,7 @@ const initialState: AnalysisState = {
     ideaDescription: "",
     competitors: [],
     removedCompetitors: [],
+    discoveryJob: { status: "idle", jobId: null, error: null },
     runStatus: "idle",
     runEvents: [],
     telemetry: { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 },
@@ -96,6 +99,19 @@ const analysisSlice = createSlice({
                 state.removedCompetitors.splice(index, 1);
             }
         },
+        discoveryJobSubmitting(state) {
+            state.discoveryJob = { status: "submitting", jobId: null, error: null };
+        },
+        discoveryJobPolling(state, action: PayloadAction<string>) {
+            state.discoveryJob = { status: "polling", jobId: action.payload, error: null };
+        },
+        discoveryJobFailed(state, action: PayloadAction<string>) {
+            state.discoveryJob.status = "failed";
+            state.discoveryJob.error = action.payload;
+        },
+        resetDiscoveryJob(state) {
+            state.discoveryJob = { status: "idle", jobId: null, error: null };
+        },
         setRunStatus(state, action: PayloadAction<RunStatus>) {
             state.runStatus = action.payload;
         },
@@ -147,6 +163,10 @@ export const {
     setCompetitors,
     removeCompetitor,
     restoreCompetitor,
+    discoveryJobSubmitting,
+    discoveryJobPolling,
+    discoveryJobFailed,
+    resetDiscoveryJob,
     setRunStatus,
     appendRunEvent,
     updateTelemetry,

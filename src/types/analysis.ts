@@ -14,6 +14,14 @@ export type InputMode = "company" | "idea";
 
 export type RunStatus = "idle" | "running" | "done";
 
+export type DiscoveryJobStatus = "idle" | "submitting" | "polling" | "failed";
+
+export interface DiscoveryJobState {
+    status: DiscoveryJobStatus;
+    jobId: string | null;
+    error: string | null;
+}
+
 export type LaneId = "discovery" | "news" | "product" | "reviews" | "strategist";
 
 export type LaneStatus = "queued" | "waiting" | "running" | "done";

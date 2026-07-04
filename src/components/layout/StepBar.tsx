@@ -2,6 +2,7 @@ import { Check, Lock, LogOut, Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { logout as logoutApi } from "@/services/auth";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep } from "@/store/slices/analysisSlice";
 import { logout } from "@/store/slices/authSlice";
@@ -43,6 +44,19 @@ export function StepBar() {
     const unlockedSteps = useAppSelector((state) => state.analysis.unlockedSteps);
     const theme = useAppSelector((state) => state.ui.theme);
     const currentIndex = STEPS.findIndex((step) => step.id === currentStep);
+    const refreshToken = useAppSelector((state) => state.auth.refreshToken);
+
+    async function handleLogout() {
+        if (refreshToken) {
+            try {
+                await logoutApi(refreshToken);
+            } catch {
+                // Best-effort — a network blip shouldn't trap the user in a
+                // logged-in UI state, the local session clears regardless.
+            }
+        }
+        dispatch(logout());
+    }
 
     return (
         <nav
@@ -202,7 +216,7 @@ export function StepBar() {
                 size="icon"
                 aria-label="Log out"
                 title="Log out"
-                onClick={() => dispatch(logout())}
+                onClick={handleLogout}
                 className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
             >
                 <LogOut className="size-5" />

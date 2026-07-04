@@ -1,35 +1,44 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import type { AuthUser } from "@/types/auth";
+import type { AuthTokens, AuthUser } from "@/types/auth";
 
-const TOKEN_KEY = "rivalyze_auth_token";
-const USER_KEY = "rivalyze_auth_user";
+const SESSION_KEY = "rivalyze_auth_session";
 
-function loadPersistedAuth(): { user: AuthUser | null; token: string | null } {
+interface PersistedSession {
+    user: AuthUser;
+    accessToken: string;
+    refreshToken: string;
+}
+
+function loadPersistedSession(): PersistedSession | null {
     try {
-        const token = localStorage.getItem(TOKEN_KEY);
-        const raw = localStorage.getItem(USER_KEY);
-        const user = raw ? (JSON.parse(raw) as AuthUser) : null;
-        return { user, token };
+        const raw = localStorage.getItem(SESSION_KEY);
+        return raw ? (JSON.parse(raw) as PersistedSession) : null;
     } catch {
-        return { user: null, token: null };
+        return null;
     }
+}
+
+function persistSession(session: PersistedSession) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
 interface AuthState {
     user: AuthUser | null;
-    token: string | null;
+    accessToken: string | null;
+    refreshToken: string | null;
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
 }
 
-const persisted = loadPersistedAuth();
+const persisted = loadPersistedSession();
 
 const initialState: AuthState = {
-    user: persisted.user,
-    token: persisted.token,
-    isAuthenticated: !!persisted.token,
+    user: persisted?.user ?? null,
+    accessToken: persisted?.accessToken ?? null,
+    refreshToken: persisted?.refreshToken ?? null,
+    isAuthenticated: !!persisted,
     isLoading: false,
     error: null,
 };
@@ -42,13 +51,13 @@ const authSlice = createSlice({
             state.isLoading = true;
             state.error = null;
         },
-        loginSuccess(state, action: PayloadAction<{ user: AuthUser; token: string }>) {
+        loginSuccess(state, action: PayloadAction<{ user: AuthUser } & AuthTokens>) {
             state.isLoading = false;
             state.isAuthenticated = true;
             state.user = action.payload.user;
-            state.token = action.payload.token;
-            localStorage.setItem(TOKEN_KEY, action.payload.token);
-            localStorage.setItem(USER_KEY, JSON.stringify(action.payload.user));
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
+            persistSession(action.payload);
         },
         loginFailure(state, action: PayloadAction<string>) {
             state.isLoading = false;
@@ -58,25 +67,33 @@ const authSlice = createSlice({
             state.isLoading = true;
             state.error = null;
         },
-        signupSuccess(state, action: PayloadAction<{ user: AuthUser; token: string }>) {
+        signupSuccess(state, action: PayloadAction<{ user: AuthUser } & AuthTokens>) {
             state.isLoading = false;
             state.isAuthenticated = true;
             state.user = action.payload.user;
-            state.token = action.payload.token;
-            localStorage.setItem(TOKEN_KEY, action.payload.token);
-            localStorage.setItem(USER_KEY, JSON.stringify(action.payload.user));
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
+            persistSession(action.payload);
         },
         signupFailure(state, action: PayloadAction<string>) {
             state.isLoading = false;
             state.error = action.payload;
         },
+        /** Dispatched by the api client's response interceptor after a
+         * silent token refresh — leaves `user` untouched. */
+        tokensRefreshed(state, action: PayloadAction<AuthTokens>) {
+            if (!state.user) return;
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
+            persistSession({ user: state.user, ...action.payload });
+        },
         logout(state) {
             state.user = null;
-            state.token = null;
+            state.accessToken = null;
+            state.refreshToken = null;
             state.isAuthenticated = false;
             state.error = null;
-            localStorage.removeItem(TOKEN_KEY);
-            localStorage.removeItem(USER_KEY);
+            localStorage.removeItem(SESSION_KEY);
         },
         clearError(state) {
             state.error = null;
@@ -91,6 +108,7 @@ export const {
     signupStart,
     signupSuccess,
     signupFailure,
+    tokensRefreshed,
     logout,
     clearError,
 } = authSlice.actions;
