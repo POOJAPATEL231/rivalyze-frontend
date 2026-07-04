@@ -83,13 +83,43 @@ const analysisSlice = createSlice({
             state.inputMode = action.payload;
         },
         setCompanyName(state, action: PayloadAction<string>) {
+            const prev = state.companyName;
             state.companyName = action.payload;
+            // Invalidate previous analysis when input changes on Brief
+            if (prev !== action.payload) {
+                state.unlockedSteps = ["brief", "history"];
+                state.competitors = [];
+                state.removedCompetitors = [];
+                state.jobId = null;
+                state.runStatus = "idle";
+                state.runEvents = [];
+                state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
+                state.report = null;
+                state.runId = null;
+                state.apiReport = null;
+                state.apiReportRunId = null;
+            }
         },
         setDomain(state, action: PayloadAction<string>) {
             state.domain = action.payload;
         },
         setIdeaDescription(state, action: PayloadAction<string>) {
+            const prev = state.ideaDescription;
             state.ideaDescription = action.payload;
+            // Invalidate previous analysis when input changes on Brief
+            if (prev !== action.payload) {
+                state.unlockedSteps = ["brief", "history"];
+                state.competitors = [];
+                state.removedCompetitors = [];
+                state.jobId = null;
+                state.runStatus = "idle";
+                state.runEvents = [];
+                state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
+                state.report = null;
+                state.runId = null;
+                state.apiReport = null;
+                state.apiReportRunId = null;
+            }
         },
         setCompetitors(state, action: PayloadAction<Competitor[]>) {
             state.competitors = action.payload;
