@@ -45,13 +45,6 @@ export function InputCard() {
                 return `Company name must be under ${MAX_NAME_LENGTH} characters.`;
             if (hasUnsafeMarkup(companyName))
                 return "Company name can't contain HTML or script content.";
-            const site = domain.trim();
-            if (site) {
-                if (site.length > MAX_DOMAIN_LENGTH)
-                    return `Domain must be under ${MAX_DOMAIN_LENGTH} characters.`;
-                if (hasUnsafeMarkup(site)) return "Domain can't contain HTML or script content.";
-                if (!isValidDomain(site)) return "Enter a valid domain, e.g. notion.so.";
-            }
             return null;
         }
         const idea = ideaDescription.trim();
@@ -110,7 +103,7 @@ export function InputCard() {
                             </label>
                             <Input
                                 id="brief-domain"
-                                placeholder="e.g. notion.so"
+                                placeholder="Add company domain"
                                 value={domain}
                                 disabled={isBusy}
                                 onChange={(e) => dispatch(setDomain(e.target.value))}
