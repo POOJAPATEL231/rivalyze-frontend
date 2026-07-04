@@ -14,7 +14,7 @@ import {
     setIdeaDescription,
     setInputMode,
 } from "@/store/slices/analysisSlice";
-import { hasUnsafeMarkup, isValidDomain } from "@/utils/textValidation";
+import { hasUnsafeMarkup } from "@/utils/textValidation";
 
 const COMPANY_EXAMPLES = [
     { name: "Notion", domain: "notion.so" },
@@ -26,8 +26,8 @@ const IDEA_EXAMPLE =
     "An AI copilot that plans and reorders grocery staples for busy families based on what they've already bought.";
 
 const MAX_NAME_LENGTH = 100;
-const MAX_DOMAIN_LENGTH = 253;
 const MAX_IDEA_LENGTH = 500;
+const MAX_DOMAIN_LENGTH = 200;
 
 export function InputCard() {
     const dispatch = useAppDispatch();
@@ -94,6 +94,7 @@ export function InputCard() {
                                 placeholder="e.g. Notion"
                                 value={companyName}
                                 disabled={isBusy}
+                                maxLength={MAX_NAME_LENGTH}
                                 onChange={(e) => dispatch(setCompanyName(e.target.value))}
                             />
                         </div>
@@ -106,6 +107,7 @@ export function InputCard() {
                                 placeholder="Add company domain"
                                 value={domain}
                                 disabled={isBusy}
+                                maxLength={MAX_DOMAIN_LENGTH}
                                 onChange={(e) => dispatch(setDomain(e.target.value))}
                             />
                         </div>
