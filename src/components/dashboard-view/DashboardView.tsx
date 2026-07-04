@@ -47,7 +47,7 @@ export function DashboardView() {
 
             <ExecSummary />
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-2">
                 <Card>
                     <CardHeader>
                         <CardTitle>Head to head</CardTitle>
@@ -59,7 +59,7 @@ export function DashboardView() {
                 <SwotGrid />
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-2">
                 <SentimentPanel />
                 <OpportunitiesPanel />
             </div>

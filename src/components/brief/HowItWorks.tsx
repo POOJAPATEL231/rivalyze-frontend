@@ -67,7 +67,7 @@ export function HowItWorks({ className }: HowItWorksProps) {
         <div className={cn("space-y-10", className)}>
             <section>
                 <h2 className="font-heading text-lg font-semibold text-foreground">How it works</h2>
-                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-4 grid grid-cols-1 gap-4 min-[960px]:grid-cols-4">
                     {STEPS.map((step, index) => (
                         <Card key={step.title}>
                             <CardContent className="space-y-2">
@@ -89,7 +89,7 @@ export function HowItWorks({ className }: HowItWorksProps) {
 
             <section>
                 <h2 className="font-heading text-lg font-semibold text-foreground">Built for</h2>
-                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-4 grid grid-cols-1 gap-4 min-[960px]:grid-cols-4">
                     {AUDIENCES.map((audience) => (
                         <Card key={audience.label}>
                             <CardContent className="flex items-start gap-3">

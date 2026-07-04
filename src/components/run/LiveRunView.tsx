@@ -104,7 +104,7 @@ export function LiveRunView() {
 
             {lowSignalDetected && <LowSignalWarning />}
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[55fr_45fr]">
+            <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-[55fr_45fr]">
                 <div className="space-y-3">
                     {LANES.map((lane) => (
                         <AgentLane

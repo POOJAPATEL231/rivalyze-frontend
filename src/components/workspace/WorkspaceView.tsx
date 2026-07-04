@@ -61,7 +61,7 @@ export function WorkspaceView() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[45fr_55fr]">
+            <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-[45fr_55fr]">
                 <Card>
                     <CardHeader>
                         <CardTitle>Documents</CardTitle>

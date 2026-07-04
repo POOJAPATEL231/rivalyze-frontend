@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type ComponentType, type ReactNode } from "react";
 
 import { BriefView } from "@/components/brief/BriefView";
 import { CompareView } from "@/components/compare/CompareView";
@@ -11,17 +11,29 @@ import { RecommendationsView } from "@/components/recommendations/Recommendation
 import { LiveRunView } from "@/components/run/LiveRunView";
 import { WorkspaceView } from "@/components/workspace/WorkspaceView";
 import { useAppSelector } from "@/store/hooks";
+import type { AnalysisStep } from "@/types/analysis";
 
-const BUILT_STEPS = [
-    "brief",
-    "discovery",
-    "run",
-    "dashboard",
-    "recommendations",
-    "compare",
-    "workspace",
-    "history",
-];
+const VIEWS: Partial<Record<AnalysisStep, ComponentType>> = {
+    brief: BriefView,
+    discovery: DiscoveryView,
+    run: LiveRunView,
+    dashboard: DashboardView,
+    recommendations: RecommendationsView,
+    compare: CompareView,
+    workspace: WorkspaceView,
+    history: HistoryView,
+};
+
+/** translateY(14px) + opacity:0 -> normal, 0.5s ease-out, matching the
+ * prototype's "rise" keyframe. Keyed by step so every view remounts (and
+ * re-animates) on navigation instead of reusing the previous view's node. */
+function PageTransition({ children }: { children: ReactNode }) {
+    return (
+        <div className="animate-in fade-in-0 slide-in-from-bottom-[14px] duration-500 ease-out">
+            {children}
+        </div>
+    );
+}
 
 export default function AnalysisFlow() {
     const step = useAppSelector((state) => state.analysis.currentStep);
@@ -33,18 +45,16 @@ export default function AnalysisFlow() {
         document.documentElement.classList.toggle("dark", theme === "dark");
     }, [theme]);
 
+    const View = VIEWS[step];
+
     return (
         <div className="flex min-h-svh flex-col">
             <StepBar />
-            {step === "brief" && <BriefView />}
-            {step === "discovery" && <DiscoveryView />}
-            {step === "run" && <LiveRunView />}
-            {step === "dashboard" && <DashboardView />}
-            {step === "recommendations" && <RecommendationsView />}
-            {step === "compare" && <CompareView />}
-            {step === "workspace" && <WorkspaceView />}
-            {step === "history" && <HistoryView />}
-            {!BUILT_STEPS.includes(step) && (
+            {View ? (
+                <PageTransition key={step}>
+                    <View />
+                </PageTransition>
+            ) : (
                 <div className="flex flex-1 items-center justify-center py-24 text-sm text-muted-foreground">
                     This step isn't built yet — check back after the next phase ships.
                 </div>

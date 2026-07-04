@@ -200,3 +200,18 @@
         font-variant-numeric: tabular-nums;
     }
 }
+
+/* Global reduced-motion override — the standard web.dev/MDN pattern. Kills
+ * every CSS animation/transition duration app-wide (radar sweeps, ring
+ * charge-up, drawer slide, page transitions, etc.) rather than requiring a
+ * motion-reduce: variant on every individual animated className. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

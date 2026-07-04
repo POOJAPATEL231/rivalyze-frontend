@@ -111,8 +111,8 @@ export function CompareView() {
             <div
                 className={cn(
                     "grid grid-cols-1 gap-4",
-                    selectedCompetitors.length === 1 && "sm:grid-cols-2",
-                    selectedCompetitors.length === 2 && "sm:grid-cols-3",
+                    selectedCompetitors.length === 1 && "min-[960px]:grid-cols-2",
+                    selectedCompetitors.length === 2 && "min-[960px]:grid-cols-3",
                 )}
             >
                 <CompareColumn name={`${companyLabel} · you`} accent rows={buildRows()} />
