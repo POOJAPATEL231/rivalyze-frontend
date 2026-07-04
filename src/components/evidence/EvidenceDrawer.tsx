@@ -7,6 +7,7 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 import { evidence } from "@/data/evidence";
+import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { closeEvidence } from "@/store/slices/analysisSlice";
 
@@ -26,7 +27,14 @@ export function EvidenceDrawer() {
         >
             <SheetContent
                 side="right"
-                className="gap-0 overflow-y-auto data-[side=right]:w-115 data-[side=right]:max-w-[92vw] sm:data-[side=right]:max-w-115"
+                className={cn(
+                    "gap-0 overflow-y-auto duration-300",
+                    "data-[side=right]:w-115 data-[side=right]:max-w-[92vw] sm:data-[side=right]:max-w-115",
+                    // shadcn's default slide-in-from-right-10 only nudges the panel
+                    // 2.5rem — barely perceptible on a 460px drawer. The design calls
+                    // for a proper reveal from fully off-screen, not an edge nudge.
+                    "data-[side=right]:data-open:slide-in-from-right data-[side=right]:data-closed:slide-out-to-right",
+                )}
             >
                 <SheetHeader>
                     <SheetTitle>Evidence</SheetTitle>
