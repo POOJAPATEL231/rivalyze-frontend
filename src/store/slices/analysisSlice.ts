@@ -97,6 +97,20 @@ const analysisSlice = createSlice({
         setReport(state, action: PayloadAction<Report | null>) {
             state.report = action.payload;
         },
+        /** Re-entering Live Run should always start clean, not pile a fresh
+         * script on top of a previously completed run's ledger/telemetry. */
+        resetRun(state) {
+            state.runStatus = "idle";
+            state.runEvents = [];
+            state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
+            state.laneStatuses = {
+                discovery: "done",
+                news: "queued",
+                product: "queued",
+                reviews: "queued",
+                strategist: "waiting",
+            };
+        },
         openEvidence(state, action: PayloadAction<string>) {
             state.evidenceDrawer = { open: true, evidenceId: action.payload };
         },
@@ -122,6 +136,7 @@ export const {
     updateTelemetry,
     setLaneStatus,
     setReport,
+    resetRun,
     openEvidence,
     closeEvidence,
 } = analysisSlice.actions;

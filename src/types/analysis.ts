@@ -30,6 +30,18 @@ export interface Telemetry {
     signals: number;
 }
 
+export type RunEffect = "doneN" | "doneP" | "doneR" | "low" | "startSyn" | "finish";
+
+export interface RunScriptEntry {
+    /** Absolute ms from run start — all entries are scheduled from mount, not chained. */
+    delayMs: number;
+    agent: LaneId;
+    text: string;
+    effects?: RunEffect[];
+    /** Absolute telemetry snapshot at this checkpoint, not a delta. */
+    telemetry?: Partial<Telemetry>;
+}
+
 export interface Source {
     id: string;
     name: string;
