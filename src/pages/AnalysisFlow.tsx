@@ -1,6 +1,5 @@
 import { useEffect, type ComponentType, type ReactNode } from "react";
 import { Navigate, useLocation } from "react-router";
-import type { ComponentType, ReactNode } from "react";
 
 import { BriefView } from "@/components/brief/BriefView";
 import { CompareView } from "@/components/compare/CompareView";
