@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
+import { MOCK_REPORT } from "@/data/report";
 import { RUN_SCRIPT } from "@/data/runScript";
 import { useAppDispatch } from "@/store/hooks";
 import {
     appendRunEvent,
     resetRun,
     setLaneStatus,
+    setReport,
     setRunStatus,
     updateTelemetry,
 } from "@/store/slices/analysisSlice";
@@ -53,6 +55,7 @@ export function useRunSimulation() {
                 case "finish":
                     dispatch(setLaneStatus({ lane: "strategist", status: "done" }));
                     dispatch(setRunStatus("done"));
+                    dispatch(setReport({ ...MOCK_REPORT, generatedAt: new Date().toISOString() }));
                     break;
             }
         }

@@ -103,6 +103,7 @@ const analysisSlice = createSlice({
             state.runStatus = "idle";
             state.runEvents = [];
             state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
+            state.report = null;
             state.laneStatuses = {
                 discovery: "done",
                 news: "queued",

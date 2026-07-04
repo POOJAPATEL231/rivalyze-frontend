@@ -59,8 +59,59 @@ export interface EvidenceItem {
     confidenceNote?: string;
 }
 
-/** Minimal placeholder — Phase 4/5 extend this once the dashboard and
- * recommendations data shape is defined. */
+export type ThreatLevel = "low" | "moderate" | "elevated" | "critical";
+
+/** A claim made somewhere in the report — evidenceId links it to an
+ * EvidenceItem for the drawer; omit it for claims with no single source. */
+export interface Claim {
+    text: string;
+    evidenceId?: string;
+}
+
+export interface HeadToHeadCell extends Claim {
+    badge?: "new" | "high-risk";
+}
+
+export interface HeadToHeadRow {
+    you: HeadToHeadCell;
+    /** Keyed by Competitor.id. */
+    rivals: Record<string, HeadToHeadCell>;
+}
+
+export interface Swot {
+    strengths: string[];
+    weaknesses: string[];
+    opportunities: string[];
+    threats: string[];
+}
+
+export interface SentimentEntry {
+    /** Competitor.id */
+    competitorId: string;
+    score: number;
+    label: string;
+}
+
+export interface Opportunity {
+    lead: string;
+    claim: string;
+    evidenceId: string;
+}
+
 export interface Report {
     generatedAt: string;
+    threatLevel: ThreatLevel;
+    topThreat: Claim;
+    biggestOpportunity: Claim;
+    recommendedAction: Claim;
+    headToHead: {
+        price: HeadToHeadRow;
+        aiPositioning: HeadToHeadRow;
+        recentMove: HeadToHeadRow;
+        topComplaint: HeadToHeadRow;
+    };
+    swot: Swot;
+    sentiment: SentimentEntry[];
+    opportunities: Opportunity[];
+    sourceCategories: string[];
 }
