@@ -1,55 +1,31 @@
 import { Plus, Rocket } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router";
 
 import { CompetitorRow } from "@/components/discovery/CompetitorRow";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { extractApiErrorMessage } from "@/lib/apiError";
-import { confirmRun } from "@/services/analyze";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { removeCompetitor, restoreCompetitor, unlockStep } from "@/store/slices/analysisSlice";
+import { removeCompetitor, restoreCompetitor } from "@/store/slices/analysisSlice";
+import type { ApiCompetitor } from "@/types/api";
 
-export function CompetitorList() {
+interface CompetitorListProps {
+    onDeploy: (competitors: ApiCompetitor[]) => void;
+    isDeploying: boolean;
+}
+
+export function CompetitorList({ onDeploy, isDeploying }: CompetitorListProps) {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const removedCompetitors = useAppSelector((state) => state.analysis.removedCompetitors);
-    const jobId = useAppSelector((state) => state.analysis.discoveryJob.jobId);
-    const jobStatus = useAppSelector((state) => state.analysis.discoveryJob.status);
-    const [isDeploying, setIsDeploying] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
-    async function handleDeploy() {
-        if (!jobId) return;
-
-        // Job already ran to completion (e.g. resumed mid-flow) — confirm
-        // was already accepted server-side, calling it again would 404/409.
-        if (jobStatus === "completed") {
-            dispatch(unlockStep("run"));
-            navigate("/run");
-            return;
-        }
-
-        setIsDeploying(true);
-        setError(null);
-        try {
-            await confirmRun(
-                jobId,
-                competitors.map((competitor) => ({
-                    name: competitor.name,
-                    category: competitor.relation ?? "direct",
-                    rationale: competitor.rationale ?? "",
-                })),
-            );
-            dispatch(unlockStep("run"));
-            navigate("/run");
-        } catch (err) {
-            setError(extractApiErrorMessage(err));
-        } finally {
-            setIsDeploying(false);
-        }
+    function handleDeploy() {
+        onDeploy(
+            competitors.map((competitor) => ({
+                name: competitor.name,
+                category: competitor.relation ?? "direct",
+                rationale: competitor.rationale ?? "",
+            })),
+        );
     }
 
     return (
@@ -77,11 +53,9 @@ export function CompetitorList() {
                         </p>
                     )}
 
-                    {error && <p className="text-sm text-destructive">{error}</p>}
-
                     <Button
                         size="lg"
-                        disabled={competitors.length === 0 || !jobId || isDeploying}
+                        disabled={competitors.length === 0 || isDeploying}
                         onClick={handleDeploy}
                         className="mt-auto w-full shrink-0 bg-iris text-background hover:opacity-90"
                     >

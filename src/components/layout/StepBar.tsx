@@ -25,16 +25,15 @@ interface StepConfig {
 
 const WIZARD_STEPS: StepConfig[] = [
     { id: "brief", label: "Brief", number: "01" },
-    { id: "discovery", label: "Discovery", number: "02" },
-    { id: "run", label: "Live run", number: "03" },
-    { id: "dashboard", label: "Dashboard", number: "04" },
-    { id: "recommendations", label: "Recommendations", number: "05" },
+    { id: "discovery", label: "Discovery & Run", number: "02" },
+    { id: "dashboard", label: "Dashboard", number: "03" },
+    { id: "recommendations", label: "Recommendations", number: "04" },
 ];
 
 const NAV_STEPS: StepConfig[] = [
-    { id: "compare", label: "Compare", number: "06", stretch: true },
-    { id: "workspace", label: "Workspace", number: "07", stretch: true },
-    { id: "history", label: "History", number: "08" },
+    { id: "compare", label: "Compare", number: "05", stretch: true },
+    { id: "workspace", label: "Workspace", number: "06", stretch: true },
+    { id: "history", label: "History", number: "07" },
 ];
 
 const STEPS = [...WIZARD_STEPS, ...NAV_STEPS];
@@ -105,9 +104,8 @@ export function StepBar() {
                                 type="button"
                                 disabled={!isUnlocked}
                                 aria-current={isActive ? "step" : undefined}
-                                aria-label={step.label}
-                                onClick={() => navigate(`/${step.id}`)}
-                                className="group flex items-center gap-2 rounded-full py-1 pr-1 pl-0.5 transition-colors disabled:cursor-not-allowed min-[960px]:pr-2.5 min-[960px]:pl-1"
+                                onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
+                                className="group flex items-center gap-2 rounded-full py-1 pr-2.5 pl-1 transition-colors disabled:cursor-not-allowed"
                             >
                                 <span
                                     className={cn(
@@ -223,7 +221,7 @@ export function StepBar() {
                             type="button"
                             disabled={!isUnlocked}
                             aria-current={isActive ? "step" : undefined}
-                            onClick={() => navigate(`/${step.id}`)}
+                            onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
                             className={cn(
                                 "flex items-center gap-1.5 rounded-full px-3 py-1.5 font-heading text-sm font-medium whitespace-nowrap transition-colors",
                                 isActive && "bg-primary text-primary-foreground",

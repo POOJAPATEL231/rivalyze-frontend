@@ -14,28 +14,17 @@ export type InputMode = "company" | "idea";
 
 export type RunStatus = "idle" | "running" | "done";
 
-export type DiscoveryJobStatus =
-    | "idle"
-    | "submitting"
-    | "polling"
-    | "awaiting_confirmation"
-    | "completed"
-    | "failed";
-
-export interface DiscoveryJobState {
-    status: DiscoveryJobStatus;
-    jobId: string | null;
-    error: string | null;
-}
-
 export type LaneId = "discovery" | "news" | "product" | "reviews" | "strategist";
 
 export type LaneStatus = "queued" | "waiting" | "running" | "done";
 
+/** agent is a plain string, not LaneId — the real backend emits several
+ * cross-cutting agent labels (system/search/router/merge) alongside the 5
+ * lane names, and the raw ledger renders all of them. */
 export interface RunEvent {
     id: string;
     timestamp: number;
-    agent: LaneId;
+    agent: string;
     text: string;
 }
 
@@ -44,18 +33,6 @@ export interface Telemetry {
     llmCalls: number;
     searches: number;
     signals: number;
-}
-
-export type RunEffect = "doneN" | "doneP" | "doneR" | "low" | "startSyn" | "finish";
-
-export interface RunScriptEntry {
-    /** Absolute ms from run start — all entries are scheduled from mount, not chained. */
-    delayMs: number;
-    agent: LaneId;
-    text: string;
-    effects?: RunEffect[];
-    /** Absolute telemetry snapshot at this checkpoint, not a delta. */
-    telemetry?: Partial<Telemetry>;
 }
 
 export interface Source {

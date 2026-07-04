@@ -3,7 +3,6 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Competitor } from "@/types/competitor";
 import type {
     AnalysisStep,
-    DiscoveryJobState,
     InputMode,
     LaneId,
     LaneStatus,
@@ -23,14 +22,19 @@ interface AnalysisState {
     ideaDescription: string;
     competitors: Competitor[];
     removedCompetitors: Competitor[];
-    discoveryJob: DiscoveryJobState;
+    jobId: string | null;
     runStatus: RunStatus;
     runEvents: RunEvent[];
     telemetry: Telemetry;
     laneStatuses: Record<LaneId, LaneStatus>;
     report: Report | null;
     runId: string | null;
+    /** Cache of the real GET /reports/{run_id} response, keyed by the runId
+     * it belongs to — lets a manual revisit to Dashboard reuse it instead of
+     * re-fetching. Distinct from `report` above, which is the mock-shaped
+     * type still consumed by Recommendations/Compare. */
     apiReport: ApiReportResponse | null;
+    apiReportRunId: string | null;
     evidenceDrawer: { open: boolean; evidenceId: string | null };
 }
 
@@ -45,12 +49,12 @@ const initialState: AnalysisState = {
     ideaDescription: "",
     competitors: [],
     removedCompetitors: [],
-    discoveryJob: { status: "idle", jobId: null, error: null },
+    jobId: null,
     runStatus: "idle",
     runEvents: [],
     telemetry: { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 },
     laneStatuses: {
-        discovery: "done",
+        discovery: "queued",
         news: "queued",
         product: "queued",
         reviews: "queued",
@@ -59,6 +63,7 @@ const initialState: AnalysisState = {
     report: null,
     runId: null,
     apiReport: null,
+    apiReportRunId: null,
     evidenceDrawer: { open: false, evidenceId: null },
 };
 
@@ -104,32 +109,11 @@ const analysisSlice = createSlice({
                 state.removedCompetitors.splice(index, 1);
             }
         },
-        discoveryJobSubmitting(state) {
-            state.discoveryJob = { status: "submitting", jobId: null, error: null };
-        },
-        discoveryJobPolling(state, action: PayloadAction<string>) {
-            state.discoveryJob = { status: "polling", jobId: action.payload, error: null };
-        },
-        discoveryJobFailed(state, action: PayloadAction<string>) {
-            state.discoveryJob.status = "failed";
-            state.discoveryJob.error = action.payload;
-        },
-        discoveryJobResolved(
-            state,
-            action: PayloadAction<
-                Extract<DiscoveryJobState["status"], "awaiting_confirmation" | "completed">
-            >,
-        ) {
-            state.discoveryJob.status = action.payload;
-        },
-        resetDiscoveryJob(state) {
-            state.discoveryJob = { status: "idle", jobId: null, error: null };
+        setJobId(state, action: PayloadAction<string | null>) {
+            state.jobId = action.payload;
         },
         setRunStatus(state, action: PayloadAction<RunStatus>) {
             state.runStatus = action.payload;
-        },
-        appendRunEvent(state, action: PayloadAction<RunEvent>) {
-            state.runEvents.push(action.payload);
         },
         setRunEvents(state, action: PayloadAction<RunEvent[]>) {
             state.runEvents = action.payload;
@@ -146,11 +130,12 @@ const analysisSlice = createSlice({
         setRunId(state, action: PayloadAction<string | null>) {
             state.runId = action.payload;
         },
-        setApiReport(state, action: PayloadAction<ApiReportResponse | null>) {
-            state.apiReport = action.payload;
+        setApiReport(state, action: PayloadAction<{ runId: string; report: ApiReportResponse }>) {
+            state.apiReport = action.payload.report;
+            state.apiReportRunId = action.payload.runId;
         },
-        /** Re-entering Live Run should always start clean, not pile a fresh
-         * script on top of a previously completed run's ledger/telemetry. */
+        /** Starting a fresh analysis should always begin clean, not pile a
+         * new run on top of a previous one's ledger/telemetry. */
         resetRun(state) {
             state.runStatus = "idle";
             state.runEvents = [];
@@ -158,8 +143,9 @@ const analysisSlice = createSlice({
             state.report = null;
             state.runId = null;
             state.apiReport = null;
+            state.apiReportRunId = null;
             state.laneStatuses = {
-                discovery: "done",
+                discovery: "queued",
                 news: "queued",
                 product: "queued",
                 reviews: "queued",
@@ -187,13 +173,8 @@ export const {
     setCompetitors,
     removeCompetitor,
     restoreCompetitor,
-    discoveryJobSubmitting,
-    discoveryJobPolling,
-    discoveryJobFailed,
-    discoveryJobResolved,
-    resetDiscoveryJob,
+    setJobId,
     setRunStatus,
-    appendRunEvent,
     setRunEvents,
     updateTelemetry,
     setLaneStatus,

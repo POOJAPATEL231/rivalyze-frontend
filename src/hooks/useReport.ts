@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { extractApiErrorMessage } from "@/lib/apiError";
 import { getReport } from "@/services/analyze";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setApiReport } from "@/store/slices/analysisSlice";
 import type { ApiReportResponse } from "@/types/api";
 
@@ -12,28 +12,33 @@ type ReportState =
     | { status: "error"; message: string }
     | { status: "success"; data: ApiReportResponse };
 
-/** Fetches GET /api/v1/reports/{run_id} once a run has completed. */
-/** Also mirrors a successful fetch into the store's `apiReport` field so
- * RecommendationsView can read the same response's `recommendations`
- * after navigating away from Dashboard. */
-export function useReport(runId: string | null): ReportState {
+/** Fetches GET /api/v1/reports/{run_id} once a run has completed. When
+ * `manual` is set (a StepBar/Back-button revisit to an already-unlocked
+ * Dashboard, not the app routing you here fresh), reuses the cached report
+ * for this runId from the store instead of hitting the network again. */
+export function useReport(runId: string | null, options?: { manual?: boolean }): ReportState {
     const dispatch = useAppDispatch();
-    const [state, setState] = useState<ReportState>({ status: "idle" });
+    const cachedReport = useAppSelector((state) => state.analysis.apiReport);
+    const cachedRunId = useAppSelector((state) => state.analysis.apiReportRunId);
+    const manual = options?.manual ?? false;
+    const hasCache = manual && runId !== null && runId === cachedRunId && cachedReport !== null;
+
+    const [state, setState] = useState<ReportState>(() => {
+        if (!runId) return { status: "idle" };
+        if (hasCache) return { status: "success", data: cachedReport };
+        return { status: "loading" };
+    });
 
     useEffect(() => {
-        if (!runId) {
-            setState({ status: "idle" });
-            return;
-        }
+        if (!runId || hasCache) return;
 
         let cancelled = false;
-        setState({ status: "loading" });
 
         getReport(runId)
             .then((data) => {
                 if (cancelled) return;
                 setState({ status: "success", data });
-                dispatch(setApiReport(data));
+                dispatch(setApiReport({ runId, report: data }));
             })
             .catch((error: unknown) => {
                 if (!cancelled)
@@ -43,7 +48,10 @@ export function useReport(runId: string | null): ReportState {
         return () => {
             cancelled = true;
         };
-    }, [runId, dispatch]);
+        // Runs once per mount, keyed on runId — hasCache is only meaningful
+        // at the moment this hook first mounts for a given runId.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [runId]);
 
     return state;
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { HistoryRow } from "@/components/history/HistoryRow";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ import {
     setCompetitors,
     setDomain,
     setReport,
-    setStep,
+    setRunId,
     unlockStep,
 } from "@/store/slices/analysisSlice";
 import type { AnalysisStep } from "@/types/analysis";
@@ -38,6 +39,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 
 export function HistoryView() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const [entries, setEntries] = useState<ApiHistoryEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -71,8 +73,9 @@ export function HistoryView() {
             dispatch(setDomain(""));
             dispatch(setCompetitors(competitors));
             dispatch(setReport({ ...MOCK_REPORT, generatedAt: entry.created_at }));
+            dispatch(setRunId(status.run_id));
             for (const step of ALL_STEPS) dispatch(unlockStep(step));
-            dispatch(setStep("dashboard"));
+            navigate("/dashboard");
         } catch (err) {
             setError(extractApiErrorMessage(err));
         } finally {

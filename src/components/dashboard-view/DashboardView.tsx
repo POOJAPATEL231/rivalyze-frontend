@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import { ExecSummary } from "@/components/dashboard-view/ExecSummary";
 import { HeadToHead } from "@/components/dashboard-view/HeadToHead";
@@ -15,8 +15,10 @@ import { unlockStep } from "@/store/slices/analysisSlice";
 export function DashboardView() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const manual = Boolean((location.state as { manual?: boolean } | null)?.manual);
     const runId = useAppSelector((state) => state.analysis.runId);
-    const report = useReport(runId);
+    const report = useReport(runId, { manual });
 
     function handleContinue() {
         dispatch(unlockStep("recommendations"));
@@ -52,7 +54,11 @@ export function DashboardView() {
     return (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:px-6 lg:px-8">
             <div className="space-y-4">
-                <Button variant="ghost" size="sm" onClick={() => navigate("/run")}>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate("/discovery", { state: { manual: true } })}
+                >
                     <ArrowLeft data-icon="inline-start" />
                     Back
                 </Button>

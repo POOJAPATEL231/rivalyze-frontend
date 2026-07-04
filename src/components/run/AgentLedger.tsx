@@ -16,7 +16,7 @@ export function AgentLedger() {
     return (
         <div
             ref={scrollRef}
-            className="h-[388px] space-y-1.5 overflow-y-auto rounded-xl bg-(--ink-950) p-4 ring-1 ring-white/10"
+            className="h-[388px] w-full space-y-1.5 overflow-y-auto rounded-xl bg-card p-4 ring-1 ring-white/10"
         >
             {runEvents.length === 0 && (
                 <p className="font-mono text-xs text-white/40">Waiting for the first signal…</p>

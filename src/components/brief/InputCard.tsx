@@ -1,4 +1,6 @@
 import { ArrowRight, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 import { ExampleChip } from "@/components/brief/ExampleChip";
 import { ModeSwitch } from "@/components/brief/ModeSwitch";
@@ -6,13 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useDiscoveryJob } from "@/hooks/useDiscoveryJob";
+import { extractApiErrorMessage } from "@/lib/apiError";
+import { startAnalysis } from "@/services/analyze";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
     setCompanyName,
     setDomain,
     setIdeaDescription,
     setInputMode,
+    setJobId,
+    unlockStep,
 } from "@/store/slices/analysisSlice";
 import { hasUnsafeMarkup } from "@/utils/textValidation";
 
@@ -26,16 +31,20 @@ const IDEA_EXAMPLE =
     "An AI copilot that plans and reorders grocery staples for busy families based on what they've already bought.";
 
 const MAX_NAME_LENGTH = 100;
+// Matches AnalyzeRequest.domain's maxLength on the backend — a longer value
+// passes this check but still gets a 422 from the server.
 const MAX_IDEA_LENGTH = 500;
 const MAX_DOMAIN_LENGTH = 200;
 
 export function InputCard() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const inputMode = useAppSelector((state) => state.analysis.inputMode);
     const companyName = useAppSelector((state) => state.analysis.companyName);
     const domain = useAppSelector((state) => state.analysis.domain);
     const ideaDescription = useAppSelector((state) => state.analysis.ideaDescription);
-    const { startDiscovery, status, error } = useDiscoveryJob();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const validationError = (() => {
         if (inputMode === "company") {
@@ -60,15 +69,26 @@ export function InputCard() {
         (inputMode === "company"
             ? companyName.trim().length > 0
             : ideaDescription.trim().length > 0) && validationError === null;
-    const isBusy = status === "submitting" || status === "polling";
+    const isBusy = isSubmitting;
 
-    function handleStart() {
+    async function handleStart() {
         if (!canStart || isBusy) return;
-        startDiscovery({
-            company: inputMode === "company" ? companyName.trim() : "",
-            domain: inputMode === "company" ? domain.trim() : "",
-            idea: inputMode === "idea" ? ideaDescription.trim() : null,
-        });
+        setIsSubmitting(true);
+        setError(null);
+        try {
+            const { job_id } = await startAnalysis({
+                company: inputMode === "company" ? companyName.trim() : "",
+                domain: inputMode === "company" ? domain.trim() : "",
+                idea: inputMode === "idea" ? ideaDescription.trim() : null,
+            });
+            dispatch(setJobId(job_id));
+            dispatch(unlockStep("discovery"));
+            navigate("/discovery");
+        } catch (err) {
+            setError(extractApiErrorMessage(err));
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
@@ -155,9 +175,7 @@ export function InputCard() {
                 </div>
 
                 {validationError && <p className="text-sm text-destructive">{validationError}</p>}
-                {status === "failed" && error && (
-                    <p className="text-sm text-destructive">{error}</p>
-                )}
+                {error && <p className="text-sm text-destructive">{error}</p>}
 
                 <Button
                     size="lg"
@@ -168,7 +186,7 @@ export function InputCard() {
                     {isBusy ? (
                         <>
                             <Loader2 className="animate-spin" data-icon="inline-start" />
-                            Discovering competitors&hellip;
+                            Starting the scan&hellip;
                         </>
                     ) : (
                         <>

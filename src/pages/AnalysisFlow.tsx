@@ -4,21 +4,24 @@ import { Navigate, useLocation } from "react-router";
 import { BriefView } from "@/components/brief/BriefView";
 import { CompareView } from "@/components/compare/CompareView";
 import { DashboardView } from "@/components/dashboard-view/DashboardView";
-import { DiscoveryView } from "@/components/discovery/DiscoveryView";
+import { DiscoveryRunView } from "@/components/discovery/DiscoveryRunView";
 import { EvidenceDrawer } from "@/components/evidence/EvidenceDrawer";
 import { HistoryView } from "@/components/history/HistoryView";
 import { StepBar } from "@/components/layout/StepBar";
 import { RecommendationsView } from "@/components/recommendations/RecommendationsView";
-import { LiveRunView } from "@/components/run/LiveRunView";
 import { WorkspaceView } from "@/components/workspace/WorkspaceView";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setStep } from "@/store/slices/analysisSlice";
 import type { AnalysisStep } from "@/types/analysis";
 
+// "discovery" and "run" both render the same merged screen — it owns the
+// whole running_discovery -> completed lifecycle in one continuous view.
+// Both entries stay mapped so a direct /run visit (stale link, back button)
+// still resolves instead of blank-screening.
 const VIEWS: Partial<Record<AnalysisStep, ComponentType>> = {
     brief: BriefView,
-    discovery: DiscoveryView,
-    run: LiveRunView,
+    discovery: DiscoveryRunView,
+    run: DiscoveryRunView,
     dashboard: DashboardView,
     recommendations: RecommendationsView,
     compare: CompareView,

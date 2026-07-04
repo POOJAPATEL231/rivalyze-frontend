@@ -97,8 +97,8 @@ export interface ApiSentimentEntry {
 
 export interface ApiHeadToHeadRival {
     value: string;
-    claim_ref: string;
-    source_date: string;
+    claim_ref: string | null;
+    source_date: string | null;
 }
 
 export interface ApiHeadToHeadRow {
@@ -109,7 +109,7 @@ export interface ApiHeadToHeadRow {
 
 export interface ApiOpportunity {
     text: string;
-    evidence_ids: string[];
+    evidence_ids?: string[];
     claim_ref: string;
 }
 
@@ -117,14 +117,15 @@ export interface ApiRecommendation {
     action: string;
     rationale: string;
     confidence: number;
-    evidence_ids: string[];
+    evidence_ids?: string[];
     claim_ref: string;
 }
 
 /** GET /api/v1/reports/{run_id} response, matching the OpenAPI schema
- * exactly — `threat_level` and sentiment `label` values are free-form
- * strings from the LLM, not a closed enum, so callers must fall back
- * gracefully on unrecognized values. */
+ * exactly — the schema declares `threat_level` and sentiment `label` as
+ * closed enums, but callers should still fall back gracefully on an
+ * unrecognized value rather than assume the backend can never change or
+ * loosen them. */
 export interface ApiReportResponse {
     company: string;
     threat_level: string;
@@ -136,7 +137,6 @@ export interface ApiReportResponse {
     recommendations: ApiRecommendation[];
     low_signal_findings: string[];
     analysis_date: string;
-
 }
 /** One row of GET /api/v1/history. threat_level/confidence are null for
  * runs completed before the strategist agent produced a report. */
