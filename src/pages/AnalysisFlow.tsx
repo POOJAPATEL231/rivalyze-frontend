@@ -5,6 +5,7 @@ import { CompareView } from "@/components/compare/CompareView";
 import { DashboardView } from "@/components/dashboard-view/DashboardView";
 import { DiscoveryView } from "@/components/discovery/DiscoveryView";
 import { EvidenceDrawer } from "@/components/evidence/EvidenceDrawer";
+import { HistoryView } from "@/components/history/HistoryView";
 import { StepBar } from "@/components/layout/StepBar";
 import { RecommendationsView } from "@/components/recommendations/RecommendationsView";
 import { LiveRunView } from "@/components/run/LiveRunView";
@@ -19,6 +20,7 @@ const BUILT_STEPS = [
     "recommendations",
     "compare",
     "workspace",
+    "history",
 ];
 
 export default function AnalysisFlow() {
@@ -41,6 +43,7 @@ export default function AnalysisFlow() {
             {step === "recommendations" && <RecommendationsView />}
             {step === "compare" && <CompareView />}
             {step === "workspace" && <WorkspaceView />}
+            {step === "history" && <HistoryView />}
             {!BUILT_STEPS.includes(step) && (
                 <div className="flex flex-1 items-center justify-center py-24 text-sm text-muted-foreground">
                     This step isn't built yet — check back after the next phase ships.

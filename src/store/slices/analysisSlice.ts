@@ -30,7 +30,9 @@ interface AnalysisState {
 
 const initialState: AnalysisState = {
     currentStep: "brief",
-    unlockedSteps: ["brief"],
+    // History shows past runs independent of the current session — always
+    // reachable, unlike compare/workspace which unlock from Recommendations.
+    unlockedSteps: ["brief", "history"],
     inputMode: "company",
     companyName: "",
     domain: "",
