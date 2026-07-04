@@ -1,4 +1,5 @@
 import { HistoryRow } from "@/components/history/HistoryRow";
+import { useNavigate } from "react-router";
 import { competitors as seedCompetitors } from "@/data/competitors";
 import { HISTORY_ENTRIES, type HistoryEntry } from "@/data/historyData";
 import { MOCK_REPORT } from "@/data/report";
@@ -26,6 +27,7 @@ const ALL_STEPS: AnalysisStep[] = [
 
 export function HistoryView() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     function handleOpen(entry: HistoryEntry) {
         dispatch(setCompanyName(entry.companyName));
@@ -33,7 +35,7 @@ export function HistoryView() {
         dispatch(setCompetitors(seedCompetitors));
         dispatch(setReport({ ...MOCK_REPORT, generatedAt: entry.runDate }));
         for (const step of ALL_STEPS) dispatch(unlockStep(step));
-        dispatch(setStep("dashboard"));
+        navigate("/dashboard");
     }
 
     return (

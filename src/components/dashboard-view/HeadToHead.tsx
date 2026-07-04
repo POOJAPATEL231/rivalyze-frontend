@@ -21,7 +21,6 @@ const ROWS: { key: keyof Report["headToHead"]; label: string }[] = [
 
 function Cell({ cell }: { cell: HeadToHeadCell }) {
     const dispatch = useAppDispatch();
-    console.log(cell);
 
     return (
         <div className="space-y-1.5">
@@ -67,7 +66,6 @@ export function HeadToHead() {
             <TableBody>
                 {ROWS.map((row) => {
                     const data = report.headToHead[row.key];
-                    console.log(data);
 
                     return (
                         <TableRow key={row.key}>

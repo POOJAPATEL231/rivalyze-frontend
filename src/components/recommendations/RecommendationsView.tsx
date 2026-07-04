@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router";
 
 import { ConfidenceNote } from "@/components/recommendations/ConfidenceNote";
 import { RecCard } from "@/components/recommendations/RecCard";
@@ -8,11 +9,12 @@ import { setStep, unlockStep } from "@/store/slices/analysisSlice";
 
 export function RecommendationsView() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const report = useAppSelector((state) => state.analysis.report);
 
     function goTo(step: "compare" | "workspace") {
         dispatch(unlockStep(step));
-        dispatch(setStep(step));
+        navigate(`/${step}`);
     }
 
     if (!report) {
@@ -26,7 +28,7 @@ export function RecommendationsView() {
     return (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:px-6 lg:px-8">
             <div className="space-y-4">
-                <Button variant="ghost" size="sm" onClick={() => dispatch(setStep("dashboard"))}>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
                     <ArrowLeft data-icon="inline-start" />
                     Back
                 </Button>
@@ -60,7 +62,7 @@ export function RecommendationsView() {
                     Ask the intelligence
                 </Button>
                 <Button
-                    onClick={() => dispatch(setStep("brief"))}
+                    onClick={() => navigate("/brief")}
                     className="bg-iris text-background hover:opacity-90"
                 >
                     Re-run

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { ArrowLeft } from "lucide-react";
 
 import { CompareColumn, type CompareRow } from "@/components/compare/CompareColumn";
@@ -20,6 +21,7 @@ const H2H_ROWS: { key: keyof Report["headToHead"]; label: string }[] = [
 
 export function CompareView() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const report = useAppSelector((state) => state.analysis.report);
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const companyName = useAppSelector((state) => state.analysis.companyName);
@@ -83,11 +85,7 @@ export function CompareView() {
     return (
         <div className="mx-auto max-w-6xl space-y-6 px-4 py-12 sm:px-6 lg:px-8">
             <div className="space-y-4">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => dispatch(setStep("recommendations"))}
-                >
+                <Button variant="ghost" size="sm" onClick={() => navigate("/recommendations")}>
                     <ArrowLeft data-icon="inline-start" />
                     Back
                 </Button>

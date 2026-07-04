@@ -1,4 +1,5 @@
 import { Plus, Rocket } from "lucide-react";
+import { useNavigate } from "react-router";
 
 import { CompetitorRow } from "@/components/discovery/CompetitorRow";
 import { Badge } from "@/components/ui/badge";
@@ -14,12 +15,13 @@ import {
 
 export function CompetitorList() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const removedCompetitors = useAppSelector((state) => state.analysis.removedCompetitors);
 
     function handleDeploy() {
         dispatch(unlockStep("run"));
-        dispatch(setStep("run"));
+        navigate("/run");
     }
 
     return (

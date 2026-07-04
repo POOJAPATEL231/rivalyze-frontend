@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router";
 
 import { CompetitorList } from "@/components/discovery/CompetitorList";
 import { CompetitorRadar } from "@/components/discovery/CompetitorRadar";
@@ -8,13 +9,14 @@ import { setStep } from "@/store/slices/analysisSlice";
 
 export function DiscoveryView() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const companyName = useAppSelector((state) => state.analysis.companyName);
 
     return (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:px-6 lg:px-8">
             <div className="space-y-4">
-                <Button variant="ghost" size="sm" onClick={() => dispatch(setStep("brief"))}>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/brief")}>
                     <ArrowLeft data-icon="inline-start" />
                     Back
                 </Button>
