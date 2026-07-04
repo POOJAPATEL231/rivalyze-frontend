@@ -7,9 +7,6 @@ import { DocDropzone } from "@/components/workspace/DocDropzone";
 import { DocRow } from "@/components/workspace/DocRow";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAppDispatch } from "@/store/hooks";
-import { setStep } from "@/store/slices/analysisSlice";
-
 interface Doc {
     id: string;
     name: string;
@@ -33,7 +30,6 @@ const DOC_TEMPLATES: Omit<Doc, "id">[] = [
 ];
 
 export function WorkspaceView() {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [docs, setDocs] = useState<Doc[]>([]);
 

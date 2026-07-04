@@ -5,7 +5,7 @@ import { ConfidenceNote } from "@/components/recommendations/ConfidenceNote";
 import { RecCard } from "@/components/recommendations/RecCard";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setStep, unlockStep } from "@/store/slices/analysisSlice";
+import { unlockStep } from "@/store/slices/analysisSlice";
 
 export function RecommendationsView() {
     const dispatch = useAppDispatch();

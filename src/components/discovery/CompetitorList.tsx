@@ -9,12 +9,7 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/componen
 import { extractApiErrorMessage } from "@/lib/apiError";
 import { confirmRun } from "@/services/analyze";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-    removeCompetitor,
-    restoreCompetitor,
-    setStep,
-    unlockStep,
-} from "@/store/slices/analysisSlice";
+import { removeCompetitor, restoreCompetitor, unlockStep } from "@/store/slices/analysisSlice";
 
 export function CompetitorList() {
     const dispatch = useAppDispatch();

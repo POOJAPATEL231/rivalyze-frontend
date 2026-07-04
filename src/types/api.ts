@@ -136,6 +136,16 @@ export interface ApiReportResponse {
     recommendations: ApiRecommendation[];
     low_signal_findings: string[];
     analysis_date: string;
+
+}
+/** One row of GET /api/v1/history. threat_level/confidence are null for
+ * runs completed before the strategist agent produced a report. */
+export interface ApiHistoryEntry {
+    job_id: string;
+    company: string;
+    threat_level: string | null;
+    confidence: number | null;
+    created_at: string;
 }
 
 export interface ApiValidationError {
