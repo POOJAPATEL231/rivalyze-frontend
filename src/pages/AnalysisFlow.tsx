@@ -1,4 +1,4 @@
-import { useEffect, type ComponentType, type ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 import { BriefView } from "@/components/brief/BriefView";
 import { CompareView } from "@/components/compare/CompareView";
@@ -37,13 +37,6 @@ function PageTransition({ children }: { children: ReactNode }) {
 
 export default function AnalysisFlow() {
     const step = useAppSelector((state) => state.analysis.currentStep);
-    const theme = useAppSelector((state) => state.ui.theme);
-
-    // AppShell isn't mounted for the wizard flow, so this page owns keeping
-    // the <html> class in sync with theme state instead.
-    useEffect(() => {
-        document.documentElement.classList.toggle("dark", theme === "dark");
-    }, [theme]);
 
     const View = VIEWS[step];
 
