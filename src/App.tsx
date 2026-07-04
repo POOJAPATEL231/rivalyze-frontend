@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
+import { AppShell } from "@/components/layout/AppShell";
+import Dashboard from "@/pages/Dashboard";
 
 function App() {
     return (
-        <div className="flex min-h-svh flex-col items-center justify-center">
-            <Button>Click me</Button>
-        </div>
+        <AppShell>
+            <Dashboard />
+        </AppShell>
     );
 }
 
