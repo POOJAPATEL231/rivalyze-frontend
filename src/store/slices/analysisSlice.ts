@@ -12,6 +12,7 @@ import type {
     RunStatus,
     Telemetry,
 } from "@/types/analysis";
+import type { ApiReportResponse } from "@/types/api";
 
 interface AnalysisState {
     currentStep: AnalysisStep;
@@ -29,6 +30,7 @@ interface AnalysisState {
     laneStatuses: Record<LaneId, LaneStatus>;
     report: Report | null;
     runId: string | null;
+    apiReport: ApiReportResponse | null;
     evidenceDrawer: { open: boolean; evidenceId: string | null };
 }
 
@@ -56,6 +58,7 @@ const initialState: AnalysisState = {
     },
     report: null,
     runId: null,
+    apiReport: null,
     evidenceDrawer: { open: false, evidenceId: null },
 };
 
@@ -143,6 +146,9 @@ const analysisSlice = createSlice({
         setRunId(state, action: PayloadAction<string | null>) {
             state.runId = action.payload;
         },
+        setApiReport(state, action: PayloadAction<ApiReportResponse | null>) {
+            state.apiReport = action.payload;
+        },
         /** Re-entering Live Run should always start clean, not pile a fresh
          * script on top of a previously completed run's ledger/telemetry. */
         resetRun(state) {
@@ -151,6 +157,7 @@ const analysisSlice = createSlice({
             state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
             state.report = null;
             state.runId = null;
+            state.apiReport = null;
             state.laneStatuses = {
                 discovery: "done",
                 news: "queued",
@@ -192,6 +199,7 @@ export const {
     setLaneStatus,
     setReport,
     setRunId,
+    setApiReport,
     resetRun,
     openEvidence,
     closeEvidence,

@@ -1,40 +1,33 @@
-import { EvidenceChip } from "@/components/evidence/EvidenceChip";
 import { ConfidenceRing } from "@/components/recommendations/ConfidenceRing";
 import { Card, CardContent } from "@/components/ui/card";
-import type { Recommendation } from "@/types/recommendation";
+import type { ApiRecommendation } from "@/types/api";
 
 interface RecCardProps {
-    recommendation: Recommendation;
+    recommendation: ApiRecommendation;
 }
 
+/** ponytail: evidence_ids are opaque backend ids with no content endpoint
+ * yet, shown as a plain source count rather than wired to EvidenceChip
+ * (which only resolves against the static mock evidence set). */
 export function RecCard({ recommendation }: RecCardProps) {
-    const evidenceIds = recommendation.evidenceIds ?? [];
-    const agentCount = recommendation.agentCount ?? 1;
+    const evidenceCount = recommendation.evidence_ids.length;
+    const confidencePercent = Math.round(recommendation.confidence * 100);
 
     return (
         <Card className="h-full">
             <CardContent className="flex h-full flex-col gap-3">
                 <div className="flex items-start justify-between gap-3">
                     <h3 className="font-heading text-sm font-semibold leading-snug text-foreground">
-                        {recommendation.title}
+                        {recommendation.action}
                     </h3>
-                    <ConfidenceRing value={recommendation.confidence} />
+                    <ConfidenceRing value={confidencePercent} />
                 </div>
 
-                <p className="text-sm text-muted-foreground">{recommendation.description}</p>
-
-                {evidenceIds.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                        {evidenceIds.map((evidenceId) => (
-                            <EvidenceChip key={evidenceId} evidenceId={evidenceId} />
-                        ))}
-                    </div>
-                )}
+                <p className="text-sm text-muted-foreground">{recommendation.rationale}</p>
 
                 <p className="mt-auto border-t border-border pt-3 font-mono text-[11px] text-muted-foreground">
-                    {agentCount} agent{agentCount === 1 ? "" : "s"} · {evidenceIds.length} source
-                    group{evidenceIds.length === 1 ? "" : "s"} · confidence{" "}
-                    {recommendation.confidence}%
+                    {evidenceCount} source{evidenceCount === 1 ? "" : "s"} · confidence{" "}
+                    {confidencePercent}%
                 </p>
             </CardContent>
         </Card>

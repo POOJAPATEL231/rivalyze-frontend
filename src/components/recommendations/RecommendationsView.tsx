@@ -10,7 +10,7 @@ import { unlockStep } from "@/store/slices/analysisSlice";
 export function RecommendationsView() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const report = useAppSelector((state) => state.analysis.report);
+    const report = useAppSelector((state) => state.analysis.apiReport);
 
     function goTo(step: "compare" | "workspace") {
         dispatch(unlockStep(step));
@@ -45,7 +45,7 @@ export function RecommendationsView() {
 
             <div className="grid grid-cols-1 gap-4 min-[960px]:grid-cols-3">
                 {report.recommendations.map((recommendation) => (
-                    <RecCard key={recommendation.id} recommendation={recommendation} />
+                    <RecCard key={recommendation.claim_ref} recommendation={recommendation} />
                 ))}
             </div>
 
