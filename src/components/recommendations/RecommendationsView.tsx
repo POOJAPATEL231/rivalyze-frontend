@@ -1,4 +1,14 @@
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { exportReport } from "@/services/analyze";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+
 import { useNavigate } from "react-router";
 
 import { ConfidenceNote } from "@/components/recommendations/ConfidenceNote";
@@ -11,6 +21,34 @@ export function RecommendationsView() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const report = useAppSelector((state) => state.analysis.apiReport);
+    const runId = useAppSelector((state) => state.analysis.runId);
+    const [isExporting, setIsExporting] = useState(false);
+
+    async function handleExport(format: "md" | "pdf") {
+        if (!runId || isExporting) return;
+
+        setIsExporting(true);
+        try {
+            const blob = await exportReport(runId, format);
+
+            // Create a link element, hide it, direct it toward the blob, and then click it
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            // Provide a default file name with the selected format
+            a.download = `report-${runId}.${format}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (err) {
+            console.error("Failed to export report:", err);
+            // Optionally set an error state here to show in UI
+        } finally {
+            setIsExporting(false);
+        }
+    }
 
     function goTo(step: "compare" | "workspace") {
         dispatch(unlockStep(step));
@@ -52,9 +90,22 @@ export function RecommendationsView() {
             <ConfidenceNote />
 
             <div className="flex flex-wrap items-center justify-end gap-3">
-                <Button variant="outline" disabled title="Export is not wired up yet">
-                    Export
-                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" disabled={isExporting || !runId}>
+                            {isExporting && <Loader2 className="mr-2 size-4 animate-spin" />}
+                            Export
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleExport("md")}>
+                            Markdown (.md)
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleExport("pdf")}>
+                            PDF (.pdf)
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
                 <Button variant="outline" onClick={() => goTo("compare")}>
                     Compare side-by-side
                 </Button>

@@ -58,3 +58,10 @@ export function mapApiCompetitor(competitor: ApiCompetitor, index: number): Comp
         rationale: competitor.rationale,
     };
 }
+
+export async function exportReport(runId: string, format: string): Promise<Blob> {
+    const response = await apiClient.get(`/api/v1/reports/${runId}/export?format=${format}`, {
+        responseType: "blob",
+    });
+    return response.data;
+}
