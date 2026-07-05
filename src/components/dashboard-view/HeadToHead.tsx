@@ -16,7 +16,7 @@ export function HeadToHead({ rows }: HeadToHeadProps) {
     const rivalNames = rows.length > 0 ? Object.keys(rows[0].rivals) : [];
 
     return (
-        <Table>
+        <Table className="min-w-[720px]">
             <TableHeader>
                 <TableRow>
                     <TableHead>Signal</TableHead>

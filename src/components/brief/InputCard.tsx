@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { extractApiErrorMessage } from "@/lib/apiError";
-import { startAnalysis } from "@/services/analyze";
+import { startCompanyAnalysis, startIdeaAnalysis } from "@/services/analyze";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
     setCompanyName,
@@ -76,11 +76,13 @@ export function InputCard() {
         setIsSubmitting(true);
         setError(null);
         try {
-            const { job_id } = await startAnalysis({
-                company: inputMode === "company" ? companyName.trim() : "",
-                domain: inputMode === "company" ? domain.trim() : "",
-                idea: inputMode === "idea" ? ideaDescription.trim() : null,
-            });
+            const { job_id } =
+                inputMode === "company"
+                    ? await startCompanyAnalysis({
+                          company: companyName.trim(),
+                          domain: domain.trim(),
+                      })
+                    : await startIdeaAnalysis({ idea: ideaDescription.trim() });
             dispatch(setJobId(job_id));
             dispatch(unlockStep("discovery"));
             navigate("/discovery");

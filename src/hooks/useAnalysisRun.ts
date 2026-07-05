@@ -236,6 +236,7 @@ export function useAnalysisRun(jobId: string | null, options?: { manual?: boolea
         setError(null);
         try {
             await confirmRun(jobId, competitors);
+            dispatch(unlockStep("run"));
             dispatch(setRunStatus("running"));
             dispatch(setLaneStatus({ lane: "news", status: "running" }));
             dispatch(setLaneStatus({ lane: "product", status: "running" }));

@@ -25,15 +25,16 @@ interface StepConfig {
 
 const WIZARD_STEPS: StepConfig[] = [
     { id: "brief", label: "Brief", number: "01" },
-    { id: "discovery", label: "Discovery & Run", number: "02" },
-    { id: "dashboard", label: "Dashboard", number: "03" },
-    { id: "recommendations", label: "Recommendations", number: "04" },
+    { id: "discovery", label: "Discovery", number: "02" },
+    { id: "run", label: "Run", number: "03" },
+    { id: "dashboard", label: "Dashboard", number: "04" },
+    { id: "recommendations", label: "Recommendations", number: "05" },
 ];
 
 const NAV_STEPS: StepConfig[] = [
-    { id: "compare", label: "Compare", number: "05", stretch: true },
-    { id: "workspace", label: "Workspace", number: "06", stretch: true },
-    { id: "history", label: "History", number: "07" },
+    { id: "compare", label: "Compare", number: "06", stretch: true },
+    { id: "workspace", label: "Workspace", number: "07", stretch: true },
+    { id: "history", label: "History", number: "08" },
 ];
 
 const STEPS = [...WIZARD_STEPS, ...NAV_STEPS];
@@ -49,8 +50,14 @@ export function StepBar() {
     const navigate = useNavigate();
     const currentStep = useAppSelector((state) => state.analysis.currentStep);
     const unlockedSteps = useAppSelector((state) => state.analysis.unlockedSteps);
+    const runStatus = useAppSelector((state) => state.analysis.runStatus);
     const theme = useAppSelector((state) => state.ui.theme);
-    const currentIndex = STEPS.findIndex((step) => step.id === currentStep);
+    // Discovery and Run share one URL for the live automatic flow (see
+    // useAnalysisRun) — the rail still needs to show two nodes, so once
+    // agents are deployed it displays "Run" as current instead of "Discovery"
+    // without touching the actual route/currentStep.
+    const displayStep = currentStep === "discovery" && runStatus !== "idle" ? "run" : currentStep;
+    const currentIndex = STEPS.findIndex((step) => step.id === displayStep);
     const refreshToken = useAppSelector((state) => state.auth.refreshToken);
 
     async function handleLogout() {
@@ -85,7 +92,7 @@ export function StepBar() {
             {/* Wizard rail — always visible. Labels hide below md, circles shrink below md */}
             <ol className="flex min-w-0 flex-1 items-center">
                 {WIZARD_STEPS.map((step, index) => {
-                    const isActive = step.id === currentStep;
+                    const isActive = step.id === displayStep;
                     const isUnlocked = unlockedSteps.includes(step.id);
                     const isDone = isUnlocked && index < currentIndex;
 
@@ -168,7 +175,7 @@ export function StepBar() {
                     <DropdownMenuContent align="end" className="w-44">
                         {NAV_STEPS.map((step, i) => {
                             const index = WIZARD_STEPS.length + i;
-                            const isActive = step.id === currentStep;
+                            const isActive = step.id === displayStep;
                             const isUnlocked = unlockedSteps.includes(step.id);
                             const isDone = isUnlocked && index < currentIndex;
                             return (
@@ -211,7 +218,7 @@ export function StepBar() {
             <div className="hidden shrink-0 items-center gap-1 min-[1430px]:flex">
                 {NAV_STEPS.map((step, i) => {
                     const index = WIZARD_STEPS.length + i;
-                    const isActive = step.id === currentStep;
+                    const isActive = step.id === displayStep;
                     const isUnlocked = unlockedSteps.includes(step.id);
                     const isDone = isUnlocked && index < currentIndex;
 
