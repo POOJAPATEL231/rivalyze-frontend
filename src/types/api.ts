@@ -191,13 +191,17 @@ export interface ApiReportResponse {
     stats: ApiReportStats | null;
 }
 /** One row of GET /api/v1/history. threat_level/confidence are null for
- * runs completed before the strategist agent produced a report. */
+ * runs completed before the strategist agent produced a report.
+ * `has_new` is true only on a company's newest row when its latest run
+ * carries signals the previous run didn't — older rows and first-run
+ * companies always come back false. */
 export interface ApiHistoryEntry {
     job_id: string;
     company: string;
     threat_level: string | null;
     confidence: number | null;
     created_at: string;
+    has_new: boolean;
 }
 
 export interface ApiValidationError {
