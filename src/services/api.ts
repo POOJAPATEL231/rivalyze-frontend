@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
-import { store } from "@/store";
+import { store, clearAllPersistedData } from "@/store";
 import { logout, tokensRefreshed } from "@/store/slices/authSlice";
 import type { ApiTokenResponse } from "@/types/api";
 
@@ -54,6 +54,7 @@ apiClient.interceptors.response.use(
         const { refreshToken } = store.getState().auth;
         if (!refreshToken) {
             store.dispatch(logout());
+            clearAllPersistedData();
             return Promise.reject(error);
         }
 
@@ -73,6 +74,7 @@ apiClient.interceptors.response.use(
             return apiClient(config);
         } catch (refreshError) {
             store.dispatch(logout());
+            clearAllPersistedData();
             return Promise.reject(refreshError);
         }
     },
