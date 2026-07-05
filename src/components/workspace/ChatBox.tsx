@@ -154,7 +154,6 @@ export function ChatBox() {
 /** Polls GET /api/v1/chat/{chat_id} every `POLL_INTERVAL_MS` until the
  * status is no longer `"processing"`, then returns the final payload. */
 async function pollChatStatus(chatId: string) {
-    // eslint-disable-next-line no-constant-condition
     while (true) {
         const status = await getChatStatus(chatId);
 
