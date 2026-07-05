@@ -1,81 +1,17 @@
-import {
-    Compass,
-    Loader2,
-    type LucideIcon,
-    MessageSquareQuote,
-    Newspaper,
-    Package,
-    Sparkles,
-    TriangleAlert,
-} from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 
-import { CompetitorList } from "@/components/discovery/CompetitorList";
-import { CompetitorRadar } from "@/components/discovery/CompetitorRadar";
-import { AgentLane } from "@/components/run/AgentLane";
-import { AgentLedger } from "@/components/run/AgentLedger";
-import { TelemetryBar } from "@/components/run/TelemetryBar";
-import { Button } from "@/components/ui/button";
+import { DiscoveryPanel } from "@/components/discovery/DiscoveryPanel";
+import { RunPanel } from "@/components/run/RunPanel";
 import { useAnalysisRun } from "@/hooks/useAnalysisRun";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { unlockStep } from "@/store/slices/analysisSlice";
-import type { LaneId } from "@/types/analysis";
-
-interface LaneConfig {
-    id: LaneId;
-    icon: LucideIcon;
-    name: string;
-    fallbackSubtitle: string;
-    iconClassName: string;
-    barClassName: string;
-}
-
-const LANES: LaneConfig[] = [
-    {
-        id: "discovery",
-        icon: Compass,
-        name: "Discovery",
-        fallbackSubtitle: "Competitive set confirmed",
-        iconClassName: "text-muted-foreground",
-        barClassName: "bg-muted-foreground",
-    },
-    {
-        id: "news",
-        icon: Newspaper,
-        name: "News",
-        fallbackSubtitle: "Press, funding, and announcements",
-        iconClassName: "text-success",
-        barClassName: "bg-success",
-    },
-    {
-        id: "product",
-        icon: Package,
-        name: "Product",
-        fallbackSubtitle: "Pricing and changelog diffs",
-        iconClassName: "text-primary",
-        barClassName: "bg-primary",
-    },
-    {
-        id: "reviews",
-        icon: MessageSquareQuote,
-        name: "Reviews",
-        fallbackSubtitle: "G2, Capterra, and forum threads",
-        iconClassName: "text-destructive",
-        barClassName: "bg-destructive",
-    },
-    {
-        id: "strategist",
-        icon: Sparkles,
-        name: "Strategist",
-        fallbackSubtitle: "Synthesizing the report",
-        iconClassName: "text-chart-4",
-        barClassName: "bg-chart-4",
-    },
-];
 
 /** Discovery and Live Run share one continuous backend poll (see
  * useAnalysisRun), but read as two distinct steps: competitor confirmation
- * first, then per-agent progress — matching the pre-merge two-screen flow. */
+ * first, then per-agent progress — matching the pre-merge two-screen flow.
+ * Rendering is split into DiscoveryPanel/RunPanel; this component only owns
+ * the shared poll and hands each phase its slice of state. */
 export function DiscoveryRunView() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -87,13 +23,6 @@ export function DiscoveryRunView() {
     const runEvents = useAppSelector((state) => state.analysis.runEvents);
     const laneStatuses = useAppSelector((state) => state.analysis.laneStatuses);
     const { phase, error, confirm } = useAnalysisRun(jobId, { manual });
-
-    function latestTextFor(lane: LaneId, fallback: string) {
-        for (let i = runEvents.length - 1; i >= 0; i--) {
-            if (runEvents[i].agent === lane) return runEvents[i].text;
-        }
-        return fallback;
-    }
 
     function handleOpenDashboard() {
         dispatch(unlockStep("dashboard"));
@@ -122,59 +51,24 @@ export function DiscoveryRunView() {
                 </div>
             )}
 
-            {phase === "discovering" && (
-                <div className="flex flex-col items-center gap-4 py-8">
-                    <CompetitorRadar competitors={[]} companyLabel={companyName || "Your idea"} />
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Loader2 className="size-4 animate-spin" />
-                        Mapping your competitive set…
-                    </div>
-                </div>
-            )}
-
-            {(phase === "awaiting_confirmation" || phase === "confirming") && (
-                <div className="grid grid-cols-1 gap-8 min-[960px]:grid-cols-[55fr_45fr] min-[960px]:items-center">
-                    <CompetitorRadar
-                        competitors={competitors}
-                        companyLabel={companyName || "Your idea"}
-                    />
-                    <CompetitorList onDeploy={confirm} isDeploying={phase === "confirming"} />
-                </div>
+            {(phase === "discovering" ||
+                phase === "awaiting_confirmation" ||
+                phase === "confirming") && (
+                <DiscoveryPanel
+                    phase={phase}
+                    competitors={competitors}
+                    companyName={companyName}
+                    onConfirm={confirm}
+                />
             )}
 
             {isLiveRun && (
-                <>
-                    <TelemetryBar />
-
-                    <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-[55fr_45fr]">
-                        <div className="space-y-3">
-                            {LANES.map((lane) => (
-                                <AgentLane
-                                    key={lane.id}
-                                    icon={lane.icon}
-                                    name={lane.name}
-                                    subtitle={latestTextFor(lane.id, lane.fallbackSubtitle)}
-                                    status={laneStatuses[lane.id]}
-                                    iconClassName={lane.iconClassName}
-                                    barClassName={lane.barClassName}
-                                />
-                            ))}
-                        </div>
-
-                        <AgentLedger />
-                    </div>
-
-                    <div className="flex flex-wrap items-center justify-end gap-3">
-                        <Button
-                            size="lg"
-                            disabled={phase !== "done"}
-                            onClick={handleOpenDashboard}
-                            className="bg-iris text-background hover:opacity-90"
-                        >
-                            Open the dashboard
-                        </Button>
-                    </div>
-                </>
+                <RunPanel
+                    isDone={phase === "done"}
+                    runEvents={runEvents}
+                    laneStatuses={laneStatuses}
+                    onOpenDashboard={handleOpenDashboard}
+                />
             )}
         </div>
     );
