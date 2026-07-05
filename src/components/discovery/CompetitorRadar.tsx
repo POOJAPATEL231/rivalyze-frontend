@@ -14,6 +14,18 @@ const RING_RADIUS: Record<CompetitorRelation, number> = {
     indirect: 90,
 };
 
+// Tailwind's scanner needs literal class strings, so orbit durations are
+// fixed pairs rather than interpolated — direct orbits faster, on the
+// smaller ring; indirect drifts slower on the outer one.
+const ORBIT_CLASS: Record<CompetitorRelation, string> = {
+    direct: "animate-[spin_40s_linear_infinite]",
+    indirect: "animate-[spin_60s_linear_infinite]",
+};
+const COUNTER_ORBIT_CLASS: Record<CompetitorRelation, string> = {
+    direct: "animate-[spin_40s_linear_infinite_reverse]",
+    indirect: "animate-[spin_60s_linear_infinite_reverse]",
+};
+
 function layoutNodes(competitors: Competitor[]) {
     const groups: Record<CompetitorRelation, Competitor[]> = {
         direct: [],
@@ -47,7 +59,9 @@ export function CompetitorRadar({ competitors, companyLabel, className }: Compet
 
     return (
         <div className={cn("relative mx-auto aspect-square w-full max-w-md", className)}>
-            <svg viewBox="0 0 200 200" className="size-full overflow-visible" aria-hidden>
+            <div className="absolute inset-10 animate-pulse rounded-full bg-primary opacity-10 blur-3xl" />
+
+            <svg viewBox="0 0 200 200" className="relative size-full overflow-visible" aria-hidden>
                 <defs>
                     <linearGradient id="radar-sweep" x1="0%" y1="0%" x2="0%" y2="100%">
                         <stop offset="0%" stopColor="var(--success)" />
@@ -60,7 +74,7 @@ export function CompetitorRadar({ competitors, companyLabel, className }: Compet
                     cx="100"
                     cy="100"
                     r="90"
-                    className="fill-none stroke-border"
+                    className="animate-pulse fill-none stroke-border"
                     strokeWidth="1"
                 />
                 <circle
@@ -94,15 +108,26 @@ export function CompetitorRadar({ competitors, companyLabel, className }: Compet
                     />
                 </g>
 
-                {nodes.map(({ competitor, relation, x, y }, index) => (
-                    <RadarNode
-                        key={competitor.id}
-                        x={x}
-                        y={y}
-                        label={competitor.name}
-                        relation={relation}
-                        delayMs={index * 100}
-                    />
+                {(["direct", "indirect"] as CompetitorRelation[]).map((relation) => (
+                    <g
+                        key={relation}
+                        className={ORBIT_CLASS[relation]}
+                        style={{ transformOrigin: "100px 100px" }}
+                    >
+                        {nodes
+                            .filter((node) => node.relation === relation)
+                            .map(({ competitor, x, y }, index) => (
+                                <RadarNode
+                                    key={competitor.id}
+                                    x={x}
+                                    y={y}
+                                    label={competitor.name}
+                                    relation={relation}
+                                    delayMs={index * 100}
+                                    counterOrbitClass={COUNTER_ORBIT_CLASS[relation]}
+                                />
+                            ))}
+                    </g>
                 ))}
             </svg>
 
