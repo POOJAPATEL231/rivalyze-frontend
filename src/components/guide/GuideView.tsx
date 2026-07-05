@@ -217,21 +217,15 @@ export function GuideView() {
                     />
                     <p className="text-sm text-muted-foreground">
                         A checkbox labeled <strong>Keep me logged in</strong> sits above the sign-in
-                        button and is checked by default.
+                        button and is checked by default. Leave it checked to stay signed in after
+                        closing the browser; uncheck it and your session clears as soon as you close
+                        the tab.
                     </p>
-
-                    <GuideCallout variant="clarify">
-                        <p>
-                            The <strong>Keep me logged in</strong> checkbox doesn&rsquo;t appear to
-                            change anything — your session is saved to the browser the same way
-                            whether it&rsquo;s checked or not.
-                        </p>
-                    </GuideCallout>
 
                     <p className="text-sm text-muted-foreground">
                         A <strong>Forgot password?</strong> link sits next to the password field but
-                        is not active yet — hovering it shows &ldquo;Coming soon,&rdquo; and
-                        clicking it does nothing.
+                        isn&rsquo;t active yet — clicking it just swaps the text to &ldquo;Coming
+                        soon&rdquo; rather than sending a reset email.
                     </p>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
@@ -302,8 +296,19 @@ export function GuideView() {
                                 of the 500 available characters you&rsquo;ve used.
                             </>,
                             <>
+                                Fill in <strong>Target geography</strong> — marked with a red{" "}
+                                <strong>*</strong>, this is the one required field below the idea
+                                box.
+                            </>,
+                            <>
+                                Optionally add <strong>Industry</strong>,{" "}
+                                <strong>Target customer</strong>, <strong>Business model</strong>,
+                                and <strong>Stage</strong> to sharpen the research — none of these
+                                are required.
+                            </>,
+                            <>
                                 Or click <strong>Try an example idea</strong> to fill in a sample
-                                description.
+                                description and all five fields at once.
                             </>,
                             <>
                                 Click <strong>Start intelligence scan</strong>.
@@ -313,9 +318,21 @@ export function GuideView() {
 
                     <p className="text-sm text-muted-foreground">
                         Company names must stay under 100 characters and idea descriptions under
-                        500. Neither field accepts anything that looks like an HTML tag or script —
-                        Rivalyze blocks the button and explains why until you remove it.
+                        500. The optional context fields are capped at 120 characters each (60 for{" "}
+                        <strong>Stage</strong>). Neither the company name nor the idea description
+                        accepts anything that looks like an HTML tag or script — Rivalyze blocks the
+                        button and explains why until you remove it.
                     </p>
+
+                    <GuideCallout variant="note">
+                        <p>
+                            <strong>Target geography</strong> tells the agents which region&rsquo;s
+                            competitors to prioritize — for example, an idea aimed at India surfaces
+                            different rivals than the same idea aimed at the US. It&rsquo;s the only
+                            required field beyond the idea description itself; the Start button
+                            stays disabled with an explanation until it&rsquo;s filled in.
+                        </p>
+                    </GuideCallout>
 
                     <GuideCallout variant="note">
                         <p>
@@ -439,7 +456,7 @@ export function GuideView() {
 
                     <GuideQA
                         question="What happens if a run fails or times out?"
-                        answer='A message appears in a dashed red box above the run panel — either a specific error or a generic "This is taking longer than expected. Please try again." Either way, you’ll need to start over from Brief.'
+                        answer='A message appears in a dashed red box — either a specific error or a generic "This is taking longer than expected. Please try again." A Try again button appears below it that takes you back to Brief to start over.'
                     />
                 </section>
 
@@ -476,15 +493,6 @@ export function GuideView() {
                         (violet).
                     </p>
 
-                    <GuideCallout variant="clarify">
-                        <p>
-                            In the current build, the SWOT section appears twice in a row, showing
-                            identical information both times. That looks like a display bug rather
-                            than something intentional — if you see it, it isn&rsquo;t something you
-                            did.
-                        </p>
-                    </GuideCallout>
-
                     <p className="text-sm text-muted-foreground">
                         The <strong>rival sentiment</strong> panel is a bar chart scoring each
                         competitor, and the <strong>opportunities</strong> panel lists numbered
@@ -493,12 +501,17 @@ export function GuideView() {
                         bottom moves you on.
                     </p>
 
-                    <GuideCallout variant="clarify">
+                    <GuideCallout variant="note">
                         <p>
-                            The small &ldquo;N sources&rdquo; badges throughout this page
-                            aren&rsquo;t clickable yet — this looks like a feature that exists on
-                            the server but hasn&rsquo;t been connected to this screen, not an
-                            intentional dead end.
+                            A value in the head-to-head table or an opportunity&rsquo;s source count
+                            is clickable — shown in violet with a small arrow icon, or a &ldquo;N
+                            sources&rdquo; pill you can press — whenever Rivalyze can trace it back
+                            to a specific claim. Click it to open the{" "}
+                            <a href="#evidence" className="text-primary hover:underline">
+                                Evidence Drawer
+                            </a>
+                            . Values shown as plain text aren&rsquo;t linked to a specific claim yet
+                            and won&rsquo;t open anything.
                         </p>
                     </GuideCallout>
                 </section>
@@ -539,6 +552,15 @@ export function GuideView() {
                         question="Why is one recommendation's confidence so low?"
                         answer="Low confidence is shown deliberately, not hidden. It usually means the claim is backed by only one source or one agent, rather than several agreeing independently."
                     />
+
+                    <GuideCallout variant="clarify">
+                        <p>
+                            Each card&rsquo;s &ldquo;N sources&rdquo; text is not clickable here —
+                            unlike the equivalent counts on the dashboard, recommendation cards
+                            aren&rsquo;t wired to a specific claim yet, so there&rsquo;s nothing to
+                            open.
+                        </p>
+                    </GuideCallout>
                 </section>
 
                 <section
@@ -613,10 +635,19 @@ export function GuideView() {
                     <GuideSteps
                         items={[
                             "Click a suggested question, or type your own into the box and press Enter.",
-                            "If your question matches one of the built-in sample topics, you get a canned answer with a citation you can click to open the Evidence Drawer.",
+                            "If your question matches one of the built-in sample topics, you get a canned answer with a source-count citation.",
                             "Anything else returns a message saying it couldn't find an answer in the indexed sources.",
                         ]}
                     />
+
+                    <GuideCallout variant="clarify">
+                        <p>
+                            Clicking a citation here opens the real Evidence Drawer, but since these
+                            answers are canned demo content rather than a real analysis, the drawer
+                            has nothing to match and shows &ldquo;No sources found for this
+                            claim.&rdquo; That&rsquo;s expected for this screen, not an error.
+                        </p>
+                    </GuideCallout>
                 </section>
 
                 <section
@@ -672,22 +703,32 @@ export function GuideView() {
                     <p className="text-sm text-muted-foreground">
                         A panel that slides in from the right, showing exactly which sources back up
                         a specific claim: source type, date, a quoted snippet, a link, and which
-                        agent found it. Click a pill that reads something like &ldquo;&#9670; 2
-                        sources&rdquo; to open it.
+                        agent found it. It fetches this live from your run the moment you open it,
+                        so the sources you see are real, not canned examples.
                     </p>
 
-                    <GuideCallout variant="clarify">
+                    <GuideCallout variant="note">
                         <p>
-                            This works reliably today from the Workspace chat&rsquo;s citations. On
-                            Dashboard and Recommendations, the equivalent source-count badges are
-                            currently display-only and don&rsquo;t open the drawer.
+                            Not every claim on screen opens the drawer — only ones Rivalyze can
+                            trace to a specific claim reference. On the <strong>Dashboard</strong>,
+                            that currently covers the head-to-head table (shown as a violet link
+                            with a small arrow) and the opportunities list (shown as a pressable
+                            &ldquo;N sources&rdquo; pill). Plain, non-colored text elsewhere —
+                            including every source count on <strong>Recommendations</strong> and{" "}
+                            <strong>Compare</strong> — isn&rsquo;t linked yet and won&rsquo;t open
+                            anything.
                         </p>
                     </GuideCallout>
 
                     <GuideSteps
                         items={[
-                            "Click an evidence pill.",
-                            "A panel slides in from the right, showing the claim in quotation marks, followed by one card per source.",
+                            "Click a linked value or source pill.",
+                            <>
+                                The drawer slides in and shows{" "}
+                                <strong>Loading sources&hellip;</strong> briefly, then either a card
+                                per source or, if nothing matches,{" "}
+                                <strong>No sources found for this claim.</strong>
+                            </>,
                             <>
                                 Close it by clicking the <strong>&times;</strong> in the corner,
                                 clicking outside the panel, or pressing Escape.
@@ -746,20 +787,12 @@ export function GuideView() {
                         answer="Each phase has a soft time limit — roughly a minute for Discovery, a few minutes for the full run. Past that point, Rivalyze shows an error and you'll need to restart from Brief."
                     />
                     <GuideQA
-                        question="The SWOT section shows up twice on the Dashboard."
-                        answer="That's a known display issue in the current build, not something you did — both copies show the same information."
-                    />
-                    <GuideQA
-                        question="Nothing happens when I click a source count on Dashboard or Recommendations."
-                        answer="Those badges aren't wired up to open the Evidence Drawer yet. Evidence links currently work reliably only from the Workspace chat."
+                        question="Nothing happens when I click a source count on Recommendations or Compare."
+                        answer="Those aren't wired up to open the Evidence Drawer yet. On the Dashboard, the equivalent head-to-head values and opportunity source pills do open it, whenever Rivalyze can trace them to a specific claim."
                     />
                     <GuideQA
                         question="Workspace doesn't seem to know anything about my actual competitors."
-                        answer="That's expected right now — Workspace is a scripted demo built around four fictional companies, not a live question-answering tool over your analysis."
-                    />
-                    <GuideQA
-                        question={`I unchecked "Keep me logged in," but I'm still logged in later.`}
-                        answer="That checkbox doesn't currently change anything — your session is saved to the browser either way."
+                        answer="That's expected right now — Workspace is a scripted demo built around four fictional companies, not a live question-answering tool over your analysis. Its citations open the real Evidence Drawer, but show no matching sources since the demo answers aren't tied to a real run."
                     />
                     <GuideQA
                         question="My PDF export looked cut off or oddly split across pages."
@@ -768,6 +801,10 @@ export function GuideView() {
                     <GuideQA
                         question="I was logged out without doing anything."
                         answer="Login sessions expire and are refreshed silently in the background; occasionally that refresh fails and you're signed out. Log back in — Rivalyze returns you to the page you were on."
+                    />
+                    <GuideQA
+                        question="I refreshed the page and lost my progress."
+                        answer="Refreshing at any point resets this browser tab back to Brief — the analysis itself may keep running on the server, but the tab loses track of which step you were on. Once a run finishes, you can find it again in History."
                     />
                 </section>
 
