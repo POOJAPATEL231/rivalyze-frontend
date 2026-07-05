@@ -47,7 +47,9 @@ export function CompetitorRadar({ competitors, companyLabel, className }: Compet
 
     return (
         <div className={cn("relative mx-auto aspect-square w-full max-w-md", className)}>
-            <svg viewBox="0 0 200 200" className="size-full overflow-visible" aria-hidden>
+            <div className="absolute inset-10 animate-pulse rounded-full bg-primary opacity-10 blur-3xl" />
+
+            <svg viewBox="0 0 200 200" className="relative size-full overflow-visible" aria-hidden>
                 <defs>
                     <linearGradient id="radar-sweep" x1="0%" y1="0%" x2="0%" y2="100%">
                         <stop offset="0%" stopColor="var(--success)" />
@@ -60,7 +62,7 @@ export function CompetitorRadar({ competitors, companyLabel, className }: Compet
                     cx="100"
                     cy="100"
                     r="90"
-                    className="fill-none stroke-border"
+                    className="animate-pulse fill-none stroke-border"
                     strokeWidth="1"
                 />
                 <circle

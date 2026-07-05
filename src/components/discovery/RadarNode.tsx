@@ -26,6 +26,14 @@ export function RadarNode({ x, y, label, relation, delayMs }: RadarNodeProps) {
                 transformOrigin: `${x}px ${y}px`,
             }}
         >
+            <circle
+                cx={x}
+                cy={y}
+                r="8"
+                fill={RELATION_COLOR[relation]}
+                className="animate-ping opacity-40"
+                style={{ animationDelay: `${delayMs + 400}ms` }}
+            />
             <circle cx={x} cy={y} r="5" fill={RELATION_COLOR[relation]} />
             <text
                 x={x + (isRightHalf ? 9 : -9)}

@@ -29,7 +29,7 @@ export type AnalysisPhase =
 
 const POLL_INTERVAL_MS = 2000;
 /** ~50s soft timeout for discovery, matching the old useDiscoveryJob's cap. */
-const MAX_DISCOVERY_POLLS = 25;
+const MAX_DISCOVERY_POLLS = 35;
 /** ~3min soft timeout for analysis, matching the old useLiveRun's cap. */
 const MAX_ANALYSIS_POLLS = 90;
 
