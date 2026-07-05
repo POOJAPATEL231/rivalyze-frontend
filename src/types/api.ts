@@ -227,6 +227,29 @@ export interface ApiChatStatusResponse {
     error: string | null;
 }
 
+export interface ApiChatRequest {
+    company: string;
+    question: string;
+    run_id: string;
+}
+
+export interface ApiChatResponse {
+    chat_id: string;
+    status: string;
+}
+
+/** Full response from GET /api/v1/chat/{chat_id} — polled until `status`
+ * transitions away from `"processing"`. */
+export interface ApiChatStatusResponse {
+    chat_id: string;
+    status: string;
+    events: ApiRunEvent[];
+    answer: string | null;
+    source: string;
+    evidence_ids: string[];
+    error: string | null;
+}
+
 export interface ApiValidationError {
     loc: (string | number)[];
     msg: string;
