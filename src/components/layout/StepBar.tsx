@@ -1,5 +1,5 @@
-import { Check, Lock, LogOut, Moon, Sun, MoreHorizontal } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Check, HelpCircle, Lock, LogOut, Moon, Sun, MoreHorizontal } from "lucide-react";
+import { Link, useNavigate } from "react-router";
 
 import {
     DropdownMenu,
@@ -273,9 +273,22 @@ export function StepBar() {
             <Button
                 variant="ghost"
                 size="icon"
+                aria-label="User guide"
+                title="User guide"
+                asChild
+                className="ml-auto shrink-0"
+            >
+                <Link to="/guide">
+                    <HelpCircle className="size-5" />
+                </Link>
+            </Button>
+
+            <Button
+                variant="ghost"
+                size="icon"
                 aria-label="Toggle theme"
                 onClick={() => dispatch(toggleTheme())}
-                className="ml-auto shrink-0"
+                className="shrink-0"
             >
                 {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
             </Button>

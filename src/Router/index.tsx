@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-route
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicRoute } from "@/components/auth/PublicRoute";
 import AnalysisFlow from "@/pages/AnalysisFlow";
+import Guide from "@/pages/Guide";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import { useAppSelector } from "@/store/hooks";
@@ -30,6 +31,7 @@ export default function AppRouter() {
                     <Route path="/signup" element={<Signup />} />
                 </Route>
                 <Route path="/" element={<LandingRoute />} />
+                <Route path="/guide" element={<Guide />} />
                 <Route element={<ProtectedRoute />}>
                     <Route path="/brief" element={<AnalysisFlow />} />
                     <Route path="/discovery" element={<AnalysisFlow />} />

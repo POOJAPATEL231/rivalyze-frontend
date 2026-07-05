@@ -1,9 +1,23 @@
+import { Link } from "react-router";
+
 import { Container } from "./primitives";
 
 const COLUMNS = [
-    { title: "Product", links: ["Features", "Roadmap"] },
-    { title: "Company", links: ["Contact"] },
-    { title: "Resources", links: ["Documentation", "Evidence Framework"] },
+    {
+        title: "Product",
+        links: [
+            { label: "Features", href: "#top" },
+            { label: "Roadmap", href: "#top" },
+        ],
+    },
+    { title: "Company", links: [{ label: "Contact", href: "#top" }] },
+    {
+        title: "Resources",
+        links: [
+            { label: "Documentation", href: "/guide" },
+            { label: "Evidence Framework", href: "#top" },
+        ],
+    },
 ];
 
 export default function Footer() {
@@ -32,16 +46,27 @@ export default function Footer() {
                                     {col.title}
                                 </div>
                                 <ul className="mt-4 space-y-2">
-                                    {col.links.map((l) => (
-                                        <li key={l}>
-                                            <a
-                                                href="#top"
-                                                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                                            >
-                                                {l}
-                                            </a>
-                                        </li>
-                                    ))}
+                                    {col.links.map((l) =>
+                                        l.href.startsWith("/") ? (
+                                            <li key={l.label}>
+                                                <Link
+                                                    to={l.href}
+                                                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                                                >
+                                                    {l.label}
+                                                </Link>
+                                            </li>
+                                        ) : (
+                                            <li key={l.label}>
+                                                <a
+                                                    href={l.href}
+                                                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                                                >
+                                                    {l.label}
+                                                </a>
+                                            </li>
+                                        ),
+                                    )}
                                 </ul>
                             </div>
                         ))}
