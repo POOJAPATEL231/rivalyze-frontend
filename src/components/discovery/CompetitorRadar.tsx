@@ -14,6 +14,18 @@ const RING_RADIUS: Record<CompetitorRelation, number> = {
     indirect: 90,
 };
 
+// Tailwind's scanner needs literal class strings, so orbit durations are
+// fixed pairs rather than interpolated — direct orbits faster, on the
+// smaller ring; indirect drifts slower on the outer one.
+const ORBIT_CLASS: Record<CompetitorRelation, string> = {
+    direct: "animate-[spin_40s_linear_infinite]",
+    indirect: "animate-[spin_60s_linear_infinite]",
+};
+const COUNTER_ORBIT_CLASS: Record<CompetitorRelation, string> = {
+    direct: "animate-[spin_40s_linear_infinite_reverse]",
+    indirect: "animate-[spin_60s_linear_infinite_reverse]",
+};
+
 function layoutNodes(competitors: Competitor[]) {
     const groups: Record<CompetitorRelation, Competitor[]> = {
         direct: [],
@@ -96,15 +108,26 @@ export function CompetitorRadar({ competitors, companyLabel, className }: Compet
                     />
                 </g>
 
-                {nodes.map(({ competitor, relation, x, y }, index) => (
-                    <RadarNode
-                        key={competitor.id}
-                        x={x}
-                        y={y}
-                        label={competitor.name}
-                        relation={relation}
-                        delayMs={index * 100}
-                    />
+                {(["direct", "indirect"] as CompetitorRelation[]).map((relation) => (
+                    <g
+                        key={relation}
+                        className={ORBIT_CLASS[relation]}
+                        style={{ transformOrigin: "100px 100px" }}
+                    >
+                        {nodes
+                            .filter((node) => node.relation === relation)
+                            .map(({ competitor, x, y }, index) => (
+                                <RadarNode
+                                    key={competitor.id}
+                                    x={x}
+                                    y={y}
+                                    label={competitor.name}
+                                    relation={relation}
+                                    delayMs={index * 100}
+                                    counterOrbitClass={COUNTER_ORBIT_CLASS[relation]}
+                                />
+                            ))}
+                    </g>
                 ))}
             </svg>
 
