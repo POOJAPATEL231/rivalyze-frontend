@@ -1,8 +1,10 @@
-import { Diamond } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Diamond, Loader2 } from "lucide-react";
 
 import { evidence } from "@/data/evidence";
 import { cn } from "@/lib/utils";
-import { useAppDispatch } from "@/store/hooks";
+import { fetchClaimEvidence } from "@/services/analyze";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { openEvidence } from "@/store/slices/analysisSlice";
 
 interface EvidenceChipProps {
@@ -14,7 +16,38 @@ interface EvidenceChipProps {
  * shared EvidenceDrawer for a given claim. */
 export function EvidenceChip({ evidenceId, className }: EvidenceChipProps) {
     const dispatch = useAppDispatch();
-    const count = evidence[evidenceId]?.sources.length ?? 0;
+    const runId = useAppSelector((state) => state.analysis.runId);
+
+    const mockEvidence = evidence[evidenceId];
+    const [count, setCount] = useState<number | null>(
+        mockEvidence ? mockEvidence.sources.length : null,
+    );
+    // Only show loading if we don't have mock data AND we have a runId to fetch from.
+    const [loading, setLoading] = useState(!mockEvidence && !!runId);
+
+    useEffect(() => {
+        if (mockEvidence || !runId) return;
+
+        let cancelled = false;
+
+        fetchClaimEvidence(evidenceId, runId)
+            .then((data) => {
+                if (!cancelled) {
+                    setCount(data.sources.length);
+                    setLoading(false);
+                }
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setCount(0);
+                    setLoading(false);
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [evidenceId, runId, mockEvidence]);
 
     return (
         <button
@@ -25,8 +58,12 @@ export function EvidenceChip({ evidenceId, className }: EvidenceChipProps) {
                 className,
             )}
         >
-            <Diamond className="size-2.5" />
-            {count} source{count === 1 ? "" : "s"}
+            {loading ? (
+                <Loader2 className="size-2.5 animate-spin" />
+            ) : (
+                <Diamond className="size-2.5" />
+            )}
+            {loading ? "Loading..." : `${count ?? 0} source${count === 1 ? "" : "s"}`}
         </button>
     );
 }

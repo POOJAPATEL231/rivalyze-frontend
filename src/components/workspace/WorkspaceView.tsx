@@ -24,23 +24,20 @@ export function WorkspaceView() {
                         <Badge variant="watch">Preview</Badge>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
-                        Ground questions against your own documents and everything the agents found.
-                        This preview answers a handful of sample questions — it isn&rsquo;t
-                        connected to your analysis yet.
+                        Ask questions grounded in everything the agents found during the analysis
+                        run.
                     </p>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-[100fr]">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Chat</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ChatBox />
-                    </CardContent>
-                </Card>
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Chat</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ChatBox />
+                </CardContent>
+            </Card>
         </div>
     );
 }
