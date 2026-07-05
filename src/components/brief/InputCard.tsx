@@ -22,9 +22,9 @@ import {
 import { hasUnsafeMarkup } from "@/utils/textValidation";
 
 const COMPANY_EXAMPLES = [
-    { name: "Notion", domain: "notion.so" },
-    { name: "Figma", domain: "figma.com" },
-    { name: "Zomato", domain: "zomato.com" },
+    { name: "Notion", domain: "Workspace application" },
+    { name: "Figma", domain: "Interface design tool" },
+    { name: "Zomato", domain: "Food delivery platform" },
 ];
 
 const IDEA_EXAMPLE =
