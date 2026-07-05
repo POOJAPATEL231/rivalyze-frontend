@@ -80,7 +80,7 @@ export function StepBar() {
     return (
         <nav
             aria-label="Analysis progress"
-            className="glass sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6"
+            className="bg-white sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6 border-b border-b-gray-200"
         >
             <a
                 href="/"

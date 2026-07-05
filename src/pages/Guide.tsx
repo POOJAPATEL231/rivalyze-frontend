@@ -24,7 +24,7 @@ export default function Guide() {
                         alt=""
                         className="h-8 w-8 rounded-md object-cover"
                     />
-                    Rivalyze
+                    Argus
                 </Link>
                 <span className="hidden text-sm text-muted-foreground sm:inline">/ User guide</span>
                 <div className="ml-auto flex items-center gap-2">
