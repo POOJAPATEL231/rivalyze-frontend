@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Check, HelpCircle, Lock, LogOut, Moon, Sun, MoreHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 
@@ -11,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { logout as logoutApi } from "@/services/auth";
+import { clearAllPersistedData } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
 import { toggleTheme } from "@/store/slices/uiSlice";
@@ -60,6 +62,14 @@ export function StepBar() {
     const currentIndex = STEPS.findIndex((step) => step.id === displayStep);
     const refreshToken = useAppSelector((state) => state.auth.refreshToken);
 
+    const [scrolled, setScrolled] = useState(false);
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 8);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
     async function handleLogout() {
         if (refreshToken) {
             try {
@@ -70,6 +80,10 @@ export function StepBar() {
             }
         }
         dispatch(logout());
+        // Wipe all persisted data (session, analysis cache, etc.) so the next
+        // user who logs in starts completely fresh. Theme is intentionally kept
+        // — clearAllPersistedData() preserves ui_state so the theme survives.
+        clearAllPersistedData();
     }
 
     return (
