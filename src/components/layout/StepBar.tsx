@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Check, HelpCircle, Lock, LogOut, Moon, Sun, MoreHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 
@@ -61,6 +62,14 @@ export function StepBar() {
     const currentIndex = STEPS.findIndex((step) => step.id === displayStep);
     const refreshToken = useAppSelector((state) => state.auth.refreshToken);
 
+    const [scrolled, setScrolled] = useState(false);
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 8);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
     async function handleLogout() {
         if (refreshToken) {
             try {
@@ -80,7 +89,10 @@ export function StepBar() {
     return (
         <nav
             aria-label="Analysis progress"
-            className="glass sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6"
+            className={cn(
+                "sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 transition-colors duration-300 min-[1430px]:gap-5 min-[1430px]:px-6",
+                scrolled ? "glass" : "border-b border-transparent",
+            )}
         >
             <a
                 href="/"
