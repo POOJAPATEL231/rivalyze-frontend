@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { logout as logoutApi } from "@/services/auth";
+import { clearAllPersistedData } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
 import { toggleTheme } from "@/store/slices/uiSlice";
@@ -79,15 +80,16 @@ export function StepBar() {
             }
         }
         dispatch(logout());
+        // Wipe all persisted data (session, analysis cache, etc.) so the next
+        // user who logs in starts completely fresh. Theme is intentionally kept
+        // — clearAllPersistedData() preserves ui_state so the theme survives.
+        clearAllPersistedData();
     }
 
     return (
         <nav
             aria-label="Analysis progress"
-            className={cn(
-                "sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 transition-colors duration-300 min-[1430px]:gap-5 min-[1430px]:px-6",
-                scrolled ? "glass" : "border-b border-transparent",
-            )}
+            className="bg-background sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6 border-b border-border"
         >
             <a
                 href="/"
@@ -121,7 +123,10 @@ export function StepBar() {
                             )}
                             <button
                                 type="button"
-                                disabled={!isUnlocked}
+                                disabled={
+                                    !isUnlocked ||
+                                    ((step.id === "discovery" || step.id === "run") && isDone)
+                                }
                                 aria-current={isActive ? "step" : undefined}
                                 aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
                                 onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
@@ -138,15 +143,18 @@ export function StepBar() {
                                         !isActive &&
                                             !isDone &&
                                             isUnlocked &&
-                                            "border-border bg-card text-muted-foreground group-hover:border-primary/50 group-hover:text-foreground",
+                                            "border-border bg-card text-foreground/80 group-hover:border-primary/50 group-hover:text-foreground",
                                         !isUnlocked &&
-                                            "border-border/60 bg-transparent text-muted-foreground/40",
+                                            "border-border/60 bg-transparent text-foreground/50",
                                     )}
                                 >
                                     {isActive && (
                                         <span className="absolute inset-0 animate-ping rounded-full bg-primary/40" />
                                     )}
-                                    {isDone ? (
+                                    {(step.label === "Discovery" || step.label === "Run") &&
+                                    isUnlocked ? (
+                                        <Lock className="size-2.5 min-[960px]:size-3 pointer-events-none" />
+                                    ) : isDone ? (
                                         <Check className="size-3 min-[960px]:size-3.5" />
                                     ) : !isUnlocked ? (
                                         <Lock className="size-2.5 min-[960px]:size-3" />
@@ -160,9 +168,11 @@ export function StepBar() {
                                         "hidden font-heading text-sm font-medium whitespace-nowrap min-[960px]:inline",
                                         isActive
                                             ? "text-foreground"
-                                            : isUnlocked
-                                              ? "text-muted-foreground group-hover:text-foreground"
-                                              : "text-muted-foreground/40",
+                                            : isUnlocked ||
+                                                step.label === "Discovery" ||
+                                                step.label === "Run"
+                                              ? "text-foreground/80 group-hover:text-foreground"
+                                              : "text-foreground/40",
                                     )}
                                 >
                                     {step.label}
@@ -196,7 +206,11 @@ export function StepBar() {
                                 return (
                                     <DropdownMenuItem
                                         key={step.id}
-                                        disabled={!isUnlocked}
+                                        disabled={
+                                            !isUnlocked ||
+                                            ((step.id === "discovery" || step.id === "run") &&
+                                                isDone)
+                                        }
                                         aria-label={
                                             !isUnlocked ? `${step.label}, locked` : undefined
                                         }
@@ -208,7 +222,8 @@ export function StepBar() {
                                             !isActive &&
                                                 isDone &&
                                                 "text-success focus:text-success",
-                                            !isUnlocked && "text-muted-foreground/50",
+                                            !isActive && isUnlocked && "text-foreground/80",
+                                            !isUnlocked && "text-foreground/50",
                                         )}
                                     >
                                         <span className="flex items-center gap-2">

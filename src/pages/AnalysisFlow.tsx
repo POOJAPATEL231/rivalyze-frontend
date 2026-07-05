@@ -90,6 +90,18 @@ export default function AnalysisFlow() {
         return <Navigate to="/brief" replace />;
     }
 
+    // Guard: Prevent backtracking to discovery if it's completed (run is unlocked)
+    if (stepFromPath === "discovery" && unlockedSteps.includes("run")) {
+        const fallback = currentStep === "discovery" ? "run" : currentStep;
+        return <Navigate to={`/${fallback}`} replace />;
+    }
+
+    // Guard: Prevent backtracking to run if it's completed (dashboard is unlocked)
+    if (stepFromPath === "run" && unlockedSteps.includes("dashboard")) {
+        const fallback = currentStep === "run" ? "dashboard" : currentStep;
+        return <Navigate to={`/${fallback}`} replace />;
+    }
+
     const View = VIEWS[stepFromPath];
 
     return (

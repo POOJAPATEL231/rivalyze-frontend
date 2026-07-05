@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, type Reducer } from "@reduxjs/toolkit";
 
 import analysisReducer from "@/store/slices/analysisSlice";
 import authReducer from "@/store/slices/authSlice";
@@ -21,30 +21,26 @@ const loadUiState = () => {
     }
 };
 
-/** Session-scoped (not localStorage) so an accidental refresh mid-analysis
- * doesn't lose progress, while a closed tab still starts clean next time.
- * The evidence drawer's open flag is intentionally dropped on load — no
- * reason to reopen it mid-slide-in on a rehydrated page. */
-const loadAnalysisState = () => {
-    if (typeof window === "undefined" || !window.sessionStorage) {
-        return undefined;
-    }
-    try {
-        const serializedState = sessionStorage.getItem(ANALYSIS_STATE_KEY);
-        if (serializedState === null) {
-            return undefined;
+const LOGOUT_ACTION = "auth/logout";
+
+/** Wrap any slice reducer so that dispatching auth/logout resets it to its
+ * initial state. Generic over the slice's state type so TypeScript infers
+ * correctly without losing the original return type. */
+function withLogoutReset<S>(reducer: Reducer<S>): Reducer<S> {
+    return (state, action) => {
+        if (action.type === LOGOUT_ACTION) {
+            // Passing `undefined` makes RTK re-run the reducer with no state,
+            // which returns each slice's own initialState.
+            return reducer(undefined, action);
         }
-        const parsed = JSON.parse(serializedState);
-        return { ...parsed, evidenceDrawer: { open: false, evidenceId: null } };
-    } catch {
-        return undefined;
-    }
-};
+        return reducer(state, action);
+    };
+}
 
 export const store = configureStore({
     reducer: {
         ui: uiReducer,
-        analysis: analysisReducer,
+        analysis: withLogoutReset(analysisReducer),
         auth: authReducer,
     },
     preloadedState: {
@@ -72,6 +68,18 @@ store.subscribe(() => {
         }
     }
 });
+
+/** Called once by the logout action to wipe all browser-persisted data that
+ * doesn't belong to a new anonymous session. ui_state is intentionally kept
+ * so the user's theme preference survives a logout → re-login cycle. */
+export function clearAllPersistedData() {
+    try {
+        localStorage.removeItem("ui_state");
+        sessionStorage.clear();
+    } catch {
+        // Ignore
+    }
+}
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

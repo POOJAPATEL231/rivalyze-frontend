@@ -3,6 +3,10 @@ import type {
     ApiAnalyzeCompanyRequest,
     ApiAnalyzeIdeaRequest,
     ApiAnalyzeResponse,
+    ApiChatRequest,
+    ApiChatResponse,
+    ApiChatStatusResponse,
+    ApiClaimEvidenceResponse,
     ApiCompetitor,
     ApiReportResponse,
     ApiRunStatus,
@@ -73,5 +77,15 @@ export async function exportReport(runId: string, format: string): Promise<Blob>
     const response = await apiClient.get(`/api/v1/reports/${runId}/export?format=${format}`, {
         responseType: "blob",
     });
+    return response.data;
+}
+
+export async function sendChatMessage(payload: ApiChatRequest): Promise<ApiChatResponse> {
+    const response = await apiClient.post<ApiChatResponse>("/api/v1/chat", payload);
+    return response.data;
+}
+
+export async function getChatStatus(chatId: string): Promise<ApiChatStatusResponse> {
+    const response = await apiClient.get<ApiChatStatusResponse>(`/api/v1/chat/${chatId}`);
     return response.data;
 }

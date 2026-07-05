@@ -5,7 +5,6 @@ import { useNavigate } from "react-router";
 import { HistoryRow } from "@/components/history/HistoryRow";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MOCK_REPORT } from "@/data/report";
 import { extractApiErrorMessage } from "@/lib/apiError";
 import { getRunStatus, mapApiCompetitor } from "@/services/analyze";
 import { getHistory } from "@/services/history";
@@ -14,7 +13,6 @@ import {
     setCompanyName,
     setCompetitors,
     setDomain,
-    setReport,
     setRunId,
     unlockStep,
 } from "@/store/slices/analysisSlice";
@@ -74,7 +72,6 @@ export function HistoryView() {
             dispatch(setCompanyName(entry.company));
             dispatch(setDomain(""));
             dispatch(setCompetitors(competitors));
-            dispatch(setReport({ ...MOCK_REPORT, generatedAt: entry.created_at }));
             dispatch(setRunId(status.run_id));
             for (const step of ALL_STEPS) dispatch(unlockStep(step));
             navigate("/dashboard");

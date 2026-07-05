@@ -15,14 +15,14 @@ export function GuideView() {
                         01
                     </p>
                     <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
-                        Rivalyze User Guide
+                        Argus User Guide
                     </h1>
                     <p className="text-muted-foreground">
-                        Everything you can do in Rivalyze — from your first login to reading your
-                        first report.
+                        Everything you can do in Argus — from your first login to reading your first
+                        report.
                     </p>
                     <p className="text-sm text-foreground">
-                        Rivalyze is a competitive-intelligence tool. You give it a company name or a
+                        Argus is a competitive-intelligence tool. You give it a company name or a
                         startup idea, and it deploys five specialist AI agents — Discovery, News,
                         Product, Reviews, and Strategist — to map your competitive landscape, gather
                         evidence, and hand back a structured report: a threat assessment, a
@@ -34,8 +34,8 @@ export function GuideView() {
                         spending days on manual research: founders validating an idea before they
                         build it, product teams tracking what competitors are shipping, strategy
                         teams preparing board materials, and investors doing diligence. Every claim
-                        Rivalyze makes links back to the source that produced it, so you can check
-                        its work instead of taking it on faith.
+                        Argus makes links back to the source that produced it, so you can check its
+                        work instead of taking it on faith.
                     </p>
                 </section>
 
@@ -48,12 +48,12 @@ export function GuideView() {
                     </h2>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
-                        How to access Rivalyze
+                        How to access Argus
                     </h3>
                     <p className="text-sm text-muted-foreground">
                         Open the app in a web browser. If you are not logged in, you land on a
-                        public page that explains what Rivalyze does. From there you either create
-                        an account or log in — there is no way to run an analysis without one.
+                        public page that explains what Argus does. From there you either create an
+                        account or log in — there is no way to run an analysis without one.
                     </p>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
@@ -85,8 +85,8 @@ export function GuideView() {
                                 and click <strong>Start intelligence scan</strong>.
                             </>,
                             <>
-                                Wait while Rivalyze maps your competitive set. When the competitor
-                                list appears, remove anything that doesn&rsquo;t belong, then click{" "}
+                                Wait while Argus maps your competitive set. When the competitor list
+                                appears, remove anything that doesn&rsquo;t belong, then click{" "}
                                 <strong>Deploy the agents</strong>.
                             </>,
                             <>
@@ -106,15 +106,14 @@ export function GuideView() {
                         Navigating the app
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                        Rivalyze has two distinct modes, and they don&rsquo;t share a navigation
-                        bar.
+                        Argus has two distinct modes, and they don&rsquo;t share a navigation bar.
                     </p>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
                         The homepage (logged out)
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        A fixed top bar shows the Rivalyze logo on the left; links to{" "}
+                        A fixed top bar shows the Argus logo on the left; links to{" "}
                         <strong>How It Works</strong>, <strong>Evidence</strong>,{" "}
                         <strong>Product</strong>, and <strong>Roadmap</strong> (each jumps to a
                         section further down the same page); a theme toggle; and{" "}
@@ -128,8 +127,8 @@ export function GuideView() {
                     </h3>
                     <p className="text-sm text-muted-foreground">
                         Once you&rsquo;re logged in, a step bar replaces the homepage nav and stays
-                        fixed to the top of every screen: the Rivalyze logo, then five numbered
-                        steps joined into a rail — <strong>01 Brief</strong>,{" "}
+                        fixed to the top of every screen: the Argus logo, then five numbered steps
+                        joined into a rail — <strong>01 Brief</strong>,{" "}
                         <strong>02 Discovery</strong>, <strong>03 Run</strong>,{" "}
                         <strong>04 Dashboard</strong>, <strong>05 Recommendations</strong> — with a
                         checkmark for steps you&rsquo;ve completed and a padlock for steps you
@@ -167,8 +166,8 @@ export function GuideView() {
                         Signing up and logging in
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                        Rivalyze uses a plain email-and-password account system. There is no
-                        &ldquo;log in with Google&rdquo; or single sign-on option.
+                        Argus uses a plain email-and-password account system. There is no &ldquo;log
+                        in with Google&rdquo; or single sign-on option.
                     </p>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
@@ -217,21 +216,15 @@ export function GuideView() {
                     />
                     <p className="text-sm text-muted-foreground">
                         A checkbox labeled <strong>Keep me logged in</strong> sits above the sign-in
-                        button and is checked by default.
+                        button and is checked by default. Leave it checked to stay signed in after
+                        closing the browser; uncheck it and your session clears as soon as you close
+                        the tab.
                     </p>
-
-                    <GuideCallout variant="clarify">
-                        <p>
-                            The <strong>Keep me logged in</strong> checkbox doesn&rsquo;t appear to
-                            change anything — your session is saved to the browser the same way
-                            whether it&rsquo;s checked or not.
-                        </p>
-                    </GuideCallout>
 
                     <p className="text-sm text-muted-foreground">
                         A <strong>Forgot password?</strong> link sits next to the password field but
-                        is not active yet — hovering it shows &ldquo;Coming soon,&rdquo; and
-                        clicking it does nothing.
+                        isn&rsquo;t active yet — clicking it just swaps the text to &ldquo;Coming
+                        soon&rdquo; rather than sending a reset email.
                     </p>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
@@ -244,7 +237,7 @@ export function GuideView() {
 
                     <GuideQA
                         question="Why was I sent to the login screen when I clicked a link?"
-                        answer="You followed a link to a page inside the analysis flow while logged out, or your session had expired. Log in and Rivalyze sends you on to where you were originally headed."
+                        answer="You followed a link to a page inside the analysis flow while logged out, or your session had expired. Log in and Argus sends you on to where you were originally headed."
                     />
                 </section>
 
@@ -256,7 +249,7 @@ export function GuideView() {
                         Brief — starting an analysis
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                        Brief is the first step of every analysis. You tell Rivalyze who you are —
+                        Brief is the first step of every analysis. You tell Argus who you are —
                         either an existing company or a startup idea — and it uses that to kick off
                         research. It&rsquo;s always reachable by clicking <strong>01 Brief</strong>{" "}
                         in the step bar.
@@ -302,8 +295,19 @@ export function GuideView() {
                                 of the 500 available characters you&rsquo;ve used.
                             </>,
                             <>
+                                Fill in <strong>Target geography</strong> — marked with a red{" "}
+                                <strong>*</strong>, this is the one required field below the idea
+                                box.
+                            </>,
+                            <>
+                                Optionally add <strong>Industry</strong>,{" "}
+                                <strong>Target customer</strong>, <strong>Business model</strong>,
+                                and <strong>Stage</strong> to sharpen the research — none of these
+                                are required.
+                            </>,
+                            <>
                                 Or click <strong>Try an example idea</strong> to fill in a sample
-                                description.
+                                description and all five fields at once.
                             </>,
                             <>
                                 Click <strong>Start intelligence scan</strong>.
@@ -313,9 +317,21 @@ export function GuideView() {
 
                     <p className="text-sm text-muted-foreground">
                         Company names must stay under 100 characters and idea descriptions under
-                        500. Neither field accepts anything that looks like an HTML tag or script —
-                        Rivalyze blocks the button and explains why until you remove it.
+                        500. The optional context fields are capped at 120 characters each (60 for{" "}
+                        <strong>Stage</strong>). Neither the company name nor the idea description
+                        accepts anything that looks like an HTML tag or script — Argus blocks the
+                        button and explains why until you remove it.
                     </p>
+
+                    <GuideCallout variant="note">
+                        <p>
+                            <strong>Target geography</strong> tells the agents which region&rsquo;s
+                            competitors to prioritize — for example, an idea aimed at India surfaces
+                            different rivals than the same idea aimed at the US. It&rsquo;s the only
+                            required field beyond the idea description itself; the Start button
+                            stays disabled with an explanation until it&rsquo;s filled in.
+                        </p>
+                    </GuideCallout>
 
                     <GuideCallout variant="note">
                         <p>
@@ -343,7 +359,7 @@ export function GuideView() {
                         Discovery — reviewing your competitive set
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                        After you submit a Brief, Rivalyze proposes a set of direct and indirect
+                        After you submit a Brief, Argus proposes a set of direct and indirect
                         competitors before committing to deeper research. You get to edit that list
                         first. This is the same screen the step bar calls{" "}
                         <strong>02 Discovery</strong> (it briefly relabels itself{" "}
@@ -351,13 +367,13 @@ export function GuideView() {
                     </p>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
-                        While Rivalyze is mapping competitors
+                        While Argus is mapping competitors
                     </h3>
                     <p className="text-sm text-muted-foreground">
                         You&rsquo;ll see an animated radar graphic and the text &ldquo;Mapping your
                         competitive set&hellip;&rdquo;. This usually takes under a minute. If it
-                        takes much longer, Rivalyze shows an error asking you to try again — return
-                        to Brief and resubmit.
+                        takes much longer, Argus shows an error asking you to try again — return to
+                        Brief and resubmit.
                     </p>
 
                     <h3 className="font-heading text-base font-semibold text-foreground">
@@ -392,8 +408,8 @@ export function GuideView() {
                         ]}
                     />
                     <GuideQA
-                        question="What if Rivalyze found the wrong competitors?"
-                        answer="Remove the ones that don't fit before deploying. There's currently no way to add a competitor of your own that Rivalyze didn't surface itself."
+                        question="What if Argus found the wrong competitors?"
+                        answer="Remove the ones that don't fit before deploying. There's currently no way to add a competitor of your own that Argus didn't surface itself."
                     />
                 </section>
 
@@ -439,7 +455,7 @@ export function GuideView() {
 
                     <GuideQA
                         question="What happens if a run fails or times out?"
-                        answer='A message appears in a dashed red box above the run panel — either a specific error or a generic "This is taking longer than expected. Please try again." Either way, you’ll need to start over from Brief.'
+                        answer='A message appears in a dashed red box — either a specific error or a generic "This is taking longer than expected. Please try again." A Try again button appears below it that takes you back to Brief to start over.'
                     />
                 </section>
 
@@ -467,23 +483,34 @@ export function GuideView() {
                     <p className="text-sm text-muted-foreground">
                         The <strong>executive summary</strong> banner shows a color-coded threat
                         level — Low (green), Medium/Moderate/Elevated (gold), or High/Critical (red)
-                        — with run details and a written summary. The{" "}
-                        <strong>head-to-head table</strong> lists the metrics Rivalyze compared,
+                        — with run details and a written summary.
+                    </p>
+
+                    <h3 className="font-heading text-base font-semibold text-foreground">
+                        By the numbers
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                        A tile row of hard counts — <strong>Evidence sources</strong>,{" "}
+                        <strong>Competitors</strong>, <strong>Corroborated (2+ sources)</strong>{" "}
+                        (highlighted), <strong>Independent domains</strong>,{" "}
+                        <strong>Newest evidence</strong>, and <strong>Avg. confidence</strong> —
+                        every number here is a real count, nothing estimated. Below that, three bar
+                        breakdowns: <strong>Source mix</strong> (what kind of sources were used),{" "}
+                        <strong>Sentiment spread</strong> (positive/neutral/negative), and{" "}
+                        <strong>Sources per rival</strong>. A line at the bottom notes how many
+                        rivals have logged complaints, and flags any findings backed by only one
+                        source. This whole section disappears if a run didn&rsquo;t produce these
+                        stats (older runs, or a run where synthesis was degraded).
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                        The <strong>head-to-head table</strong> lists the metrics Argus compared,
                         with a highlighted <strong>You</strong> column and one column per
                         competitor. The <strong>SWOT section</strong> shows four boxes:{" "}
                         <strong>Strengths</strong> (teal), <strong>Weaknesses</strong> (rose),{" "}
                         <strong>Opportunities</strong> (gold), and <strong>Threats</strong>{" "}
                         (violet).
                     </p>
-
-                    <GuideCallout variant="clarify">
-                        <p>
-                            In the current build, the SWOT section appears twice in a row, showing
-                            identical information both times. That looks like a display bug rather
-                            than something intentional — if you see it, it isn&rsquo;t something you
-                            did.
-                        </p>
-                    </GuideCallout>
 
                     <p className="text-sm text-muted-foreground">
                         The <strong>rival sentiment</strong> panel is a bar chart scoring each
@@ -493,12 +520,17 @@ export function GuideView() {
                         bottom moves you on.
                     </p>
 
-                    <GuideCallout variant="clarify">
+                    <GuideCallout variant="note">
                         <p>
-                            The small &ldquo;N sources&rdquo; badges throughout this page
-                            aren&rsquo;t clickable yet — this looks like a feature that exists on
-                            the server but hasn&rsquo;t been connected to this screen, not an
-                            intentional dead end.
+                            A value in the head-to-head table is clickable — shown in violet with a
+                            small arrow icon — whenever Argus can trace it back to a specific claim.
+                            Click it to open the{" "}
+                            <a href="#evidence" className="text-primary hover:underline">
+                                Evidence Drawer
+                            </a>
+                            . Values shown as plain text aren&rsquo;t linked to a specific claim and
+                            won&rsquo;t open anything. Opportunities don&rsquo;t currently show a
+                            source count at all.
                         </p>
                     </GuideCallout>
                 </section>
@@ -528,17 +560,25 @@ export function GuideView() {
                         Actions at the bottom of the page
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        <strong>Export</strong> offers <strong>Markdown (.md)</strong> or{" "}
-                        <strong>PDF (.pdf)</strong> downloads. <strong>Compare side-by-side</strong>{" "}
-                        opens the optional Compare screen. <strong>Ask the intelligence</strong>{" "}
-                        opens the optional Workspace screen. <strong>Re-run</strong> takes you back
-                        to Brief to start a new analysis.
+                        <strong>Export (.md)</strong> downloads the full report as a Markdown file.{" "}
+                        <strong>Compare side-by-side</strong> opens the optional Compare screen.{" "}
+                        <strong>Ask the intelligence</strong> opens the optional Workspace screen.{" "}
+                        <strong>Re-run</strong> takes you back to Brief to start a new analysis.
                     </p>
 
                     <GuideQA
                         question="Why is one recommendation's confidence so low?"
                         answer="Low confidence is shown deliberately, not hidden. It usually means the claim is backed by only one source or one agent, rather than several agreeing independently."
                     />
+
+                    <GuideCallout variant="clarify">
+                        <p>
+                            Each card&rsquo;s &ldquo;N sources&rdquo; text is not clickable here —
+                            unlike the equivalent counts on the dashboard, recommendation cards
+                            aren&rsquo;t wired to a specific claim yet, so there&rsquo;s nothing to
+                            open.
+                        </p>
+                    </GuideCallout>
                 </section>
 
                 <section
@@ -588,33 +628,36 @@ export function GuideView() {
                         Workspace
                     </h2>
 
-                    <GuideCallout variant="warning">
-                        <p>
-                            This screen is a scripted demo, not a working feature yet. The chat only
-                            recognizes a fixed set of sample questions about four made-up companies
-                            — Northwind, PulseMetrics, Vantage, and Beacon — regardless of who you
-                            actually analyzed. Uploading a document doesn&rsquo;t read it either:
-                            clicking the upload area just adds a fake file name to the list. Treat
-                            this screen as a preview of a planned feature, not a way to ask real
-                            questions about your own competitors.
-                        </p>
-                    </GuideCallout>
-
                     <p className="text-sm text-muted-foreground">
-                        Workspace is intended to let you upload your own documents and ask questions
-                        grounded in everything the agents found. Click{" "}
-                        <strong>Ask the intelligence</strong> on Recommendations, or the{" "}
-                        <strong>Workspace</strong> tab in the step bar once it&rsquo;s unlocked. A{" "}
-                        <strong>Documents</strong> panel sits on the left with a{" "}
-                        <strong>Click to add a document to the workspace</strong> box; a{" "}
-                        <strong>Chat</strong> panel sits on the right with suggested-question pills
-                        and a text box.
+                        Workspace is a real chat grounded in your own run — it asks the backend your
+                        question along with the company and run ID, and answers using what the
+                        agents actually found. It&rsquo;s labeled <strong>Preview</strong> since
+                        it&rsquo;s newer than the rest of the flow, but the answers aren&rsquo;t
+                        scripted. Click <strong>Ask the intelligence</strong> on Recommendations, or
+                        the <strong>Workspace</strong> tab in the step bar once it&rsquo;s unlocked.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                        A <strong>Chat</strong> card shows the message log, four suggested questions
+                        (things like{" "}
+                        <strong>What is the biggest competitive threat right now?</strong> and{" "}
+                        <strong>Where are the biggest opportunities?</strong>), and a text box.
                     </p>
                     <GuideSteps
                         items={[
                             "Click a suggested question, or type your own into the box and press Enter.",
-                            "If your question matches one of the built-in sample topics, you get a canned answer with a citation you can click to open the Evidence Drawer.",
-                            "Anything else returns a message saying it couldn't find an answer in the indexed sources.",
+                            <>
+                                A <strong>Thinking&hellip;</strong> bubble appears while the answer
+                                is generated — this can take a few seconds.
+                            </>,
+                            <>
+                                The answer appears with a source-count chip if Argus can point to
+                                specific evidence for it. Click the chip to open the{" "}
+                                <a href="#evidence" className="text-primary hover:underline">
+                                    Evidence Drawer
+                                </a>
+                                .
+                            </>,
+                            "If something goes wrong or no answer comes back, the message shows in a gold dashed border instead of the usual gray bubble.",
                         ]}
                     />
                 </section>
@@ -650,7 +693,7 @@ export function GuideView() {
                                 Click <strong>Open</strong> on the run you want. It reads
                                 &ldquo;Opening&hellip;&rdquo; briefly.
                             </>,
-                            "Rivalyze takes you straight to that run's Dashboard, with every step unlocked so you can also revisit Recommendations, Compare, and Workspace for it.",
+                            "Argus takes you straight to that run's Dashboard, with every step unlocked so you can also revisit Recommendations, Compare, and Workspace for it.",
                         ]}
                     />
                     <GuideQA
@@ -672,22 +715,31 @@ export function GuideView() {
                     <p className="text-sm text-muted-foreground">
                         A panel that slides in from the right, showing exactly which sources back up
                         a specific claim: source type, date, a quoted snippet, a link, and which
-                        agent found it. Click a pill that reads something like &ldquo;&#9670; 2
-                        sources&rdquo; to open it.
+                        agent found it. It fetches this live from your run the moment you open it,
+                        so the sources you see are real, not canned examples.
                     </p>
 
-                    <GuideCallout variant="clarify">
+                    <GuideCallout variant="note">
                         <p>
-                            This works reliably today from the Workspace chat&rsquo;s citations. On
-                            Dashboard and Recommendations, the equivalent source-count badges are
-                            currently display-only and don&rsquo;t open the drawer.
+                            Not every claim on screen opens the drawer — only ones Argus can trace
+                            to a specific claim reference. That currently means the{" "}
+                            <strong>Dashboard</strong>&rsquo;s head-to-head table (shown as a violet
+                            link with a small arrow) and citations in the <strong>Workspace</strong>{" "}
+                            chat. Plain, non-colored source counts elsewhere — Recommendation cards,
+                            and everything on <strong>Compare</strong> — aren&rsquo;t linked yet and
+                            won&rsquo;t open anything.
                         </p>
                     </GuideCallout>
 
                     <GuideSteps
                         items={[
-                            "Click an evidence pill.",
-                            "A panel slides in from the right, showing the claim in quotation marks, followed by one card per source.",
+                            "Click a linked value or source pill.",
+                            <>
+                                The drawer slides in and shows{" "}
+                                <strong>Loading sources&hellip;</strong> briefly, then either a card
+                                per source or, if nothing matches,{" "}
+                                <strong>No sources found for this claim.</strong>
+                            </>,
                             <>
                                 Close it by clicking the <strong>&times;</strong> in the corner,
                                 clicking outside the panel, or pressing Escape.
@@ -707,9 +759,9 @@ export function GuideView() {
                         Settings &amp; configuration
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                        Rivalyze doesn&rsquo;t have a dedicated settings page in this version. The
-                        only user-adjustable option is the theme toggle — available on the homepage
-                        top bar and on the step bar once you&rsquo;re logged in. It switches between
+                        Argus doesn&rsquo;t have a dedicated settings page in this version. The only
+                        user-adjustable option is the theme toggle — available on the homepage top
+                        bar and on the step bar once you&rsquo;re logged in. It switches between
                         dark (the default) and light appearance and applies everywhere immediately.
                     </p>
 
@@ -743,23 +795,15 @@ export function GuideView() {
                     />
                     <GuideQA
                         question="Discovery or the live run seems stuck."
-                        answer="Each phase has a soft time limit — roughly a minute for Discovery, a few minutes for the full run. Past that point, Rivalyze shows an error and you'll need to restart from Brief."
+                        answer="Each phase has a soft time limit — roughly a minute for Discovery, a few minutes for the full run. Past that point, Argus shows an error and you'll need to restart from Brief."
                     />
                     <GuideQA
-                        question="The SWOT section shows up twice on the Dashboard."
-                        answer="That's a known display issue in the current build, not something you did — both copies show the same information."
+                        question="Nothing happens when I click a source count on Recommendations or Compare."
+                        answer="Those aren't wired up to open the Evidence Drawer yet. On the Dashboard, the equivalent head-to-head values do open it, whenever Argus can trace them to a specific claim."
                     />
                     <GuideQA
-                        question="Nothing happens when I click a source count on Dashboard or Recommendations."
-                        answer="Those badges aren't wired up to open the Evidence Drawer yet. Evidence links currently work reliably only from the Workspace chat."
-                    />
-                    <GuideQA
-                        question="Workspace doesn't seem to know anything about my actual competitors."
-                        answer="That's expected right now — Workspace is a scripted demo built around four fictional companies, not a live question-answering tool over your analysis."
-                    />
-                    <GuideQA
-                        question={`I unchecked "Keep me logged in," but I'm still logged in later.`}
-                        answer="That checkbox doesn't currently change anything — your session is saved to the browser either way."
+                        question="Does Workspace actually know about my competitors, or is it scripted?"
+                        answer="It's a real chat grounded in your run's own findings, not a script — it just carries a Preview label because it shipped after the rest of the flow. If it can't find an answer, it says so instead of making one up."
                     />
                     <GuideQA
                         question="My PDF export looked cut off or oddly split across pages."
@@ -767,7 +811,11 @@ export function GuideView() {
                     />
                     <GuideQA
                         question="I was logged out without doing anything."
-                        answer="Login sessions expire and are refreshed silently in the background; occasionally that refresh fails and you're signed out. Log back in — Rivalyze returns you to the page you were on."
+                        answer="Login sessions expire and are refreshed silently in the background; occasionally that refresh fails and you're signed out. Log back in — Argus returns you to the page you were on."
+                    />
+                    <GuideQA
+                        question="I refreshed the page and lost my progress."
+                        answer="Refreshing at any point resets this browser tab back to Brief — the analysis itself may keep running on the server, but the tab loses track of which step you were on. Once a run finishes, you can find it again in History."
                     />
                 </section>
 
@@ -801,11 +849,11 @@ export function GuideView() {
 }
 
 const GLOSSARY = [
-    { term: "Rivalyze", definition: "The name of this application." },
+    { term: "Argus", definition: "The name of this application." },
     {
         term: "Agent",
         definition:
-            "One of five automated researchers Rivalyze runs per analysis: Discovery, News, Product, Reviews, and Strategist.",
+            "One of five automated researchers Argus runs per analysis: Discovery, News, Product, Reviews, and Strategist.",
     },
     {
         term: "Threat level",
@@ -835,7 +883,7 @@ const GLOSSARY = [
     {
         term: "Low-signal finding",
         definition:
-            "An observation Rivalyze found but couldn't corroborate strongly enough to state with full confidence.",
+            "An observation Argus found but couldn't corroborate strongly enough to state with full confidence.",
     },
     {
         term: "Head-to-head",

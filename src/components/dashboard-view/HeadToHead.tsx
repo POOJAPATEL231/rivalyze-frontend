@@ -16,15 +16,24 @@ export function HeadToHead({ rows }: HeadToHeadProps) {
     const rivalNames = rows.length > 0 ? Object.keys(rows[0].rivals) : [];
 
     return (
-        <Table className="min-w-[720px]">
+        <Table className="min-w-140">
             <TableHeader>
                 <TableRow>
-                    <TableHead className="min-w-40 max-w-56">Signal</TableHead>
-                    <TableHead className="bg-success/10 text-success min-w-40 max-w-56">
+                    <TableHead className="w-28 max-w-28 truncate text-xs" title="Signal">
+                        Signal
+                    </TableHead>
+                    <TableHead
+                        className="w-28 max-w-28 truncate bg-success/10 text-xs text-success"
+                        title="You"
+                    >
                         You
                     </TableHead>
                     {rivalNames.map((name) => (
-                        <TableHead key={name} className="min-w-40 max-w-56">
+                        <TableHead
+                            key={name}
+                            className="w-28 max-w-28 truncate text-xs"
+                            title={name}
+                        >
                             {name}
                         </TableHead>
                     ))}
@@ -33,10 +42,10 @@ export function HeadToHead({ rows }: HeadToHeadProps) {
             <TableBody>
                 {rows.map((row) => (
                     <TableRow key={row.metric}>
-                        <TableCell className="align-top font-medium whitespace-normal text-muted-foreground min-w-40 max-w-56">
+                        <TableCell className="align-top font-medium whitespace-normal text-muted-foreground min-w-28 max-w-40">
                             {row.metric}
                         </TableCell>
-                        <TableCell className="max-w-56 min-w-40 align-top whitespace-normal bg-success/5">
+                        <TableCell className="max-w-40 min-w-28 align-top whitespace-normal bg-success/5">
                             {row.you}
                         </TableCell>
                         {rivalNames.map((name) => {
@@ -44,7 +53,7 @@ export function HeadToHead({ rows }: HeadToHeadProps) {
                             return (
                                 <TableCell
                                     key={name}
-                                    className="max-w-56 min-w-40 align-top whitespace-normal"
+                                    className="max-w-40 min-w-28 align-top whitespace-normal"
                                 >
                                     {cell && (
                                         <div className="space-y-1">

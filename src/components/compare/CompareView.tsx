@@ -4,7 +4,6 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { CompareColumn, type CompareRow } from "@/components/compare/CompareColumn";
 import { RivalPicker } from "@/components/compare/RivalPicker";
-import { Verdict } from "@/components/compare/Verdict";
 import { Button } from "@/components/ui/button";
 import { useReport } from "@/hooks/useReport";
 import { cn } from "@/lib/utils";
@@ -126,7 +125,7 @@ export function CompareView() {
                 ))}
             </div>
 
-            <Verdict companyLabel={companyLabel} selected={selectedCompetitors} />
+            {/* <Verdict companyLabel={companyLabel} selected={selectedCompetitors} /> */}
         </div>
     );
 }

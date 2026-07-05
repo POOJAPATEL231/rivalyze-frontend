@@ -22,7 +22,16 @@ export function HistoryRow({ entry, onOpen, opening, disabled }: HistoryRowProps
     return (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border p-4">
             <div className="space-y-1">
-                <p className="font-heading text-sm font-medium text-foreground">{entry.company}</p>
+                <div className="flex items-center gap-2">
+                    <p className="font-heading text-sm font-medium text-foreground">
+                        {entry.company}
+                    </p>
+                    {entry.has_new && (
+                        <Badge variant="watch" className="uppercase tracking-wide">
+                            New
+                        </Badge>
+                    )}
+                </div>
                 <p className="text-xs text-muted-foreground">
                     Run on {new Date(entry.created_at).toLocaleDateString()}
                 </p>

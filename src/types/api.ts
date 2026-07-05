@@ -35,8 +35,20 @@ export interface ApiAnalyzeCompanyRequest {
     domain: string;
 }
 
+/** `idea` and `target_geography` are the only fields the frontend requires
+ * (the Brief form enforces target_geography even though the backend itself
+ * treats it as optional, defaulting to ""). The remaining fields are true
+ * optional structured intake (matching the backend's
+ * AnalyzeIdeaRequest/IdeaContext fields flattened onto this one request, not
+ * nested) that sharpens discovery instead of letting the idea pre-step guess
+ * the market from one sentence. */
 export interface ApiAnalyzeIdeaRequest {
     idea: string;
+    industry?: string;
+    target_geography?: string;
+    target_customer?: string;
+    business_model?: string;
+    stage?: string;
 }
 
 export interface ApiAnalyzeResponse {
@@ -162,13 +174,40 @@ export interface ApiReportResponse {
     stats: ApiReportStats | null;
 }
 /** One row of GET /api/v1/history. threat_level/confidence are null for
- * runs completed before the strategist agent produced a report. */
+ * runs completed before the strategist agent produced a report.
+ * `has_new` is true only on a company's newest row when its latest run
+ * carries signals the previous run didn't — older rows and first-run
+ * companies always come back false. */
 export interface ApiHistoryEntry {
     job_id: string;
     company: string;
     threat_level: string | null;
     confidence: number | null;
     created_at: string;
+    has_new: boolean;
+}
+
+export interface ApiChatRequest {
+    company: string;
+    question: string;
+    run_id: string;
+}
+
+export interface ApiChatResponse {
+    chat_id: string;
+    status: string;
+}
+
+/** Full response from GET /api/v1/chat/{chat_id} — polled until `status`
+ * transitions away from `"processing"`. */
+export interface ApiChatStatusResponse {
+    chat_id: string;
+    status: string;
+    events: ApiRunEvent[];
+    answer: string | null;
+    source: string;
+    evidence_ids: string[];
+    error: string | null;
 }
 
 export interface ApiValidationError {

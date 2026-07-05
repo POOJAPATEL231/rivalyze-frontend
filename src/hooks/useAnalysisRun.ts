@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
-import { MOCK_REPORT } from "@/data/report";
 import { extractApiErrorMessage } from "@/lib/apiError";
 import { confirmRun, getRunStatus, mapApiCompetitor } from "@/services/analyze";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -9,7 +8,6 @@ import {
     resetRun,
     setCompetitors,
     setLaneStatus,
-    setReport,
     setRunEvents,
     setRunId,
     setRunStatus,
@@ -122,7 +120,6 @@ export function useAnalysisRun(jobId: string | null) {
         dispatch(setLaneStatus({ lane: "reviews", status: "done" }));
         dispatch(setLaneStatus({ lane: "strategist", status: "done" }));
         dispatch(setRunStatus("done"));
-        dispatch(setReport({ ...MOCK_REPORT, generatedAt: new Date().toISOString() }));
         dispatch(setRunId(status.run_id));
         setPhase("done");
     }

@@ -19,7 +19,6 @@ export function OpportunitiesPanel({ opportunities, lowSignalFindings }: Opportu
             <CardContent className="space-y-4">
                 <ol className="space-y-3">
                     {opportunities.map((opportunity, index) => {
-                        const evidenceCount = opportunity.evidence_ids?.length ?? 0;
                         return (
                             <li key={opportunity.claim_ref || index} className="flex gap-3">
                                 <span className="font-mono text-sm text-muted-foreground">
@@ -29,12 +28,6 @@ export function OpportunitiesPanel({ opportunities, lowSignalFindings }: Opportu
                                     <p className="text-sm text-muted-foreground">
                                         {opportunity.text}
                                     </p>
-                                    {evidenceCount > 0 && (
-                                        <span className="font-mono text-[10px] text-muted-foreground">
-                                            {evidenceCount} source
-                                            {evidenceCount === 1 ? "" : "s"}
-                                        </span>
-                                    )}
                                 </div>
                             </li>
                         );

@@ -6,7 +6,6 @@ import type {
     InputMode,
     LaneId,
     LaneStatus,
-    Report,
     RunEvent,
     RunStatus,
     Telemetry,
@@ -20,6 +19,14 @@ interface AnalysisState {
     companyName: string;
     domain: string;
     ideaDescription: string;
+    /** Optional structured intake for idea mode — sharpens discovery instead
+     * of the idea pre-step guessing the market from one sentence. All
+     * optional, sent flat alongside `idea` to POST /analyze/idea. */
+    industry: string;
+    targetGeography: string;
+    targetCustomer: string;
+    businessModel: string;
+    stage: string;
     competitors: Competitor[];
     removedCompetitors: Competitor[];
     jobId: string | null;
@@ -27,12 +34,10 @@ interface AnalysisState {
     runEvents: RunEvent[];
     telemetry: Telemetry;
     laneStatuses: Record<LaneId, LaneStatus>;
-    report: Report | null;
     runId: string | null;
     /** Cache of the real GET /reports/{run_id} response, keyed by the runId
      * it belongs to — lets a manual revisit to Dashboard reuse it instead of
-     * re-fetching. Distinct from `report` above, which is the mock-shaped
-     * type still consumed by Recommendations/Compare. */
+     * re-fetching. */
     apiReport: ApiReportResponse | null;
     apiReportRunId: string | null;
     evidenceDrawer: { open: boolean; evidenceId: string | null };
@@ -47,6 +52,11 @@ const initialState: AnalysisState = {
     companyName: "",
     domain: "",
     ideaDescription: "",
+    industry: "",
+    targetGeography: "",
+    targetCustomer: "",
+    businessModel: "",
+    stage: "",
     competitors: [],
     removedCompetitors: [],
     jobId: null,
@@ -60,7 +70,6 @@ const initialState: AnalysisState = {
         reviews: "queued",
         strategist: "waiting",
     },
-    report: null,
     runId: null,
     apiReport: null,
     apiReportRunId: null,
@@ -86,6 +95,11 @@ const analysisSlice = createSlice({
                 // Clear inputs for the other mode to prevent stale data persisting or being submitted
                 if (action.payload === "company") {
                     state.ideaDescription = "";
+                    state.industry = "";
+                    state.targetGeography = "";
+                    state.targetCustomer = "";
+                    state.businessModel = "";
+                    state.stage = "";
                 } else {
                     state.companyName = "";
                     state.domain = "";
@@ -98,7 +112,6 @@ const analysisSlice = createSlice({
                 state.runStatus = "idle";
                 state.runEvents = [];
                 state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-                state.report = null;
                 state.runId = null;
                 state.apiReport = null;
                 state.apiReportRunId = null;
@@ -116,7 +129,6 @@ const analysisSlice = createSlice({
                 state.runStatus = "idle";
                 state.runEvents = [];
                 state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-                state.report = null;
                 state.runId = null;
                 state.apiReport = null;
                 state.apiReportRunId = null;
@@ -137,11 +149,25 @@ const analysisSlice = createSlice({
                 state.runStatus = "idle";
                 state.runEvents = [];
                 state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-                state.report = null;
                 state.runId = null;
                 state.apiReport = null;
                 state.apiReportRunId = null;
             }
+        },
+        setIndustry(state, action: PayloadAction<string>) {
+            state.industry = action.payload;
+        },
+        setTargetGeography(state, action: PayloadAction<string>) {
+            state.targetGeography = action.payload;
+        },
+        setTargetCustomer(state, action: PayloadAction<string>) {
+            state.targetCustomer = action.payload;
+        },
+        setBusinessModel(state, action: PayloadAction<string>) {
+            state.businessModel = action.payload;
+        },
+        setStage(state, action: PayloadAction<string>) {
+            state.stage = action.payload;
         },
         setCompetitors(state, action: PayloadAction<Competitor[]>) {
             state.competitors = action.payload;
@@ -176,9 +202,6 @@ const analysisSlice = createSlice({
         setLaneStatus(state, action: PayloadAction<{ lane: LaneId; status: LaneStatus }>) {
             state.laneStatuses[action.payload.lane] = action.payload.status;
         },
-        setReport(state, action: PayloadAction<Report | null>) {
-            state.report = action.payload;
-        },
         setRunId(state, action: PayloadAction<string | null>) {
             state.runId = action.payload;
         },
@@ -192,7 +215,6 @@ const analysisSlice = createSlice({
             state.runStatus = "idle";
             state.runEvents = [];
             state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-            state.report = null;
             state.runId = null;
             state.apiReport = null;
             state.apiReportRunId = null;
@@ -222,6 +244,11 @@ export const {
     setCompanyName,
     setDomain,
     setIdeaDescription,
+    setIndustry,
+    setTargetGeography,
+    setTargetCustomer,
+    setBusinessModel,
+    setStage,
     setCompetitors,
     removeCompetitor,
     restoreCompetitor,
@@ -230,7 +257,6 @@ export const {
     setRunEvents,
     updateTelemetry,
     setLaneStatus,
-    setReport,
     setRunId,
     setApiReport,
     resetRun,

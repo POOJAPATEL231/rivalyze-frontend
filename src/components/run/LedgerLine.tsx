@@ -23,11 +23,11 @@ const FALLBACK_COLOR = "#8a8f98";
 export function LedgerLine({ event }: LedgerLineProps) {
     return (
         <p className="font-mono text-xs leading-relaxed">
-            <span className="text-white/40">{event.timestamp.toFixed(2) + "s "}</span>
+            <span className="">{event.timestamp.toFixed(2) + "s "}</span>
             <span style={{ color: AGENT_COLOR[event.agent] ?? FALLBACK_COLOR }}>
                 [{event.agent}]
             </span>{" "}
-            <span className="text-white/85">{event.text}</span>
+            <span className="">{event.text}</span>
         </p>
     );
 }
