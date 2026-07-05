@@ -126,7 +126,7 @@ export function CompareView() {
                 ))}
             </div>
 
-            <Verdict companyLabel={companyLabel} selected={selectedCompetitors} />
+            {/* <Verdict companyLabel={companyLabel} selected={selectedCompetitors} /> */}
         </div>
     );
 }
