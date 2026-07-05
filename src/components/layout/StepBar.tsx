@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { logout as logoutApi } from "@/services/auth";
+import { clearAllPersistedData } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
 import { toggleTheme } from "@/store/slices/uiSlice";
@@ -70,6 +71,10 @@ export function StepBar() {
             }
         }
         dispatch(logout());
+        // Wipe all persisted data (session, analysis cache, etc.) so the next
+        // user who logs in starts completely fresh. Theme is intentionally kept
+        // — clearAllPersistedData() preserves ui_state so the theme survives.
+        clearAllPersistedData();
     }
 
     return (
@@ -185,13 +190,17 @@ export function StepBar() {
                                     <DropdownMenuItem
                                         key={step.id}
                                         disabled={!isUnlocked}
-                                        aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
+                                        aria-label={
+                                            !isUnlocked ? `${step.label}, locked` : undefined
+                                        }
                                         onClick={() => navigate(`/${step.id}`)}
                                         className={cn(
                                             "cursor-pointer font-heading text-sm flex items-center justify-between gap-3",
                                             isActive &&
                                                 "bg-primary/10 font-semibold text-primary focus:bg-primary/10 focus:text-primary",
-                                            !isActive && isDone && "text-success focus:text-success",
+                                            !isActive &&
+                                                isDone &&
+                                                "text-success focus:text-success",
                                             !isUnlocked && "text-muted-foreground/50",
                                         )}
                                     >
