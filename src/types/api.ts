@@ -124,6 +124,25 @@ export interface ApiRecommendation {
     claim_ref: string;
 }
 
+/** Deterministic evidence counts for a report — null on degraded runs
+ * (synthesis failed) and on reports created before this field existed.
+ * `corroboration_rate` is already a 0-100 percent; `avg_confidence` is a
+ * 0-1 fraction — don't conflate the two units. */
+export interface ApiReportStats {
+    evidence_count: number;
+    competitors_analyzed: number;
+    sources_per_competitor: Record<string, number>;
+    source_type_breakdown: Record<string, number>;
+    signals_by_type: Record<string, number>;
+    competitors_with_complaints: number;
+    sentiment_spread: Record<"POSITIVE" | "NEUTRAL" | "NEGATIVE", number>;
+    avg_confidence: number | null;
+    freshest_signal_days: number | null;
+    distinct_sources: number;
+    corroboration_rate: number | null;
+    uncorroborated_claims: number;
+}
+
 /** GET /api/v1/reports/{run_id} response, matching the OpenAPI schema
  * exactly — the schema declares `threat_level` and sentiment `label` as
  * closed enums, but callers should still fall back gracefully on an
@@ -140,6 +159,7 @@ export interface ApiReportResponse {
     recommendations: ApiRecommendation[];
     low_signal_findings: string[];
     analysis_date: string;
+    stats: ApiReportStats | null;
 }
 /** One row of GET /api/v1/history. threat_level/confidence are null for
  * runs completed before the strategist agent produced a report. */
