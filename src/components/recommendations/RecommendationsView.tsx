@@ -2,12 +2,6 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import { ConfidenceNote } from "@/components/recommendations/ConfidenceNote";
 import { RecCard } from "@/components/recommendations/RecCard";
 import { Button } from "@/components/ui/button";
@@ -111,22 +105,14 @@ export function RecommendationsView() {
 
             <div className="space-y-2">
                 <div className="flex flex-wrap items-center justify-end gap-3">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" disabled={isExporting || !runId}>
-                                {isExporting && <Loader2 className="mr-2 size-4 animate-spin" />}
-                                Export
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleExport("md")}>
-                                Markdown (.md)
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleExport("pdf")}>
-                                PDF (.pdf)
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button
+                        variant="outline"
+                        disabled={isExporting || !runId}
+                        onClick={() => handleExport("md")}
+                    >
+                        {isExporting && <Loader2 className="mr-2 size-4 animate-spin" />}
+                        Export (.md)
+                    </Button>
                     <Button variant="outline" onClick={() => goTo("compare")}>
                         Compare side-by-side
                     </Button>
