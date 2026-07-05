@@ -85,6 +85,16 @@ export function DashboardView() {
 
     const data = report.data;
 
+    const formatSwotArray = (arr: string[]) =>
+        arr.map((str) => str.replace(/\s*\(ev-[a-zA-Z0-9]{8}\)/g, ".").trim());
+
+    const formattedSwot = {
+        strengths: formatSwotArray(data.swot.strengths),
+        weaknesses: formatSwotArray(data.swot.weaknesses),
+        opportunities: formatSwotArray(data.swot.opportunities),
+        threats: formatSwotArray(data.swot.threats),
+    };
+
     return (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:px-6 lg:px-8">
             <div className="flex items-start justify-between gap-4">
@@ -123,7 +133,7 @@ export function DashboardView() {
                     </CardContent>
                 </Card>
 
-                <SwotGrid swot={data.swot} />
+                <SwotGrid swot={formattedSwot} />
 
                 <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-2">
                     <SentimentPanel sentiment={data.sentiment} />

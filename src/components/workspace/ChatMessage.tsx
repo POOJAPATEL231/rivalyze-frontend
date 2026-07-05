@@ -1,16 +1,14 @@
-import { EvidenceChip } from "@/components/evidence/EvidenceChip";
 import { cn } from "@/lib/utils";
 
 export interface ChatMessageProps {
     role: "user" | "ai";
     text: string;
-    evidenceIds?: string[];
     notFound?: boolean;
 }
 
 /** User bubbles align right; AI bubbles align left. An AI answer with no
  * keyword match gets a gold dashed border instead of the plain muted bg. */
-export function ChatMessage({ role, text, evidenceIds, notFound }: ChatMessageProps) {
+export function ChatMessage({ role, text, notFound }: ChatMessageProps) {
     const isUser = role === "user";
 
     return (
@@ -26,13 +24,6 @@ export function ChatMessage({ role, text, evidenceIds, notFound }: ChatMessagePr
                 )}
             >
                 <p>{text}</p>
-                {evidenceIds && evidenceIds.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                        {evidenceIds.map((evidenceId) => (
-                            <EvidenceChip key={evidenceId} evidenceId={evidenceId} />
-                        ))}
-                    </div>
-                )}
             </div>
         </div>
     );
