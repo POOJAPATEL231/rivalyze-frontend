@@ -28,10 +28,10 @@ export function SourceCard({ source }: SourceCardProps) {
                 href={source.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 font-mono text-xs text-primary hover:underline"
+                className="flex flex-1 w-full items-center gap-1 font-mono text-xs text-primary hover:underline break-all"
             >
                 {source.url}
-                <ExternalLink className="size-3" />
+                <ExternalLink className="block h-3 w-3 shrink-0" />
             </a>
         </div>
     );
