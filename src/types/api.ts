@@ -125,7 +125,7 @@ export interface ApiHeadToHeadRow {
 export interface ApiOpportunity {
     text: string;
     evidence_ids?: string[];
-    claim_ref: string | null;
+    claim_ref: string;
 }
 
 export interface ApiRecommendation {
@@ -133,24 +133,7 @@ export interface ApiRecommendation {
     rationale: string;
     confidence: number;
     evidence_ids?: string[];
-    claim_ref: string | null;
-}
-
-export interface ApiEvidenceSource {
-    id: string;
-    run_id: string;
     claim_ref: string;
-    source_type: string;
-    source_name: string;
-    url: string;
-    snippet: string;
-    source_date: string;
-    agent: string;
-}
-
-export interface ApiClaimEvidenceResponse {
-    claim_ref: string;
-    sources: ApiEvidenceSource[];
 }
 
 /** Deterministic evidence counts for a report — null on degraded runs

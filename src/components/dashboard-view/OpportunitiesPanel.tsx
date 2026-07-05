@@ -6,6 +6,10 @@ interface OpportunitiesPanelProps {
     lowSignalFindings: string[];
 }
 
+/** ponytail: evidence_ids/claim_ref are opaque backend ids shown as a plain
+ * source count, not wired to EvidenceDrawer (which only knows the static
+ * mock evidence set) — GET /api/v1/evidence/{claim_ref} exists on the
+ * backend, this just hasn't been wired up to call it yet. */
 export function OpportunitiesPanel({ opportunities, lowSignalFindings }: OpportunitiesPanelProps) {
     return (
         <Card>
@@ -16,7 +20,7 @@ export function OpportunitiesPanel({ opportunities, lowSignalFindings }: Opportu
                 <ol className="space-y-3">
                     {opportunities.map((opportunity, index) => {
                         return (
-                            <li key={opportunity.claim_ref ?? index} className="flex gap-3">
+                            <li key={opportunity.claim_ref || index} className="flex gap-3">
                                 <span className="font-mono text-sm text-muted-foreground">
                                     {(index + 1).toString().padStart(2, "0")}
                                 </span>

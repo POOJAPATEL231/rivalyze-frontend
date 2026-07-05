@@ -46,17 +46,6 @@ export async function getReport(runId: string): Promise<ApiReportResponse> {
     return response.data;
 }
 
-export async function fetchClaimEvidence(
-    claimRef: string,
-    runId: string,
-): Promise<ApiClaimEvidenceResponse> {
-    const response = await apiClient.get<ApiClaimEvidenceResponse>(
-        `/api/v1/evidence/${encodeURIComponent(claimRef)}`,
-        { params: { run_id: runId } },
-    );
-    return response.data;
-}
-
 function slugify(name: string): string {
     return name
         .toLowerCase()

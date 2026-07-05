@@ -32,7 +32,10 @@ function Tile({ value, label, hero }: TileProps) {
             <p
                 className={cn(
                     "font-mono text-2xl font-bold",
-                    hero ? "bg-iris bg-clip-text text-transparent" : "text-foreground",
+                    // ponytail: bg-clip-text gradient renders as a solid block in
+                    // html2canvas (used for PDF export), swallowing the number — plain
+                    // text-primary is the fix that survives both live view and export.
+                    hero ? "text-primary" : "text-foreground",
                 )}
             >
                 {value}

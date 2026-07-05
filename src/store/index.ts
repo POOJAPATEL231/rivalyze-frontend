@@ -4,6 +4,8 @@ import analysisReducer from "@/store/slices/analysisSlice";
 import authReducer from "@/store/slices/authSlice";
 import uiReducer from "@/store/slices/uiSlice";
 
+const ANALYSIS_STATE_KEY = "analysis_state";
+
 const loadUiState = () => {
     if (typeof window === "undefined" || !window.localStorage) {
         return undefined;
@@ -43,6 +45,7 @@ export const store = configureStore({
     },
     preloadedState: {
         ui: loadUiState(),
+        analysis: loadAnalysisState(),
     },
 });
 
@@ -52,6 +55,14 @@ store.subscribe(() => {
     if (typeof window !== "undefined" && window.localStorage) {
         try {
             localStorage.setItem("ui_state", JSON.stringify(state.ui));
+        } catch {
+            // Ignore write errors
+        }
+    }
+
+    if (typeof window !== "undefined" && window.sessionStorage) {
+        try {
+            sessionStorage.setItem(ANALYSIS_STATE_KEY, JSON.stringify(state.analysis));
         } catch {
             // Ignore write errors
         }

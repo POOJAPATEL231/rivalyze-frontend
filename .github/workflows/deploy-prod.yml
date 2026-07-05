@@ -3,7 +3,7 @@ name: Deploy Prod to Azure Static Web App
 on:
     push:
         branches:
-            - dev
+            - main
     workflow_dispatch:
 
 jobs:
