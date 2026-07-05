@@ -20,17 +20,10 @@ const AGENT_COLOR: Record<string, string> = {
 };
 const FALLBACK_COLOR = "#8a8f98";
 
-function formatTimestamp(ms: number) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
-
 export function LedgerLine({ event }: LedgerLineProps) {
     return (
         <p className="font-mono text-xs leading-relaxed">
-            <span className="text-white/40">{formatTimestamp(event.timestamp)}</span>{" "}
+            <span className="text-white/40">{event.timestamp.toFixed(2) + "s "}</span>
             <span style={{ color: AGENT_COLOR[event.agent] ?? FALLBACK_COLOR }}>
                 [{event.agent}]
             </span>{" "}

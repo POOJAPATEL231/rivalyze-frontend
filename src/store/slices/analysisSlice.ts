@@ -80,7 +80,29 @@ const analysisSlice = createSlice({
             }
         },
         setInputMode(state, action: PayloadAction<InputMode>) {
+            const prev = state.inputMode;
             state.inputMode = action.payload;
+            if (prev !== action.payload) {
+                // Clear inputs for the other mode to prevent stale data persisting or being submitted
+                if (action.payload === "company") {
+                    state.ideaDescription = "";
+                } else {
+                    state.companyName = "";
+                    state.domain = "";
+                }
+                // Invalidate previous analysis
+                state.unlockedSteps = ["brief", "history"];
+                state.competitors = [];
+                state.removedCompetitors = [];
+                state.jobId = null;
+                state.runStatus = "idle";
+                state.runEvents = [];
+                state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
+                state.report = null;
+                state.runId = null;
+                state.apiReport = null;
+                state.apiReportRunId = null;
+            }
         },
         setCompanyName(state, action: PayloadAction<string>) {
             const prev = state.companyName;

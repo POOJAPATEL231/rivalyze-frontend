@@ -102,8 +102,8 @@ export function DashboardView() {
                             Here&rsquo;s the read
                         </h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Every claim below traces back to a source — click any of them to see
-                            the evidence.
+                            Every claim below traces back to a source — click any of them to see the
+                            evidence.
                         </p>
                     </div>
                 </div>
@@ -129,6 +129,8 @@ export function DashboardView() {
                         <HeadToHead rows={data.head_to_head} />
                     </CardContent>
                 </Card>
+
+                <SwotGrid swot={data.swot} />
 
                 <SwotGrid swot={data.swot} />
 

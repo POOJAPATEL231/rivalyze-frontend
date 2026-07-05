@@ -19,17 +19,21 @@ export function HeadToHead({ rows }: HeadToHeadProps) {
         <Table className="min-w-[720px]">
             <TableHeader>
                 <TableRow>
-                    <TableHead>Signal</TableHead>
-                    <TableHead className="bg-success/10 text-success">You</TableHead>
+                    <TableHead className="min-w-40 max-w-56">Signal</TableHead>
+                    <TableHead className="bg-success/10 text-success min-w-40 max-w-56">
+                        You
+                    </TableHead>
                     {rivalNames.map((name) => (
-                        <TableHead key={name}>{name}</TableHead>
+                        <TableHead key={name} className="min-w-40 max-w-56">
+                            {name}
+                        </TableHead>
                     ))}
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {rows.map((row) => (
                     <TableRow key={row.metric}>
-                        <TableCell className="align-top font-medium whitespace-normal text-muted-foreground">
+                        <TableCell className="align-top font-medium whitespace-normal text-muted-foreground min-w-40 max-w-56">
                             {row.metric}
                         </TableCell>
                         <TableCell className="max-w-56 min-w-40 align-top whitespace-normal bg-success/5">

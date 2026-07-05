@@ -33,16 +33,26 @@ const MAX_DISCOVERY_POLLS = 35;
 /** ~3min soft timeout for analysis, matching the old useLiveRun's cap. */
 const MAX_ANALYSIS_POLLS = 90;
 
-const TELEMETRY_KEYS = [
-    "llmCalls",
-    "searches",
-    "signals",
-] as const satisfies readonly (keyof Telemetry)[];
+/** lane_stats is an open Record<string, number> whose provider keys
+ * (groq/gemini/cerebras/openrouter/...) vary run to run, but these three are
+ * fixed backend field names — verified against a real completed run.
+ * llm_calls is already the backend's own sum across every provider used, so
+ * there's no need to total the per-provider counts ourselves. Note the
+ * snake_case: it doesn't match Telemetry's own field names, unlike `searches`. */
+const LANE_STATS_KEY: Record<keyof Pick<Telemetry, "llmCalls" | "searches" | "signals">, string> = {
+    llmCalls: "llm_calls",
+    searches: "searches",
+    signals: "signals_found",
+};
 
 function mapTelemetry(laneStats: Record<string, number>): Partial<Telemetry> {
     const update: Partial<Telemetry> = {};
-    for (const key of TELEMETRY_KEYS) {
-        if (typeof laneStats[key] === "number") update[key] = laneStats[key];
+    for (const [telemetryKey, laneStatsKey] of Object.entries(LANE_STATS_KEY) as [
+        keyof Telemetry,
+        string,
+    ][]) {
+        const value = laneStats[laneStatsKey];
+        if (typeof value === "number") update[telemetryKey] = value;
     }
     return update;
 }
