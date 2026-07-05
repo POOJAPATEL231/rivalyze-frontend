@@ -75,7 +75,7 @@ export function StepBar() {
     return (
         <nav
             aria-label="Analysis progress"
-            className="glass sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6"
+            className="backdrop-blur-md bg-background/50 sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6 border-b border-b-gray-200"
         >
             <a
                 href="/"
@@ -185,13 +185,17 @@ export function StepBar() {
                                     <DropdownMenuItem
                                         key={step.id}
                                         disabled={!isUnlocked}
-                                        aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
+                                        aria-label={
+                                            !isUnlocked ? `${step.label}, locked` : undefined
+                                        }
                                         onClick={() => navigate(`/${step.id}`)}
                                         className={cn(
                                             "cursor-pointer font-heading text-sm flex items-center justify-between gap-3",
                                             isActive &&
                                                 "bg-primary/10 font-semibold text-primary focus:bg-primary/10 focus:text-primary",
-                                            !isActive && isDone && "text-success focus:text-success",
+                                            !isActive &&
+                                                isDone &&
+                                                "text-success focus:text-success",
                                             !isUnlocked && "text-muted-foreground/50",
                                         )}
                                     >
