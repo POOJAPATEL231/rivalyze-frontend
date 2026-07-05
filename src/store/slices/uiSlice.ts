@@ -7,9 +7,19 @@ interface UiState {
     theme: Theme;
 }
 
+const getInitialTheme = (): Theme => {
+    if (typeof window !== "undefined" && window.localStorage) {
+        const storedTheme = localStorage.getItem("theme");
+        if (storedTheme === "dark" || storedTheme === "light") {
+            return storedTheme;
+        }
+    }
+    return "light";
+};
+
 const initialState: UiState = {
     sidebarOpen: true,
-    theme: "dark",
+    theme: getInitialTheme(),
 };
 
 const uiSlice = createSlice({
@@ -24,9 +34,15 @@ const uiSlice = createSlice({
         },
         toggleTheme(state) {
             state.theme = state.theme === "dark" ? "light" : "dark";
+            if (typeof window !== "undefined" && window.localStorage) {
+                localStorage.setItem("theme", state.theme);
+            }
         },
         setTheme(state, action: PayloadAction<Theme>) {
             state.theme = action.payload;
+            if (typeof window !== "undefined" && window.localStorage) {
+                localStorage.setItem("theme", state.theme);
+            }
         },
     },
 });
