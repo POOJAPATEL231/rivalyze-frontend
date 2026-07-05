@@ -86,7 +86,7 @@ export function StepBar() {
                     alt=""
                     className="h-8 w-8 rounded-md object-cover"
                 />
-                Argus
+                <span className="hidden sm:inline">Argus</span>
             </a>
 
             {/* Wizard rail — always visible. Labels hide below md, circles shrink below md */}
@@ -113,7 +113,7 @@ export function StepBar() {
                                 aria-current={isActive ? "step" : undefined}
                                 aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
                                 onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
-                                className="group flex items-center gap-2 rounded-full py-1 pr-2.5 pl-1 transition-colors disabled:cursor-not-allowed"
+                                className="group flex items-center rounded-full py-1 pr-1 pl-1 transition-colors disabled:cursor-not-allowed min-[960px]:gap-2 min-[960px]:pr-2.5"
                             >
                                 <span
                                     className={cn(
@@ -161,151 +161,178 @@ export function StepBar() {
                 })}
             </ol>
 
-            {/* NAV_STEPS dropdown — visible below xl */}
-            <div className="flex shrink-0 items-center min-[1430px]:hidden">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="gap-1 rounded-full font-heading text-sm text-muted-foreground hover:text-foreground"
-                        >
-                            <MoreHorizontal className="size-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-44">
-                        {NAV_STEPS.map((step, i) => {
-                            const index = WIZARD_STEPS.length + i;
-                            const isActive = step.id === displayStep;
-                            const isUnlocked = unlockedSteps.includes(step.id);
-                            const isDone = isUnlocked && index < currentIndex;
-                            return (
-                                <DropdownMenuItem
-                                    key={step.id}
-                                    disabled={!isUnlocked}
-                                    aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
-                                    onClick={() => navigate(`/${step.id}`)}
-                                    className={cn(
-                                        "cursor-pointer font-heading text-sm flex items-center justify-between gap-3",
-                                        isActive &&
-                                            "bg-primary/10 font-semibold text-primary focus:bg-primary/10 focus:text-primary",
-                                        !isActive && isDone && "text-success focus:text-success",
-                                        !isUnlocked && "text-muted-foreground/50",
-                                    )}
-                                >
-                                    <span className="flex items-center gap-2">
-                                        <span className="w-3">
-                                            {isDone ? (
-                                                <Check className="size-3" />
-                                            ) : !isUnlocked ? (
-                                                <Lock className="size-3" />
-                                            ) : null}
+            {/* Actions and dropdown items container */}
+            <div className="ml-auto flex shrink-0 items-center gap-2">
+                {/* NAV_STEPS dropdown — visible below xl */}
+                <div className="flex shrink-0 items-center min-[1430px]:hidden">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="gap-1 rounded-full font-heading text-sm text-muted-foreground hover:text-foreground"
+                            >
+                                <MoreHorizontal className="size-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-44">
+                            {NAV_STEPS.map((step, i) => {
+                                const index = WIZARD_STEPS.length + i;
+                                const isActive = step.id === displayStep;
+                                const isUnlocked = unlockedSteps.includes(step.id);
+                                const isDone = isUnlocked && index < currentIndex;
+                                return (
+                                    <DropdownMenuItem
+                                        key={step.id}
+                                        disabled={!isUnlocked}
+                                        aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
+                                        onClick={() => navigate(`/${step.id}`)}
+                                        className={cn(
+                                            "cursor-pointer font-heading text-sm flex items-center justify-between gap-3",
+                                            isActive &&
+                                                "bg-primary/10 font-semibold text-primary focus:bg-primary/10 focus:text-primary",
+                                            !isActive && isDone && "text-success focus:text-success",
+                                            !isUnlocked && "text-muted-foreground/50",
+                                        )}
+                                    >
+                                        <span className="flex items-center gap-2">
+                                            <span className="w-3">
+                                                {isDone ? (
+                                                    <Check className="size-3" />
+                                                ) : !isUnlocked ? (
+                                                    <Lock className="size-3" />
+                                                ) : null}
+                                            </span>
+                                            {step.label}
                                         </span>
-                                        {step.label}
-                                    </span>
-                                    {step.stretch && (
-                                        <span className="flex size-3.5 items-center justify-center rounded-full bg-watch text-[9px] font-bold text-watch-foreground">
-                                            S
-                                        </span>
-                                    )}
-                                </DropdownMenuItem>
-                            );
-                        })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+                                        {step.stretch && (
+                                            <span className="flex size-3.5 items-center justify-center rounded-full bg-watch text-[9px] font-bold text-watch-foreground">
+                                                S
+                                            </span>
+                                        )}
+                                    </DropdownMenuItem>
+                                );
+                            })}
 
-            <div aria-hidden className="hidden h-6 w-px shrink-0 bg-border min-[1430px]:block" />
+                            {/* On small screens, also show Help and Logout inside the dropdown */}
+                            <DropdownMenuItem
+                                onClick={() => navigate("/guide")}
+                                className="cursor-pointer font-heading text-sm sm:hidden"
+                            >
+                                <span className="flex items-center gap-2">
+                                    <HelpCircle className="size-4" />
+                                    User Guide
+                                </span>
+                            </DropdownMenuItem>
 
-            <div className="hidden shrink-0 items-center gap-1 min-[1430px]:flex">
-                {NAV_STEPS.map((step, i) => {
-                    const index = WIZARD_STEPS.length + i;
-                    const isActive = step.id === displayStep;
-                    const isUnlocked = unlockedSteps.includes(step.id);
-                    const isDone = isUnlocked && index < currentIndex;
+                            <DropdownMenuItem
+                                onClick={handleLogout}
+                                className="cursor-pointer font-heading text-sm text-destructive focus:text-destructive sm:hidden"
+                            >
+                                <span className="flex items-center gap-2">
+                                    <LogOut className="size-4" />
+                                    Log Out
+                                </span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
 
-                    return (
-                        <button
-                            key={step.id}
-                            type="button"
-                            disabled={!isUnlocked}
-                            aria-current={isActive ? "step" : undefined}
-                            aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
-                            onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
-                            className={cn(
-                                "flex items-center gap-1.5 rounded-full px-3 py-1.5 font-heading text-sm font-medium whitespace-nowrap transition-colors",
-                                isActive && "bg-primary text-primary-foreground",
-                                !isActive && isDone && "text-success hover:bg-muted",
-                                !isActive &&
-                                    !isDone &&
-                                    isUnlocked &&
-                                    "text-foreground hover:bg-muted",
-                                !isUnlocked && "cursor-not-allowed text-muted-foreground/50",
-                            )}
-                        >
-                            <span
+                <div
+                    aria-hidden
+                    className="hidden h-6 w-px shrink-0 bg-border min-[1430px]:block"
+                />
+
+                <div className="hidden shrink-0 items-center gap-1 min-[1430px]:flex">
+                    {NAV_STEPS.map((step, i) => {
+                        const index = WIZARD_STEPS.length + i;
+                        const isActive = step.id === displayStep;
+                        const isUnlocked = unlockedSteps.includes(step.id);
+                        const isDone = isUnlocked && index < currentIndex;
+
+                        return (
+                            <button
+                                key={step.id}
+                                type="button"
+                                disabled={!isUnlocked}
+                                aria-current={isActive ? "step" : undefined}
+                                aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
+                                onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
                                 className={cn(
-                                    "inline-flex size-3.5 items-center justify-center font-mono text-[10px] tabular-nums",
-                                    isActive
-                                        ? "text-primary-foreground/70"
-                                        : "text-muted-foreground",
+                                    "flex items-center gap-1.5 rounded-full px-3 py-1.5 font-heading text-sm font-medium whitespace-nowrap transition-colors",
+                                    isActive && "bg-primary text-primary-foreground",
+                                    !isActive && isDone && "text-success hover:bg-muted",
+                                    !isActive &&
+                                        !isDone &&
+                                        isUnlocked &&
+                                        "text-foreground hover:bg-muted",
+                                    !isUnlocked && "cursor-not-allowed text-muted-foreground/50",
                                 )}
                             >
-                                {isDone ? (
-                                    <Check className="size-3" />
-                                ) : !isUnlocked ? (
-                                    <Lock className="size-3" />
-                                ) : (
-                                    step.number
-                                )}
-                            </span>
-                            {step.label}
-                            {step.stretch && (
                                 <span
-                                    aria-label="Stretch goal"
-                                    className="ml-0.5 flex size-3.5 items-center justify-center rounded-full bg-watch text-[9px] font-bold text-watch-foreground"
+                                    className={cn(
+                                        "inline-flex size-3.5 items-center justify-center font-mono text-[10px] tabular-nums",
+                                        isActive
+                                            ? "text-primary-foreground/70"
+                                            : "text-muted-foreground",
+                                    )}
                                 >
-                                    S
+                                    {isDone ? (
+                                        <Check className="size-3" />
+                                    ) : !isUnlocked ? (
+                                        <Lock className="size-3" />
+                                    ) : (
+                                        step.number
+                                    )}
                                 </span>
-                            )}
-                        </button>
-                    );
-                })}
+                                {step.label}
+                                {step.stretch && (
+                                    <span
+                                        aria-label="Stretch goal"
+                                        className="ml-0.5 flex size-3.5 items-center justify-center rounded-full bg-watch text-[9px] font-bold text-watch-foreground"
+                                    >
+                                        S
+                                    </span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="User guide"
+                    title="User guide"
+                    asChild
+                    className="hidden sm:inline-flex shrink-0"
+                >
+                    <Link to="/guide">
+                        <HelpCircle className="size-5" />
+                    </Link>
+                </Button>
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Toggle theme"
+                    onClick={() => dispatch(toggleTheme())}
+                    className="shrink-0"
+                >
+                    {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+                </Button>
+
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Log out"
+                    title="Log out"
+                    onClick={handleLogout}
+                    className="hidden sm:inline-flex shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+                >
+                    <LogOut className="size-5" />
+                </Button>
             </div>
-
-            <Button
-                variant="ghost"
-                size="icon"
-                aria-label="User guide"
-                title="User guide"
-                asChild
-                className="ml-auto shrink-0"
-            >
-                <Link to="/guide">
-                    <HelpCircle className="size-5" />
-                </Link>
-            </Button>
-
-            <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Toggle theme"
-                onClick={() => dispatch(toggleTheme())}
-                className="shrink-0"
-            >
-                {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
-            </Button>
-
-            <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Log out"
-                title="Log out"
-                onClick={handleLogout}
-                className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
-            >
-                <LogOut className="size-5" />
-            </Button>
         </nav>
     );
 }
