@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Check, HelpCircle, Lock, LogOut, Moon, Sun, MoreHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 
@@ -61,14 +60,6 @@ export function StepBar() {
     const displayStep = currentStep === "discovery" && runStatus !== "idle" ? "run" : currentStep;
     const currentIndex = STEPS.findIndex((step) => step.id === displayStep);
     const refreshToken = useAppSelector((state) => state.auth.refreshToken);
-
-    const [scrolled, setScrolled] = useState(false);
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 8);
-        onScroll();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
 
     async function handleLogout() {
         if (refreshToken) {
