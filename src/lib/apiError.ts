@@ -8,6 +8,12 @@ import type { ApiErrorBody } from "@/types/api";
  * status text ("Request failed with status code 401") either way. */
 export function extractApiErrorMessage(error: unknown): string {
     if (isAxiosError<ApiErrorBody>(error)) {
+        if (error.code === "ECONNABORTED") {
+            return "That took too long to respond. Check your connection and try again.";
+        }
+        if (!error.response) {
+            return "Couldn't reach the server. Check your connection and try again.";
+        }
         const detail = error.response?.data?.detail;
         if (typeof detail === "string") return detail;
         if (Array.isArray(detail) && detail.length > 0) {

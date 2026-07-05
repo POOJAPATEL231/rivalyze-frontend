@@ -48,6 +48,7 @@ export default function AnalysisFlow() {
     const theme = useAppSelector((state) => state.ui.theme);
     const unlockedSteps = useAppSelector((state) => state.analysis.unlockedSteps);
     const currentStep = useAppSelector((state) => state.analysis.currentStep);
+    const runStatus = useAppSelector((state) => state.analysis.runStatus);
 
     // Derive step from URL path: "/brief" → "brief"
     const stepFromPath = location.pathname.slice(1) as AnalysisStep;
@@ -65,6 +66,19 @@ export default function AnalysisFlow() {
     useEffect(() => {
         document.documentElement.classList.toggle("dark", theme === "dark");
     }, [theme]);
+
+    // The analysis itself survives a refresh (see store/index.ts), but a
+    // closed tab still loses it — warn before either while agents are
+    // actively working, same as any form with unsaved input.
+    useEffect(() => {
+        if (runStatus !== "running") return;
+        function handleBeforeUnload(event: BeforeUnloadEvent) {
+            event.preventDefault();
+            event.returnValue = "";
+        }
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [runStatus]);
 
     // Guard: unrecognised path → brief
     if (!isValidStep) {

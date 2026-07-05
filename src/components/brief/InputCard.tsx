@@ -65,11 +65,19 @@ export function InputCard() {
         return null;
     })();
 
-    const canStart =
-        (inputMode === "company"
-            ? companyName.trim().length > 0
-            : ideaDescription.trim().length > 0) && validationError === null;
+    const hasInput =
+        inputMode === "company" ? companyName.trim().length > 0 : ideaDescription.trim().length > 0;
+    const canStart = hasInput && validationError === null;
     const isBusy = isSubmitting;
+    const disabledReason = isBusy
+        ? undefined
+        : validationError
+          ? validationError
+          : !hasInput
+            ? inputMode === "company"
+                ? "Enter a company name to continue"
+                : "Describe your idea to continue"
+            : undefined;
 
     async function handleStart() {
         if (!canStart || isBusy) return;
@@ -183,6 +191,7 @@ export function InputCard() {
                     size="lg"
                     disabled={!canStart || isBusy}
                     onClick={handleStart}
+                    title={disabledReason}
                     className="w-full bg-iris text-background hover:opacity-90"
                 >
                     {isBusy ? (

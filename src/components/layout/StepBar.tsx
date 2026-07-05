@@ -75,7 +75,7 @@ export function StepBar() {
     return (
         <nav
             aria-label="Analysis progress"
-            className="glass sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6"
+            className="glass sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6"
         >
             <a
                 href="/"
@@ -111,6 +111,7 @@ export function StepBar() {
                                 type="button"
                                 disabled={!isUnlocked}
                                 aria-current={isActive ? "step" : undefined}
+                                aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
                                 onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
                                 className="group flex items-center gap-2 rounded-full py-1 pr-2.5 pl-1 transition-colors disabled:cursor-not-allowed"
                             >
@@ -182,6 +183,7 @@ export function StepBar() {
                                 <DropdownMenuItem
                                     key={step.id}
                                     disabled={!isUnlocked}
+                                    aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
                                     onClick={() => navigate(`/${step.id}`)}
                                     className={cn(
                                         "cursor-pointer font-heading text-sm flex items-center justify-between gap-3",
@@ -228,6 +230,7 @@ export function StepBar() {
                             type="button"
                             disabled={!isUnlocked}
                             aria-current={isActive ? "step" : undefined}
+                            aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
                             onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
                             className={cn(
                                 "flex items-center gap-1.5 rounded-full px-3 py-1.5 font-heading text-sm font-medium whitespace-nowrap transition-colors",

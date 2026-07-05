@@ -1,8 +1,9 @@
 import { TriangleAlert } from "lucide-react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 import { DiscoveryPanel } from "@/components/discovery/DiscoveryPanel";
 import { RunPanel } from "@/components/run/RunPanel";
+import { Button } from "@/components/ui/button";
 import { useAnalysisRun } from "@/hooks/useAnalysisRun";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { unlockStep } from "@/store/slices/analysisSlice";
@@ -15,14 +16,12 @@ import { unlockStep } from "@/store/slices/analysisSlice";
 export function DiscoveryRunView() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
-    const manual = Boolean((location.state as { manual?: boolean } | null)?.manual);
     const jobId = useAppSelector((state) => state.analysis.jobId);
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const companyName = useAppSelector((state) => state.analysis.companyName);
     const runEvents = useAppSelector((state) => state.analysis.runEvents);
     const laneStatuses = useAppSelector((state) => state.analysis.laneStatuses);
-    const { phase, error, confirm } = useAnalysisRun(jobId, { manual });
+    const { phase, error, confirm } = useAnalysisRun(jobId);
 
     function handleOpenDashboard() {
         dispatch(unlockStep("dashboard"));
@@ -48,6 +47,17 @@ export function DiscoveryRunView() {
                 <div className="flex items-start gap-2 rounded-lg border border-dashed border-destructive/60 bg-destructive/10 p-3 text-xs text-destructive">
                     <TriangleAlert className="size-4 shrink-0" />
                     <p>{error}</p>
+                </div>
+            )}
+
+            {phase === "failed" && (
+                <div className="flex justify-center py-4">
+                    <Button
+                        onClick={() => navigate("/brief")}
+                        className="bg-iris text-background hover:opacity-90"
+                    >
+                        Try again
+                    </Button>
                 </div>
             )}
 

@@ -23,6 +23,8 @@ export default function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState(true);
+    const [showForgotPasswordNote, setShowForgotPasswordNote] = useState(false);
 
     useEffect(() => {
         dispatch(clearError());
@@ -38,6 +40,7 @@ export default function Login() {
                     user: { email },
                     accessToken: tokens.access_token,
                     refreshToken: tokens.refresh_token,
+                    remember: rememberMe,
                 }),
             );
             navigate(from, { replace: true });
@@ -110,14 +113,19 @@ export default function Login() {
                             <label className="flex items-center gap-2 text-muted-foreground">
                                 <input
                                     type="checkbox"
-                                    defaultChecked
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
                                     className="size-4 rounded border-border accent-primary"
                                 />
                                 Keep me logged in
                             </label>
-                            <span className="cursor-default text-primary/70" title="Coming soon">
-                                Forgot password?
-                            </span>
+                            <button
+                                type="button"
+                                onClick={() => setShowForgotPasswordNote(true)}
+                                className="text-primary/70 hover:text-primary"
+                            >
+                                {showForgotPasswordNote ? "Coming soon" : "Forgot password?"}
+                            </button>
                         </div>
 
                         <Button

@@ -30,7 +30,7 @@ export function OpportunitiesPanel({ opportunities, lowSignalFindings }: Opportu
                                         {opportunity.text}
                                     </p>
                                     {evidenceCount > 0 && (
-                                        <span className="inline-flex items-center rounded-full border border-border bg-muted/50 px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+                                        <span className="font-mono text-[10px] text-muted-foreground">
                                             {evidenceCount} source
                                             {evidenceCount === 1 ? "" : "s"}
                                         </span>

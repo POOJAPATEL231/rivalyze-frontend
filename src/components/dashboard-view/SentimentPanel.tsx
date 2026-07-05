@@ -31,7 +31,20 @@ const chartConfig = {
 export function SentimentPanel({ sentiment }: SentimentPanelProps) {
     const entries = Object.entries(sentiment);
 
-    if (entries.length === 0) return null;
+    if (entries.length === 0) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Rival sentiment</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                        Sentiment data isn&rsquo;t available for this run.
+                    </p>
+                </CardContent>
+            </Card>
+        );
+    }
 
     const chartData = entries.map(([name, entry]) => ({
         name,

@@ -12,16 +12,17 @@ type ReportState =
     | { status: "error"; message: string }
     | { status: "success"; data: ApiReportResponse };
 
-/** Fetches GET /api/v1/reports/{run_id} once a run has completed. When
- * `manual` is set (a StepBar/Back-button revisit to an already-unlocked
- * Dashboard, not the app routing you here fresh), reuses the cached report
- * for this runId from the store instead of hitting the network again. */
-export function useReport(runId: string | null, options?: { manual?: boolean }): ReportState {
+/** Fetches GET /api/v1/reports/{run_id} once a run has completed. Reuses a
+ * cached report for this exact runId already sitting in the store instead of
+ * refetching — regardless of which screen asked or how the user navigated
+ * here, so Dashboard, Recommendations, and Compare all share one fetch per
+ * run instead of racing each other or showing a stale "run the agents
+ * first" empty state while another screen's fetch is still in flight. */
+export function useReport(runId: string | null): ReportState {
     const dispatch = useAppDispatch();
     const cachedReport = useAppSelector((state) => state.analysis.apiReport);
     const cachedRunId = useAppSelector((state) => state.analysis.apiReportRunId);
-    const manual = options?.manual ?? false;
-    const hasCache = manual && runId !== null && runId === cachedRunId && cachedReport !== null;
+    const hasCache = runId !== null && runId === cachedRunId && cachedReport !== null;
 
     const [state, setState] = useState<ReportState>(() => {
         if (!runId) return { status: "idle" };

@@ -57,6 +57,11 @@ export function CompetitorList({ onDeploy, isDeploying }: CompetitorListProps) {
                         size="lg"
                         disabled={competitors.length === 0 || isDeploying}
                         onClick={handleDeploy}
+                        title={
+                            competitors.length === 0
+                                ? "Add at least one competitor to deploy the agents"
+                                : undefined
+                        }
                         className="mt-auto w-full shrink-0 bg-iris text-background hover:opacity-90"
                     >
                         {isDeploying ? "Deploying..." : "Deploy the agents"}
@@ -84,7 +89,7 @@ export function CompetitorList({ onDeploy, isDeploying }: CompetitorListProps) {
                                 <Button
                                     type="button"
                                     variant="ghost"
-                                    size="icon-sm"
+                                    size="icon"
                                     onClick={() => dispatch(restoreCompetitor(competitor.id))}
                                     aria-label={`Restore ${competitor.name}`}
                                 >

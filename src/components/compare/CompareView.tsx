@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 import { CompareColumn, type CompareRow } from "@/components/compare/CompareColumn";
 import { RivalPicker } from "@/components/compare/RivalPicker";
 import { Verdict } from "@/components/compare/Verdict";
 import { Button } from "@/components/ui/button";
+import { useReport } from "@/hooks/useReport";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/store/hooks";
 
 export function CompareView() {
     const navigate = useNavigate();
-    const report = useAppSelector((state) => state.analysis.apiReport);
+    const runId = useAppSelector((state) => state.analysis.runId);
+    const report = useReport(runId);
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const companyName = useAppSelector((state) => state.analysis.companyName);
     const [selectedIds, setSelectedIds] = useState<string[]>(() =>
@@ -29,7 +31,7 @@ export function CompareView() {
         });
     }
 
-    if (!report) {
+    if (report.status === "idle") {
         return (
             <div className="mx-auto max-w-6xl px-4 py-12 text-sm text-muted-foreground">
                 Nothing to compare yet — run the agents first.
@@ -37,15 +39,34 @@ export function CompareView() {
         );
     }
 
+    if (report.status === "loading") {
+        return (
+            <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-12 text-sm text-muted-foreground">
+                <Loader2 className="size-4 animate-spin" />
+                Loading comparison&hellip;
+            </div>
+        );
+    }
+
+    if (report.status === "error") {
+        return (
+            <div className="mx-auto max-w-6xl px-4 py-12 text-sm text-destructive">
+                {report.message}
+            </div>
+        );
+    }
+
+    const data = report.data;
+
     // Rival cells are keyed by the competitor's real name in the API response
     // (e.g. "Ola"), not the internal slugified Competitor.id (e.g. "ola").
     function buildRows(competitorName?: string): CompareRow[] {
-        const h2hRows = report!.head_to_head.map((row) => ({
+        const h2hRows = data.head_to_head.map((row) => ({
             label: row.metric,
             text: competitorName ? (row.rivals[competitorName]?.value ?? "No data yet") : row.you,
         }));
 
-        const sentimentEntry = competitorName ? report!.sentiment[competitorName] : undefined;
+        const sentimentEntry = competitorName ? data.sentiment[competitorName] : undefined;
 
         return [
             ...h2hRows,

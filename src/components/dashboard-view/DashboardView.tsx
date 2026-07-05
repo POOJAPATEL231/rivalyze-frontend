@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, Loader2 } from "lucide-react";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 import { ExecSummary } from "@/components/dashboard-view/ExecSummary";
 import { HeadToHead } from "@/components/dashboard-view/HeadToHead";
@@ -19,10 +19,8 @@ import { unlockStep } from "@/store/slices/analysisSlice";
 export function DashboardView() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
-    const manual = Boolean((location.state as { manual?: boolean } | null)?.manual);
     const runId = useAppSelector((state) => state.analysis.runId);
-    const report = useReport(runId, { manual });
+    const report = useReport(runId);
     const exportRef = useRef<HTMLDivElement>(null);
     const [exporting, setExporting] = useState(false);
 
@@ -70,7 +68,8 @@ export function DashboardView() {
 
     if (report.status === "loading") {
         return (
-            <div className="mx-auto max-w-6xl px-4 py-12 text-sm text-muted-foreground">
+            <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-12 text-sm text-muted-foreground">
+                <Loader2 className="size-4 animate-spin" />
                 Loading report&hellip;
             </div>
         );
@@ -90,11 +89,7 @@ export function DashboardView() {
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:px-6 lg:px-8">
             <div className="flex items-start justify-between gap-4">
                 <div className="space-y-4">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate("/discovery", { state: { manual: true } })}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => navigate("/discovery")}>
                         <ArrowLeft data-icon="inline-start" />
                         Back
                     </Button>
@@ -131,8 +126,6 @@ export function DashboardView() {
                         <HeadToHead rows={data.head_to_head} />
                     </CardContent>
                 </Card>
-
-                <SwotGrid swot={data.swot} />
 
                 <SwotGrid swot={data.swot} />
 

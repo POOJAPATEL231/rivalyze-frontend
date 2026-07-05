@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { ChatBox } from "@/components/workspace/ChatBox";
 import { DocDropzone } from "@/components/workspace/DocDropzone";
 import { DocRow } from "@/components/workspace/DocRow";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 interface Doc {
@@ -46,11 +47,16 @@ export function WorkspaceView() {
                     Back
                 </Button>
                 <div>
-                    <h1 className="font-heading text-3xl font-semibold text-foreground">
-                        Ask the intelligence
-                    </h1>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <h1 className="font-heading text-3xl font-semibold text-foreground">
+                            Ask the intelligence
+                        </h1>
+                        <Badge variant="watch">Preview</Badge>
+                    </div>
                     <p className="mt-1 text-sm text-muted-foreground">
                         Ground questions against your own documents and everything the agents found.
+                        This preview answers a handful of sample questions — it isn&rsquo;t
+                        connected to your analysis yet.
                     </p>
                 </div>
             </div>

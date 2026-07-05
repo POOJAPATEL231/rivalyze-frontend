@@ -7,6 +7,7 @@ interface HistoryRowProps {
     entry: ApiHistoryEntry;
     onOpen: () => void;
     opening: boolean;
+    disabled?: boolean;
 }
 
 const THREAT_BADGE_CLASSNAME: Record<string, string> = {
@@ -15,7 +16,7 @@ const THREAT_BADGE_CLASSNAME: Record<string, string> = {
     LOW: "bg-success/10 text-success",
 };
 
-export function HistoryRow({ entry, onOpen, opening }: HistoryRowProps) {
+export function HistoryRow({ entry, onOpen, opening, disabled }: HistoryRowProps) {
     const threatLevel = entry.threat_level?.toUpperCase() ?? null;
 
     return (
@@ -41,7 +42,7 @@ export function HistoryRow({ entry, onOpen, opening }: HistoryRowProps) {
                 <span className="font-mono text-xs text-muted-foreground">
                     {entry.confidence != null ? `${entry.confidence}% confidence` : "No score yet"}
                 </span>
-                <Button size="sm" onClick={onOpen} disabled={opening}>
+                <Button size="sm" onClick={onOpen} disabled={opening || disabled}>
                     {opening ? "Opening…" : "Open"}
                 </Button>
             </div>

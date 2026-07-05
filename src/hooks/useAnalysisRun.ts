@@ -66,9 +66,9 @@ function mapEvent(event: ApiRunEvent, index: number): RunEvent {
     };
 }
 
-/** Derives the phase a manual (StepBar/Back-button) revisit should render
- * without touching the network — the only signals available are whatever's
- * already sitting in the store from the original automatic run. */
+/** Derives the phase a revisit should render without touching the network —
+ * the only signals available are whatever's already sitting in the store
+ * from the original automatic run. */
 function deriveStoredPhase(runStatus: RunStatus, hasCompetitors: boolean): AnalysisPhase {
     if (runStatus === "done") return "done";
     if (runStatus === "running") return "analyzing";
@@ -82,22 +82,38 @@ function deriveStoredPhase(runStatus: RunStatus, hasCompetitors: boolean): Analy
  * single running ledger falls out naturally with no reset at the confirm
  * boundary — only the poll target (discovery vs analysis) changes.
  *
- * When `manual` is set (a StepBar/Back-button revisit to an already-unlocked
- * step, not the app routing you here fresh), skips resetting/polling
- * entirely and just reflects whatever's already in the store. */
-export function useAnalysisRun(jobId: string | null, options?: { manual?: boolean }) {
+ * What to do with a given jobId is classified once, from whatever's already
+ * in the store for it — never from *how* the caller navigated here. A
+ * step-bar click, a Back button, the browser's own back/forward, a typed
+ * URL, or a rehydrated page refresh all land on the same correct behavior:
+ * "fresh" (nothing recorded yet) starts the poll loop from scratch, "resume"
+ * (still running server-side) keeps pulling live updates without touching
+ * anything already stored, and "static" (done, or awaiting confirmation)
+ * needs no network activity at all. */
+export function useAnalysisRun(jobId: string | null) {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const manual = options?.manual ?? false;
     const storedRunStatus = useAppSelector((state) => state.analysis.runStatus);
     const storedHasCompetitors = useAppSelector((state) => state.analysis.competitors.length > 0);
+
+    // Captured once via lazy init, not read reactively — the poll loop this
+    // triggers immediately starts changing storedRunStatus/storedHasCompetitors
+    // itself, and a reactive read here would re-classify (and re-trigger) on
+    // every one of its own updates.
+    const [mode] = useState<"fresh" | "resume" | "static">(() =>
+        storedRunStatus === "idle" && !storedHasCompetitors
+            ? "fresh"
+            : storedRunStatus === "running"
+              ? "resume"
+              : "static",
+    );
     const [phase, setPhase] = useState<AnalysisPhase>(() =>
-        manual ? deriveStoredPhase(storedRunStatus, storedHasCompetitors) : "discovering",
+        mode === "fresh" ? "discovering" : deriveStoredPhase(storedRunStatus, storedHasCompetitors),
     );
     const [error, setError] = useState<string | null>(null);
     const cancelledRef = useRef(false);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const competitorsAppliedRef = useRef(false);
+    const competitorsAppliedRef = useRef(mode !== "fresh");
 
     function finishRun(status: ApiRunStatus) {
         dispatch(setLaneStatus({ lane: "discovery", status: "done" }));
@@ -221,14 +237,19 @@ export function useAnalysisRun(jobId: string | null, options?: { manual?: boolea
     }
 
     useEffect(() => {
-        if (!jobId || manual) return;
+        if (!jobId) return;
         cancelledRef.current = false;
-        competitorsAppliedRef.current = false;
 
-        dispatch(resetRun());
-        dispatch(setCompetitors([]));
-        dispatch(setLaneStatus({ lane: "discovery", status: "running" }));
-        pollDiscovery(jobId, 1);
+        if (mode === "fresh") {
+            dispatch(resetRun());
+            dispatch(setCompetitors([]));
+            dispatch(setLaneStatus({ lane: "discovery", status: "running" }));
+            pollDiscovery(jobId, 1);
+        } else if (mode === "resume") {
+            pollAnalysis(jobId, 1);
+        }
+        // "static" (done, or awaiting confirmation with competitors already
+        // loaded) needs no active polling — just render what's in the store.
 
         return () => {
             cancelledRef.current = true;
@@ -238,7 +259,7 @@ export function useAnalysisRun(jobId: string | null, options?: { manual?: boolea
         // changes while this screen stays mounted (a new analysis means a
         // full navigation away and back, i.e. a fresh mount).
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [jobId, manual]);
+    }, [jobId, mode]);
 
     async function confirm(competitors: ApiCompetitor[]) {
         if (!jobId) return;

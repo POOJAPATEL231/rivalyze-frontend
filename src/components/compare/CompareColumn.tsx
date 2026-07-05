@@ -24,13 +24,17 @@ function Row({ row }: { row: CompareRow }) {
             <p className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
                 {row.label}
             </p>
-            <button
-                type="button"
-                onClick={() => row.evidenceId && dispatch(openEvidence(row.evidenceId))}
-                className="text-left text-sm text-foreground hover:underline"
-            >
-                {row.text}
-            </button>
+            {row.evidenceId ? (
+                <button
+                    type="button"
+                    onClick={() => dispatch(openEvidence(row.evidenceId!))}
+                    className="text-left text-sm text-foreground hover:underline"
+                >
+                    {row.text}
+                </button>
+            ) : (
+                <p className="text-sm text-foreground">{row.text}</p>
+            )}
             {row.evidenceId && <EvidenceChip evidenceId={row.evidenceId} />}
         </div>
     );

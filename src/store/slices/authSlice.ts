@@ -10,17 +10,31 @@ interface PersistedSession {
     refreshToken: string;
 }
 
-function loadPersistedSession(): PersistedSession | null {
+/** localStorage survives closing the browser; sessionStorage clears with the
+ * tab. Which one a session lives in is exactly what "Keep me logged in"
+ * controls (see Login.tsx) — checked persists across restarts, unchecked
+ * only lasts this tab. */
+function loadPersistedSession(): (PersistedSession & { remember: boolean }) | null {
     try {
-        const raw = localStorage.getItem(SESSION_KEY);
-        return raw ? (JSON.parse(raw) as PersistedSession) : null;
+        const fromLocal = localStorage.getItem(SESSION_KEY);
+        if (fromLocal) return { ...(JSON.parse(fromLocal) as PersistedSession), remember: true };
+        const fromSession = sessionStorage.getItem(SESSION_KEY);
+        if (fromSession)
+            return { ...(JSON.parse(fromSession) as PersistedSession), remember: false };
+        return null;
     } catch {
         return null;
     }
 }
 
-function persistSession(session: PersistedSession) {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+function persistSession(session: PersistedSession, remember: boolean) {
+    const storage = remember ? localStorage : sessionStorage;
+    storage.setItem(SESSION_KEY, JSON.stringify(session));
+}
+
+function clearPersistedSession() {
+    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
 }
 
 interface AuthState {
@@ -30,6 +44,9 @@ interface AuthState {
     isAuthenticated: boolean;
     isLoading: boolean;
     error: string | null;
+    /** Which storage this session lives in — needed so a later silent token
+     * refresh writes back to the same place instead of always localStorage. */
+    remember: boolean;
 }
 
 const persisted = loadPersistedSession();
@@ -41,6 +58,7 @@ const initialState: AuthState = {
     isAuthenticated: !!persisted,
     isLoading: false,
     error: null,
+    remember: persisted?.remember ?? true,
 };
 
 const authSlice = createSlice({
@@ -51,13 +69,17 @@ const authSlice = createSlice({
             state.isLoading = true;
             state.error = null;
         },
-        loginSuccess(state, action: PayloadAction<{ user: AuthUser } & AuthTokens>) {
+        loginSuccess(
+            state,
+            action: PayloadAction<{ user: AuthUser; remember?: boolean } & AuthTokens>,
+        ) {
             state.isLoading = false;
             state.isAuthenticated = true;
             state.user = action.payload.user;
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
-            persistSession(action.payload);
+            state.remember = action.payload.remember ?? true;
+            persistSession(action.payload, state.remember);
         },
         loginFailure(state, action: PayloadAction<string>) {
             state.isLoading = false;
@@ -73,7 +95,9 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
-            persistSession(action.payload);
+            // No "keep me logged in" control on signup — always persist normally.
+            state.remember = true;
+            persistSession(action.payload, true);
         },
         signupFailure(state, action: PayloadAction<string>) {
             state.isLoading = false;
@@ -85,7 +109,7 @@ const authSlice = createSlice({
             if (!state.user) return;
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
-            persistSession({ user: state.user, ...action.payload });
+            persistSession({ user: state.user, ...action.payload }, state.remember);
         },
         logout(state) {
             state.user = null;
@@ -93,7 +117,8 @@ const authSlice = createSlice({
             state.refreshToken = null;
             state.isAuthenticated = false;
             state.error = null;
-            localStorage.removeItem(SESSION_KEY);
+            state.remember = true;
+            clearPersistedSession();
         },
         clearError(state) {
             state.error = null;

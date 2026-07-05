@@ -33,7 +33,7 @@ export function CompetitorRow({ competitor, onRemove }: CompetitorRowProps) {
             <Button
                 type="button"
                 variant="ghost"
-                size="icon-sm"
+                size="icon"
                 aria-label={`Remove ${competitor.name}`}
                 onClick={onRemove}
             >

@@ -4,8 +4,11 @@ import { store } from "@/store";
 import { logout, tokensRefreshed } from "@/store/slices/authSlice";
 import type { ApiTokenResponse } from "@/types/api";
 
+const REQUEST_TIMEOUT_MS = 20000;
+
 export const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
+    timeout: REQUEST_TIMEOUT_MS,
 });
 
 const AUTH_ENDPOINTS = ["/api/v1/auth/login", "/api/v1/auth/signup", "/api/v1/auth/refresh"];
@@ -33,7 +36,7 @@ function refreshTokens(refreshToken: string): Promise<ApiTokenResponse> {
         .post<ApiTokenResponse>(
             "/api/v1/auth/refresh",
             { refresh_token: refreshToken },
-            { baseURL: import.meta.env.VITE_API_BASE_URL },
+            { baseURL: import.meta.env.VITE_API_BASE_URL, timeout: REQUEST_TIMEOUT_MS },
         )
         .then((res) => res.data);
 }

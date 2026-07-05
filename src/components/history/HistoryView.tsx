@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router";
 
 import { HistoryRow } from "@/components/history/HistoryRow";
@@ -64,6 +65,7 @@ export function HistoryView() {
     const pageEntries = entries.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
     async function handleOpen(entry: ApiHistoryEntry) {
+        if (openingJobId) return;
         setOpeningJobId(entry.job_id);
         setError(null);
         try {
@@ -103,7 +105,12 @@ export function HistoryView() {
                 className="max-w-sm"
             />
 
-            {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
+            {loading && (
+                <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="size-4 animate-spin" />
+                    Loading&hellip;
+                </p>
+            )}
             {error && <p className="text-sm text-destructive">{error}</p>}
             {!loading && !error && entries.length === 0 && (
                 <p className="text-sm text-muted-foreground">No past runs found.</p>
@@ -115,6 +122,7 @@ export function HistoryView() {
                         key={entry.job_id}
                         entry={entry}
                         opening={openingJobId === entry.job_id}
+                        disabled={openingJobId !== null && openingJobId !== entry.job_id}
                         onOpen={() => handleOpen(entry)}
                     />
                 ))}
