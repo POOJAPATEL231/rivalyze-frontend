@@ -483,12 +483,33 @@ export function GuideView() {
                     <p className="text-sm text-muted-foreground">
                         The <strong>executive summary</strong> banner shows a color-coded threat
                         level — Low (green), Medium/Moderate/Elevated (gold), or High/Critical (red)
-                        — with run details and a written summary. The{" "}
-                        <strong>head-to-head table</strong> lists the metrics Argus compared, with a
-                        highlighted <strong>You</strong> column and one column per competitor. The{" "}
-                        <strong>SWOT section</strong> shows four boxes: <strong>Strengths</strong>{" "}
-                        (teal), <strong>Weaknesses</strong> (rose), <strong>Opportunities</strong>{" "}
-                        (gold), and <strong>Threats</strong> (violet).
+                        — with run details and a written summary.
+                    </p>
+
+                    <h3 className="font-heading text-base font-semibold text-foreground">
+                        By the numbers
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                        A tile row of hard counts — <strong>Evidence sources</strong>,{" "}
+                        <strong>Competitors</strong>, <strong>Corroborated (2+ sources)</strong>{" "}
+                        (highlighted), <strong>Independent domains</strong>,{" "}
+                        <strong>Newest evidence</strong>, and <strong>Avg. confidence</strong> —
+                        every number here is a real count, nothing estimated. Below that, three bar
+                        breakdowns: <strong>Source mix</strong> (what kind of sources were used),{" "}
+                        <strong>Sentiment spread</strong> (positive/neutral/negative), and{" "}
+                        <strong>Sources per rival</strong>. A line at the bottom notes how many
+                        rivals have logged complaints, and flags any findings backed by only one
+                        source. This whole section disappears if a run didn&rsquo;t produce these
+                        stats (older runs, or a run where synthesis was degraded).
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                        The <strong>head-to-head table</strong> lists the metrics Argus compared,
+                        with a highlighted <strong>You</strong> column and one column per
+                        competitor. The <strong>SWOT section</strong> shows four boxes:{" "}
+                        <strong>Strengths</strong> (teal), <strong>Weaknesses</strong> (rose),{" "}
+                        <strong>Opportunities</strong> (gold), and <strong>Threats</strong>{" "}
+                        (violet).
                     </p>
 
                     <p className="text-sm text-muted-foreground">
@@ -501,15 +522,15 @@ export function GuideView() {
 
                     <GuideCallout variant="note">
                         <p>
-                            A value in the head-to-head table or an opportunity&rsquo;s source count
-                            is clickable — shown in violet with a small arrow icon, or a &ldquo;N
-                            sources&rdquo; pill you can press — whenever Argus can trace it back to
-                            a specific claim. Click it to open the{" "}
+                            A value in the head-to-head table is clickable — shown in violet with a
+                            small arrow icon — whenever Argus can trace it back to a specific claim.
+                            Click it to open the{" "}
                             <a href="#evidence" className="text-primary hover:underline">
                                 Evidence Drawer
                             </a>
-                            . Values shown as plain text aren&rsquo;t linked to a specific claim yet
-                            and won&rsquo;t open anything.
+                            . Values shown as plain text aren&rsquo;t linked to a specific claim and
+                            won&rsquo;t open anything. Opportunities don&rsquo;t currently show a
+                            source count at all.
                         </p>
                     </GuideCallout>
                 </section>
@@ -539,11 +560,10 @@ export function GuideView() {
                         Actions at the bottom of the page
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                        <strong>Export</strong> offers <strong>Markdown (.md)</strong> or{" "}
-                        <strong>PDF (.pdf)</strong> downloads. <strong>Compare side-by-side</strong>{" "}
-                        opens the optional Compare screen. <strong>Ask the intelligence</strong>{" "}
-                        opens the optional Workspace screen. <strong>Re-run</strong> takes you back
-                        to Brief to start a new analysis.
+                        <strong>Export (.md)</strong> downloads the full report as a Markdown file.{" "}
+                        <strong>Compare side-by-side</strong> opens the optional Compare screen.{" "}
+                        <strong>Ask the intelligence</strong> opens the optional Workspace screen.{" "}
+                        <strong>Re-run</strong> takes you back to Brief to start a new analysis.
                     </p>
 
                     <GuideQA
@@ -608,44 +628,38 @@ export function GuideView() {
                         Workspace
                     </h2>
 
-                    <GuideCallout variant="warning">
-                        <p>
-                            This screen is a scripted demo, not a working feature yet. The chat only
-                            recognizes a fixed set of sample questions about four made-up companies
-                            — Northwind, PulseMetrics, Vantage, and Beacon — regardless of who you
-                            actually analyzed. Uploading a document doesn&rsquo;t read it either:
-                            clicking the upload area just adds a fake file name to the list. Treat
-                            this screen as a preview of a planned feature, not a way to ask real
-                            questions about your own competitors.
-                        </p>
-                    </GuideCallout>
-
                     <p className="text-sm text-muted-foreground">
-                        Workspace is intended to let you upload your own documents and ask questions
-                        grounded in everything the agents found. Click{" "}
-                        <strong>Ask the intelligence</strong> on Recommendations, or the{" "}
-                        <strong>Workspace</strong> tab in the step bar once it&rsquo;s unlocked. A{" "}
-                        <strong>Documents</strong> panel sits on the left with a{" "}
-                        <strong>Click to add a document to the workspace</strong> box; a{" "}
-                        <strong>Chat</strong> panel sits on the right with suggested-question pills
-                        and a text box.
+                        Workspace is a real chat grounded in your own run — it asks the backend your
+                        question along with the company and run ID, and answers using what the
+                        agents actually found. It&rsquo;s labeled <strong>Preview</strong> since
+                        it&rsquo;s newer than the rest of the flow, but the answers aren&rsquo;t
+                        scripted. Click <strong>Ask the intelligence</strong> on Recommendations, or
+                        the <strong>Workspace</strong> tab in the step bar once it&rsquo;s unlocked.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                        A <strong>Chat</strong> card shows the message log, four suggested questions
+                        (things like{" "}
+                        <strong>What is the biggest competitive threat right now?</strong> and{" "}
+                        <strong>Where are the biggest opportunities?</strong>), and a text box.
                     </p>
                     <GuideSteps
                         items={[
                             "Click a suggested question, or type your own into the box and press Enter.",
-                            "If your question matches one of the built-in sample topics, you get a canned answer with a source-count citation.",
-                            "Anything else returns a message saying it couldn't find an answer in the indexed sources.",
+                            <>
+                                A <strong>Thinking&hellip;</strong> bubble appears while the answer
+                                is generated — this can take a few seconds.
+                            </>,
+                            <>
+                                The answer appears with a source-count chip if Argus can point to
+                                specific evidence for it. Click the chip to open the{" "}
+                                <a href="#evidence" className="text-primary hover:underline">
+                                    Evidence Drawer
+                                </a>
+                                .
+                            </>,
+                            "If something goes wrong or no answer comes back, the message shows in a gold dashed border instead of the usual gray bubble.",
                         ]}
                     />
-
-                    <GuideCallout variant="clarify">
-                        <p>
-                            Clicking a citation here opens the real Evidence Drawer, but since these
-                            answers are canned demo content rather than a real analysis, the drawer
-                            has nothing to match and shows &ldquo;No sources found for this
-                            claim.&rdquo; That&rsquo;s expected for this screen, not an error.
-                        </p>
-                    </GuideCallout>
                 </section>
 
                 <section
@@ -708,13 +722,12 @@ export function GuideView() {
                     <GuideCallout variant="note">
                         <p>
                             Not every claim on screen opens the drawer — only ones Argus can trace
-                            to a specific claim reference. On the <strong>Dashboard</strong>, that
-                            currently covers the head-to-head table (shown as a violet link with a
-                            small arrow) and the opportunities list (shown as a pressable &ldquo;N
-                            sources&rdquo; pill). Plain, non-colored text elsewhere — including
-                            every source count on <strong>Recommendations</strong> and{" "}
-                            <strong>Compare</strong> — isn&rsquo;t linked yet and won&rsquo;t open
-                            anything.
+                            to a specific claim reference. That currently means the{" "}
+                            <strong>Dashboard</strong>&rsquo;s head-to-head table (shown as a violet
+                            link with a small arrow) and citations in the <strong>Workspace</strong>{" "}
+                            chat. Plain, non-colored source counts elsewhere — Recommendation cards,
+                            and everything on <strong>Compare</strong> — aren&rsquo;t linked yet and
+                            won&rsquo;t open anything.
                         </p>
                     </GuideCallout>
 
@@ -786,11 +799,11 @@ export function GuideView() {
                     />
                     <GuideQA
                         question="Nothing happens when I click a source count on Recommendations or Compare."
-                        answer="Those aren't wired up to open the Evidence Drawer yet. On the Dashboard, the equivalent head-to-head values and opportunity source pills do open it, whenever Argus can trace them to a specific claim."
+                        answer="Those aren't wired up to open the Evidence Drawer yet. On the Dashboard, the equivalent head-to-head values do open it, whenever Argus can trace them to a specific claim."
                     />
                     <GuideQA
-                        question="Workspace doesn't seem to know anything about my actual competitors."
-                        answer="That's expected right now — Workspace is a scripted demo built around four fictional companies, not a live question-answering tool over your analysis. Its citations open the real Evidence Drawer, but show no matching sources since the demo answers aren't tied to a real run."
+                        question="Does Workspace actually know about my competitors, or is it scripted?"
+                        answer="It's a real chat grounded in your run's own findings, not a script — it just carries a Preview label because it shipped after the rest of the flow. If it can't find an answer, it says so instead of making one up."
                     />
                     <GuideQA
                         question="My PDF export looked cut off or oddly split across pages."
