@@ -114,7 +114,7 @@ export function StepBar() {
                             )}
                             <button
                                 type="button"
-                                disabled={!isUnlocked}
+                                disabled={!isUnlocked || (step.id === "discovery" && isDone)}
                                 aria-current={isActive ? "step" : undefined}
                                 aria-label={!isUnlocked ? `${step.label}, locked` : undefined}
                                 onClick={() => navigate(`/${step.id}`, { state: { manual: true } })}
@@ -139,7 +139,9 @@ export function StepBar() {
                                     {isActive && (
                                         <span className="absolute inset-0 animate-ping rounded-full bg-primary/40" />
                                     )}
-                                    {isDone ? (
+                                    {step.label === "Discovery" && isUnlocked ? (
+                                        <Lock className="size-2.5 min-[960px]:size-3 pointer-events-none" />
+                                    ) : isDone ? (
                                         <Check className="size-3 min-[960px]:size-3.5" />
                                     ) : !isUnlocked ? (
                                         <Lock className="size-2.5 min-[960px]:size-3" />
@@ -153,7 +155,7 @@ export function StepBar() {
                                         "hidden font-heading text-sm font-medium whitespace-nowrap min-[960px]:inline",
                                         isActive
                                             ? "text-foreground"
-                                            : isUnlocked
+                                            : isUnlocked || step.label === "Discovery"
                                               ? "text-muted-foreground group-hover:text-foreground"
                                               : "text-muted-foreground/40",
                                     )}
@@ -189,7 +191,9 @@ export function StepBar() {
                                 return (
                                     <DropdownMenuItem
                                         key={step.id}
-                                        disabled={!isUnlocked}
+                                        disabled={
+                                            !isUnlocked || (step.id === "discovery" && isDone)
+                                        }
                                         aria-label={
                                             !isUnlocked ? `${step.label}, locked` : undefined
                                         }

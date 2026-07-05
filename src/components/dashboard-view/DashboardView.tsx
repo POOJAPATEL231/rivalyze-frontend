@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ArrowLeft, Download, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router";
@@ -89,10 +89,6 @@ export function DashboardView() {
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:px-6 lg:px-8">
             <div className="flex items-start justify-between gap-4">
                 <div className="space-y-4">
-                    <Button variant="ghost" size="sm" onClick={() => navigate("/discovery")}>
-                        <ArrowLeft data-icon="inline-start" />
-                        Back
-                    </Button>
                     <div>
                         <h1 className="font-heading text-3xl font-semibold text-foreground">
                             Here&rsquo;s the read
