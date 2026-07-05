@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 
 import { ExecSummary } from "@/components/dashboard-view/ExecSummary";
 import { HeadToHead } from "@/components/dashboard-view/HeadToHead";
-import { OpportunitiesPanel } from "@/components/dashboard-view/OpportunitiesPanel";
 import { SentimentPanel } from "@/components/dashboard-view/SentimentPanel";
 import { StatsStrip } from "@/components/dashboard-view/StatsStrip";
 import { SwotGrid } from "@/components/dashboard-view/SwotGrid";
@@ -125,13 +124,7 @@ export function DashboardView() {
 
                 <SwotGrid swot={data.swot} />
 
-                <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-2">
-                    <SentimentPanel sentiment={data.sentiment} />
-                    <OpportunitiesPanel
-                        opportunities={data.opportunities}
-                        lowSignalFindings={data.low_signal_findings}
-                    />
-                </div>
+                <SentimentPanel sentiment={data.sentiment} />
             </div>
 
             <div className="flex justify-end">
