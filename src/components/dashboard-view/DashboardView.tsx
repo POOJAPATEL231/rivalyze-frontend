@@ -1,7 +1,5 @@
 import { useRef, useState } from "react";
 import { Download, Loader2 } from "lucide-react";
-import html2canvas from "html2canvas-pro";
-import jsPDF from "jspdf";
 import { useNavigate } from "react-router";
 
 import { ExecSummary } from "@/components/dashboard-view/ExecSummary";
@@ -12,6 +10,8 @@ import { SwotGrid } from "@/components/dashboard-view/SwotGrid";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useReport } from "@/hooks/useReport";
+import { extractApiErrorMessage } from "@/lib/apiError";
+import { exportSectionsToPdf } from "@/lib/exportPdf";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { unlockStep } from "@/store/slices/analysisSlice";
 
@@ -22,6 +22,7 @@ export function DashboardView() {
     const report = useReport(runId);
     const exportRef = useRef<HTMLDivElement>(null);
     const [exporting, setExporting] = useState(false);
+    const [exportError, setExportError] = useState<string | null>(null);
 
     function handleContinue() {
         dispatch(unlockStep("recommendations"));
@@ -32,26 +33,11 @@ export function DashboardView() {
         const node = exportRef.current;
         if (!node) return;
         setExporting(true);
+        setExportError(null);
         try {
-            const canvas = await html2canvas(node, { scale: 2, backgroundColor: null });
-            const imgData = canvas.toDataURL("image/png");
-            const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
-
-            pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
-            while (heightLeft > 0) {
-                position -= pdfHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-                heightLeft -= pdfHeight;
-            }
-
-            pdf.save(`${companyName || "dashboard"}-report.pdf`);
+            await exportSectionsToPdf(node, `${companyName || "dashboard"}-report.pdf`);
+        } catch (err) {
+            setExportError(extractApiErrorMessage(err));
         } finally {
             setExporting(false);
         }
@@ -108,15 +94,18 @@ export function DashboardView() {
                         </p>
                     </div>
                 </div>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={exporting}
-                    onClick={() => handleExportPdf(data.company)}
-                >
-                    <Download data-icon="inline-start" />
-                    {exporting ? "Exporting…" : "Export PDF"}
-                </Button>
+                <div className="space-y-1.5 text-right">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={exporting}
+                        onClick={() => handleExportPdf(data.company)}
+                    >
+                        <Download data-icon="inline-start" />
+                        {exporting ? "Exporting…" : "Export PDF"}
+                    </Button>
+                    {exportError && <p className="text-sm text-destructive">{exportError}</p>}
+                </div>
             </div>
 
             <div ref={exportRef} className="space-y-8 bg-background">

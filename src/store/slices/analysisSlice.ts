@@ -6,7 +6,6 @@ import type {
     InputMode,
     LaneId,
     LaneStatus,
-    Report,
     RunEvent,
     RunStatus,
     Telemetry,
@@ -35,12 +34,10 @@ interface AnalysisState {
     runEvents: RunEvent[];
     telemetry: Telemetry;
     laneStatuses: Record<LaneId, LaneStatus>;
-    report: Report | null;
     runId: string | null;
     /** Cache of the real GET /reports/{run_id} response, keyed by the runId
      * it belongs to — lets a manual revisit to Dashboard reuse it instead of
-     * re-fetching. Distinct from `report` above, which is the mock-shaped
-     * type still consumed by Recommendations/Compare. */
+     * re-fetching. */
     apiReport: ApiReportResponse | null;
     apiReportRunId: string | null;
     evidenceDrawer: {
@@ -78,7 +75,6 @@ const initialState: AnalysisState = {
         reviews: "queued",
         strategist: "waiting",
     },
-    report: null,
     runId: null,
     apiReport: null,
     apiReportRunId: null,
@@ -121,7 +117,6 @@ const analysisSlice = createSlice({
                 state.runStatus = "idle";
                 state.runEvents = [];
                 state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-                state.report = null;
                 state.runId = null;
                 state.apiReport = null;
                 state.apiReportRunId = null;
@@ -139,7 +134,6 @@ const analysisSlice = createSlice({
                 state.runStatus = "idle";
                 state.runEvents = [];
                 state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-                state.report = null;
                 state.runId = null;
                 state.apiReport = null;
                 state.apiReportRunId = null;
@@ -160,7 +154,6 @@ const analysisSlice = createSlice({
                 state.runStatus = "idle";
                 state.runEvents = [];
                 state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-                state.report = null;
                 state.runId = null;
                 state.apiReport = null;
                 state.apiReportRunId = null;
@@ -214,9 +207,6 @@ const analysisSlice = createSlice({
         setLaneStatus(state, action: PayloadAction<{ lane: LaneId; status: LaneStatus }>) {
             state.laneStatuses[action.payload.lane] = action.payload.status;
         },
-        setReport(state, action: PayloadAction<Report | null>) {
-            state.report = action.payload;
-        },
         setRunId(state, action: PayloadAction<string | null>) {
             state.runId = action.payload;
         },
@@ -230,7 +220,6 @@ const analysisSlice = createSlice({
             state.runStatus = "idle";
             state.runEvents = [];
             state.telemetry = { elapsedSeconds: 0, llmCalls: 0, searches: 0, signals: 0 };
-            state.report = null;
             state.runId = null;
             state.apiReport = null;
             state.apiReportRunId = null;
@@ -285,7 +274,6 @@ export const {
     setRunEvents,
     updateTelemetry,
     setLaneStatus,
-    setReport,
     setRunId,
     setApiReport,
     resetRun,
