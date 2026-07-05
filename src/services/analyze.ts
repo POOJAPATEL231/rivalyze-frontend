@@ -3,7 +3,6 @@ import type {
     ApiAnalyzeCompanyRequest,
     ApiAnalyzeIdeaRequest,
     ApiAnalyzeResponse,
-    ApiClaimEvidenceResponse,
     ApiCompetitor,
     ApiReportResponse,
     ApiRunStatus,
@@ -40,17 +39,6 @@ export async function confirmRun(
 
 export async function getReport(runId: string): Promise<ApiReportResponse> {
     const response = await apiClient.get<ApiReportResponse>(`/api/v1/reports/${runId}`);
-    return response.data;
-}
-
-export async function fetchClaimEvidence(
-    claimRef: string,
-    runId: string,
-): Promise<ApiClaimEvidenceResponse> {
-    const response = await apiClient.get<ApiClaimEvidenceResponse>(
-        `/api/v1/evidence/${encodeURIComponent(claimRef)}`,
-        { params: { run_id: runId } },
-    );
     return response.data;
 }
 

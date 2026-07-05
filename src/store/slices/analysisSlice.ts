@@ -11,7 +11,7 @@ import type {
     RunStatus,
     Telemetry,
 } from "@/types/analysis";
-import type { ApiEvidenceSource, ApiReportResponse } from "@/types/api";
+import type { ApiReportResponse } from "@/types/api";
 
 interface AnalysisState {
     currentStep: AnalysisStep;
@@ -35,12 +35,7 @@ interface AnalysisState {
      * type still consumed by Recommendations/Compare. */
     apiReport: ApiReportResponse | null;
     apiReportRunId: string | null;
-    evidenceDrawer: {
-        open: boolean;
-        claimRef: string | null;
-        sources: ApiEvidenceSource[];
-        loading: boolean;
-    };
+    evidenceDrawer: { open: boolean; evidenceId: string | null };
 }
 
 const initialState: AnalysisState = {
@@ -69,7 +64,7 @@ const initialState: AnalysisState = {
     runId: null,
     apiReport: null,
     apiReportRunId: null,
-    evidenceDrawer: { open: false, claimRef: null, sources: [], loading: false },
+    evidenceDrawer: { open: false, evidenceId: null },
 };
 
 const analysisSlice = createSlice({
@@ -210,21 +205,9 @@ const analysisSlice = createSlice({
             };
         },
         openEvidence(state, action: PayloadAction<string>) {
-            state.evidenceDrawer = {
-                open: true,
-                claimRef: action.payload,
-                sources: [],
-                loading: true,
-            };
+            state.evidenceDrawer = { open: true, evidenceId: action.payload };
         },
-        setEvidenceSources(state, action: PayloadAction<ApiEvidenceSource[]>) {
-            state.evidenceDrawer.sources = action.payload;
-            state.evidenceDrawer.loading = false;
-        },
-        setEvidenceLoading(state, action: PayloadAction<boolean>) {
-            state.evidenceDrawer.loading = action.payload;
-        },
-        /** Keep claimRef while closing so the drawer content doesn't flash
+        /** Keep evidenceId while closing so the drawer content doesn't flash
          * empty during the slide-out animation. */
         closeEvidence(state) {
             state.evidenceDrawer.open = false;
@@ -253,7 +236,5 @@ export const {
     resetRun,
     openEvidence,
     closeEvidence,
-    setEvidenceSources,
-    setEvidenceLoading,
 } = analysisSlice.actions;
 export default analysisSlice.reducer;
