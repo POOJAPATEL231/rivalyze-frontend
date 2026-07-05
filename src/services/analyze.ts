@@ -1,6 +1,7 @@
 import { apiClient } from "@/services/api";
 import type {
-    ApiAnalyzeRequest,
+    ApiAnalyzeCompanyRequest,
+    ApiAnalyzeIdeaRequest,
     ApiAnalyzeResponse,
     ApiCompetitor,
     ApiReportResponse,
@@ -8,8 +9,17 @@ import type {
 } from "@/types/api";
 import type { Competitor } from "@/types/competitor";
 
-export async function startAnalysis(payload: ApiAnalyzeRequest): Promise<ApiAnalyzeResponse> {
-    const response = await apiClient.post<ApiAnalyzeResponse>("/api/v1/analyze", payload);
+export async function startCompanyAnalysis(
+    payload: ApiAnalyzeCompanyRequest,
+): Promise<ApiAnalyzeResponse> {
+    const response = await apiClient.post<ApiAnalyzeResponse>("/api/v1/analyze/company", payload);
+    return response.data;
+}
+
+export async function startIdeaAnalysis(
+    payload: ApiAnalyzeIdeaRequest,
+): Promise<ApiAnalyzeResponse> {
+    const response = await apiClient.post<ApiAnalyzeResponse>("/api/v1/analyze/idea", payload);
     return response.data;
 }
 

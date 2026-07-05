@@ -30,10 +30,13 @@ export interface ApiUserPublic {
     email: string;
 }
 
-export interface ApiAnalyzeRequest {
+export interface ApiAnalyzeCompanyRequest {
     company: string;
     domain: string;
-    idea: string | null;
+}
+
+export interface ApiAnalyzeIdeaRequest {
+    idea: string;
 }
 
 export interface ApiAnalyzeResponse {
