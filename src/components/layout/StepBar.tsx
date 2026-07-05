@@ -80,7 +80,7 @@ export function StepBar() {
     return (
         <nav
             aria-label="Analysis progress"
-            className="bg-white sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6 border-b border-b-gray-200"
+            className="bg-background sticky top-0 z-50 flex shrink-0 items-center gap-3 overflow-x-auto overflow-y-hidden px-4 py-3 min-[1430px]:gap-5 min-[1430px]:px-6 border-b border-border"
         >
             <a
                 href="/"
@@ -131,9 +131,9 @@ export function StepBar() {
                                         !isActive &&
                                             !isDone &&
                                             isUnlocked &&
-                                            "border-border bg-card text-muted-foreground group-hover:border-primary/50 group-hover:text-foreground",
+                                            "border-border bg-card text-foreground/80 group-hover:border-primary/50 group-hover:text-foreground",
                                         !isUnlocked &&
-                                            "border-border/60 bg-transparent text-muted-foreground/40",
+                                            "border-border/60 bg-transparent text-foreground/50",
                                     )}
                                 >
                                     {isActive && (
@@ -155,9 +155,9 @@ export function StepBar() {
                                         "hidden font-heading text-sm font-medium whitespace-nowrap min-[960px]:inline",
                                         isActive
                                             ? "text-foreground"
-                                            : isUnlocked || step.label === "Discovery"
-                                              ? "text-muted-foreground group-hover:text-foreground"
-                                              : "text-muted-foreground/40",
+                                            : isUnlocked
+                                              ? "text-foreground/80 group-hover:text-foreground"
+                                              : "text-foreground/50",
                                     )}
                                 >
                                     {step.label}
@@ -205,7 +205,8 @@ export function StepBar() {
                                             !isActive &&
                                                 isDone &&
                                                 "text-success focus:text-success",
-                                            !isUnlocked && "text-muted-foreground/50",
+                                            !isActive && isUnlocked && "text-foreground/80",
+                                            !isUnlocked && "text-foreground/50",
                                         )}
                                     >
                                         <span className="flex items-center gap-2">
