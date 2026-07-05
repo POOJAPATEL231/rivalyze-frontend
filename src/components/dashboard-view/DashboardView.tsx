@@ -75,17 +75,16 @@ export function DashboardView() {
 
             <ExecSummary report={data} />
 
-            <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Head to head</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <HeadToHead rows={data.head_to_head} />
-                    </CardContent>
-                </Card>
-                <SwotGrid swot={data.swot} />
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Head to head</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <HeadToHead rows={data.head_to_head} />
+                </CardContent>
+            </Card>
+
+            <SwotGrid swot={data.swot} />
 
             <div className="grid grid-cols-1 gap-6 min-[960px]:grid-cols-2">
                 <SentimentPanel sentiment={data.sentiment} />
