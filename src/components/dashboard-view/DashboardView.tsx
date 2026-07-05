@@ -8,7 +8,7 @@ import { ExecSummary } from "@/components/dashboard-view/ExecSummary";
 import { HeadToHead } from "@/components/dashboard-view/HeadToHead";
 import { OpportunitiesPanel } from "@/components/dashboard-view/OpportunitiesPanel";
 import { SentimentPanel } from "@/components/dashboard-view/SentimentPanel";
-// import { StatsStrip } from "@/components/dashboard-view/StatsStrip";
+import { StatsStrip } from "@/components/dashboard-view/StatsStrip";
 import { SwotGrid } from "@/components/dashboard-view/SwotGrid";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
