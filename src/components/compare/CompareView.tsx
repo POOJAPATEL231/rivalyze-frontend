@@ -6,21 +6,12 @@ import { CompareColumn, type CompareRow } from "@/components/compare/CompareColu
 import { RivalPicker } from "@/components/compare/RivalPicker";
 import { Verdict } from "@/components/compare/Verdict";
 import { Button } from "@/components/ui/button";
-import { YOUR_ANGLE } from "@/data/compareData";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/store/hooks";
-import type { Report } from "@/types/analysis";
-
-const H2H_ROWS: { key: keyof Report["headToHead"]; label: string }[] = [
-    { key: "price", label: "Entry price" },
-    { key: "aiPositioning", label: "AI positioning" },
-    { key: "recentMove", label: "Recent move" },
-    { key: "topComplaint", label: "Top complaint" },
-];
 
 export function CompareView() {
     const navigate = useNavigate();
-    const report = useAppSelector((state) => state.analysis.report);
+    const report = useAppSelector((state) => state.analysis.apiReport);
     const competitors = useAppSelector((state) => state.analysis.competitors);
     const companyName = useAppSelector((state) => state.analysis.companyName);
     const [selectedIds, setSelectedIds] = useState<string[]>(() =>
@@ -46,32 +37,25 @@ export function CompareView() {
         );
     }
 
-    function buildRows(competitorId?: string): CompareRow[] {
-        const h2hRows = H2H_ROWS.map(({ key, label }) => {
-            const data = report!.headToHead[key];
-            const cell = competitorId ? data.rivals[competitorId] : data.you;
-            return { label, text: cell.text, evidenceId: cell.evidenceId };
-        });
+    // Rival cells are keyed by the competitor's real name in the API response
+    // (e.g. "Ola"), not the internal slugified Competitor.id (e.g. "ola").
+    function buildRows(competitorName?: string): CompareRow[] {
+        const h2hRows = report!.head_to_head.map((row) => ({
+            label: row.metric,
+            text: competitorName ? (row.rivals[competitorName]?.value ?? "No data yet") : row.you,
+        }));
 
-        const sentimentEntry = competitorId
-            ? report!.sentiment.find((entry) => entry.competitorId === competitorId)
-            : undefined;
+        const sentimentEntry = competitorName ? report!.sentiment[competitorName] : undefined;
 
         return [
             ...h2hRows,
             {
                 label: "Sentiment",
-                text: competitorId
+                text: competitorName
                     ? sentimentEntry
                         ? `${sentimentEntry.label} (${sentimentEntry.score.toFixed(2)})`
                         : "No data yet"
                     : "Building your sentiment baseline — check back after your first review cycle.",
-            },
-            {
-                label: "Your angle",
-                text: competitorId
-                    ? (YOUR_ANGLE[competitorId] ?? "No counter-angle logged yet.")
-                    : "Ship evidence-linked recommendations faster than rivals can track competitive moves.",
             },
         ];
     }
@@ -116,7 +100,7 @@ export function CompareView() {
                     <CompareColumn
                         key={competitor.id}
                         name={competitor.name}
-                        rows={buildRows(competitor.id)}
+                        rows={buildRows(competitor.name)}
                     />
                 ))}
             </div>
