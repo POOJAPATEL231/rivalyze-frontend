@@ -96,6 +96,12 @@ export default function AnalysisFlow() {
         return <Navigate to={`/${fallback}`} replace />;
     }
 
+    // Guard: Prevent backtracking to run if it's completed (dashboard is unlocked)
+    if (stepFromPath === "run" && unlockedSteps.includes("dashboard")) {
+        const fallback = currentStep === "run" ? "dashboard" : currentStep;
+        return <Navigate to={`/${fallback}`} replace />;
+    }
+
     const View = VIEWS[stepFromPath];
 
     return (
