@@ -19,7 +19,7 @@ export function AgentLedger() {
             className="glass h-[388px] w-full space-y-1.5 overflow-y-auto rounded-xl p-4"
         >
             {runEvents.length === 0 && (
-                <p className="font-mono text-xs text-white/40">Waiting for the first signal…</p>
+                <p className="font-mono text-xs">Waiting for the first signal…</p>
             )}
             {runEvents.map((event) => (
                 <LedgerLine key={event.id} event={event} />
