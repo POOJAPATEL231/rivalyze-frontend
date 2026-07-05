@@ -35,8 +35,20 @@ export interface ApiAnalyzeCompanyRequest {
     domain: string;
 }
 
+/** `idea` and `target_geography` are the only fields the frontend requires
+ * (the Brief form enforces target_geography even though the backend itself
+ * treats it as optional, defaulting to ""). The remaining fields are true
+ * optional structured intake (matching the backend's
+ * AnalyzeIdeaRequest/IdeaContext fields flattened onto this one request, not
+ * nested) that sharpens discovery instead of letting the idea pre-step guess
+ * the market from one sentence. */
 export interface ApiAnalyzeIdeaRequest {
     idea: string;
+    industry?: string;
+    target_geography?: string;
+    target_customer?: string;
+    business_model?: string;
+    stage?: string;
 }
 
 export interface ApiAnalyzeResponse {

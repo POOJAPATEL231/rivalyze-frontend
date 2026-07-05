@@ -20,6 +20,14 @@ interface AnalysisState {
     companyName: string;
     domain: string;
     ideaDescription: string;
+    /** Optional structured intake for idea mode — sharpens discovery instead
+     * of the idea pre-step guessing the market from one sentence. All
+     * optional, sent flat alongside `idea` to POST /analyze/idea. */
+    industry: string;
+    targetGeography: string;
+    targetCustomer: string;
+    businessModel: string;
+    stage: string;
     competitors: Competitor[];
     removedCompetitors: Competitor[];
     jobId: string | null;
@@ -47,6 +55,11 @@ const initialState: AnalysisState = {
     companyName: "",
     domain: "",
     ideaDescription: "",
+    industry: "",
+    targetGeography: "",
+    targetCustomer: "",
+    businessModel: "",
+    stage: "",
     competitors: [],
     removedCompetitors: [],
     jobId: null,
@@ -86,6 +99,11 @@ const analysisSlice = createSlice({
                 // Clear inputs for the other mode to prevent stale data persisting or being submitted
                 if (action.payload === "company") {
                     state.ideaDescription = "";
+                    state.industry = "";
+                    state.targetGeography = "";
+                    state.targetCustomer = "";
+                    state.businessModel = "";
+                    state.stage = "";
                 } else {
                     state.companyName = "";
                     state.domain = "";
@@ -142,6 +160,21 @@ const analysisSlice = createSlice({
                 state.apiReport = null;
                 state.apiReportRunId = null;
             }
+        },
+        setIndustry(state, action: PayloadAction<string>) {
+            state.industry = action.payload;
+        },
+        setTargetGeography(state, action: PayloadAction<string>) {
+            state.targetGeography = action.payload;
+        },
+        setTargetCustomer(state, action: PayloadAction<string>) {
+            state.targetCustomer = action.payload;
+        },
+        setBusinessModel(state, action: PayloadAction<string>) {
+            state.businessModel = action.payload;
+        },
+        setStage(state, action: PayloadAction<string>) {
+            state.stage = action.payload;
         },
         setCompetitors(state, action: PayloadAction<Competitor[]>) {
             state.competitors = action.payload;
@@ -222,6 +255,11 @@ export const {
     setCompanyName,
     setDomain,
     setIdeaDescription,
+    setIndustry,
+    setTargetGeography,
+    setTargetCustomer,
+    setBusinessModel,
+    setStage,
     setCompetitors,
     removeCompetitor,
     restoreCompetitor,
